@@ -1,0 +1,72 @@
+﻿@page
+@model Sicsoft.Checkin.Web.LoginModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="~/lib/animate.css/animate.min.css" />
+    <link rel="stylesheet" href="~/css/inspinia.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="icon" href="~/img/icon.png" type="image/png" />
+</head>
+<body class="light-skin" background="../img/fondo2.jpg" >
+
+    <div class="middle-box text-center loginscreen animated fadeInDown" style="background-image:url(../../wwwroot/img/fondo2.jpg); background-color: white; border-radius: 10px;" >
+        <div class="ibox">
+            <div class="ibox-title">
+
+        <div>
+
+            <div style="height: 78px; width: 286px; margin-left: 45px;" class="logo-name"  ></div>
+
+        </div>
+            </div>
+        <div class="ibox-content">
+
+        @*<p>Encontrá las mejores opciones para conocer<br />
+        un pais que es un sueño conocer</p>*@
+
+        <form class="m-t" role="form" method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <input asp-for="Input.Email" class="form-control" placeholder="Correo electronico">
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="Input.Password" class="form-control" placeholder="Contraseña">
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b">Iniciar sesión</button>
+
+            
+
+
+        </form>
+        </div>
+               
+    </div>
+
+        <hr>
+      
+            <p class="m-t">
+                ©2020, SWISS QUOTE BROKER <br /> Todos los derechos reservados
+            </p>
+           
+           
+       
+
+        </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+
+</body>
+    
+</html>

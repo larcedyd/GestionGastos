@@ -1,0 +1,203 @@
+﻿@page
+@model Sicsoft.CostaRica.Checkin.Web.Pages.Account.RegistroUsuarioModel
+@{
+    ViewData["Title"] = "Insertar Usuario";
+}
+
+@section Title{
+    <h2><i></i>@ViewData["Title"]</h2>
+}
+@section breadcrumb{
+
+    <li class="breadcrumb-item active">
+        <strong>Registrar Usuario </strong>
+    </li>
+}
+@section TitleAction{
+
+    <button form="formTipos" type="submit" class="btn btn-w-m btn-primary">Guardar Cambios</button>
+
+}
+
+@section styles{
+    <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2-bootstrap4.min.css" />
+    <link href="~/lib/dropzone/basic.css" rel="stylesheet" />
+    <link href="~/lib/dropzone/dropzone.css" rel="stylesheet" />
+    <link href="~/lib/iCheck/skins/square/green.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css">
+
+}
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    <script src="~/lib/dropzone/dropzone.js"></script>
+    <script src="~/lib/iCheck/icheck.js"></script>
+    <script>
+
+        $(function () {
+            $('.summernote').summernote();
+            $(".select2").select2({
+                theme: 'bootstrap4',
+            });
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        })
+
+     
+    </script>
+    <script>
+       
+
+        function tiene_caracteres(texto) {
+            var regularExpression = "/^(?=.*[])(?=.*[!#$%^&*])[-!#$%^&*]{,}$/";
+            for (i = 0; i < texto.length; i++) {
+                if (regularExpression.indexOf(texto.charAt(i), 0) != -1) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        function son_iguales(texto1, texto2) {
+            if (texto1 === texto2) {
+                return 1;
+            } else {
+                console.log(texto1 + " " + texto2);
+                return 0;
+
+            }
+        }
+
+        function tiene_numeros(texto) {
+            var numeros = "0123456789";
+            for (i = 0; i < texto.length; i++) {
+                if (numeros.indexOf(texto.charAt(i), 0) != -1) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+       //Revisa las contraseñas
+
+        function RevisaContraseña() {
+            if (tiene_numeros($("#clave").val()) == 0) {
+                var x = document.getElementById("ErrorClave");
+                x.style.display = "block";
+                $("#ErrorClave").text("La contraseña debe contener letras y numeros");
+            } else {
+                var x = document.getElementById("ErrorClave");
+                x.style.display = "none";
+
+                if (tiene_caracteres($("#clave").val()) == 0) {
+                    console.log("No  tiene");
+                    var x = document.getElementById("ErrorClave");
+                    x.style.display = "block";
+                    $("#ErrorClave").text("La contraseña debe contener al menos un caracter especial");
+                } else {
+                    console.log("Si tiene");
+                    var x = document.getElementById("ErrorClave");
+                    x.style.display = "none";
+                }
+            }
+
+
+
+
+        }
+
+        function RevisaConfirmacionContraseña() {
+            if (son_iguales($("#clave").val(), $("#cClave").val()) == 0) {
+                console.log(" son distintos");
+                var x = document.getElementById("ErrorConfirmacionClave");
+                x.style.display = "block";
+                $("#ErrorConfirmacionClave").text("Las contraseñas no coinciden");
+            } else {
+                console.log("No son iguales");
+                var x = document.getElementById("ErrorConfirmacionClave");
+                x.style.display = "none";
+            }
+          
+
+        }
+
+    </script>
+}
+
+<form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
+
+
+    <div class="ibox ">
+        <div class="ibox-title">
+            <h2>Información del Usuario</h2>
+
+        </div>
+        <div class="ibox-content">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-sm-6">
+
+
+                    <label asp-for="Input.Nombre" class="col-form-label">Nombre:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input asp-for="Input.Nombre" class="form-control">
+                            <span asp-validation-for="Input.Nombre" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <label asp-for="Input.Password" class="col-form-label">Contraseña:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input asp-for="Input.Password" id="clave" type="password" onchange="javascript: RevisaContraseña()" class="form-control">
+                            <span style="display:none;" id="ErrorClave" class="text-danger"></span>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <label asp-for="Input.Rol" class="col-form-label">Rol:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <select asp-for="Input.Rol" class="form-control form-contro-sm">
+                                <option value="0">Seleccione</option>
+                                @foreach (InversionGloblalWeb.Models.RolesViewModel item in Model.Roles)
+                                {
+                                    <option value="@item.idRol">
+                                        @item.NomRol
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="col-sm-6">
+                    <label asp-for="Input.Email" class="col-form-label">Email:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input asp-for="Input.Email" class="form-control">
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <label class="col-form-label">Confirmar Contraseña:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <input type="password" id="cClave" onchange="javascript: RevisaConfirmacionContraseña()" class="form-control">
+                            <span style="display:none;" id="ErrorConfirmacionClave" class="text-danger"></span>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-w-m btn-primary">Guardar Cambios</button>
+    </div>
+</form>
