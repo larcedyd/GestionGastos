@@ -1,11 +1,84 @@
-﻿@font-
-
-ce {
-    font-family: Helvetica-Bold;
-    src: url("../fonts/Helvetica-Bold-Font.ttf");
+﻿@font-face {
+    font-family: Font Awesome;
+    src: url("../fonts/font-awesome-4.7.0/fonts/fontawesome-webfont3e6e.ttf");
 }
+.icono {
+    font-size: 22px;
+    cursor: pointer !important;
+}
+.col-form-label {
+   
+    font-weight: bold !important;
+}
+.swal2-styled.swal2-confirm.swalBtnColor {
+    border: 1px solid #57b846 !important;
+    border-radius: 7px !important;
+    background-color: #A5CC9C !important;
+    border-color: #A5CC9C !important;
+    -webkit-box-shadow: none !important;
+}
+
+    .swal2-styled.swal2-confirm.swalBtnColor:hover {
+        border: 1px solid #57b846 !important;
+        border-radius: 7px !important;
+        background-color: #A5CC9C !important;
+        border-color: #A5CC9C !important;
+    }
+
+    .swal2-styled.swal2-confirm.swalBtnColor:focus {
+        border: 1px solid #57b846 !important;
+        border-radius: 7px !important;
+        background-color: #A5CC9C !important;
+        border-color: #A5CC9C !important;
+    }
+
+    .swal2-styled.swal2-confirm.swalBtnColor:active,
+    .swal2-styled.swal2-confirm.swalBtnColor.active {
+        border: 1px solid #57b846 !important;
+        border-radius: 7px !important;
+        background-color: #A5CC9C !important;
+        border-color: #A5CC9C !important;
+    }
+
+.swal2-styled.swal2-deny.swalDeny {
+    border: 1px solid #FF0000 !important;
+    border-radius: 7px !important;
+    border-color: #FF0000 !important;
+    background-color: #FFF !important;
+    color: black !important;
+}
+
+    .swal2-styled.swal2-deny.swalDeny:hover {
+        border: 1px solid #FF0000 !important;
+        border-radius: 7px !important;
+        border-color: #FF0000 !important;
+        background-color: #FFF !important;
+        color: black !important;
+    }
+
+    .swal2-styled.swal2-deny.swalDeny:focus {
+        border: 1px solid #FF0000 !important;
+        border-radius: 7px !important;
+        border-color: #FF0000 !important;
+        background-color: #FFF !important;
+        color: black !important;
+    }
+.fa-trash {
+    color: #FF0000 !important;
+}
+
+.fa-user-plus {
+    color: #FBBA00 !important;
+}
+.fa-edit {
+    color: forestgreen;
+}
+
+    .fa-edit:hover {
+        color: forestgreen;
+    }
 body.light-skin {
-    font-family: Helvetica, Arial, sans-serif;
+    font-family: 'JosefinSans-Bold', sans-serif;
     background-color: #ffffff;
     color: #595B69;
 }
@@ -38,30 +111,34 @@ h2 {
 }
 .btnpage {
     background-color: white;
-    border-radius: 22px;
+    border-radius: 7px;
     border-color: #202731;
     font-weight: bold;
 }
 .btnFactura {
     background-color: white;
-    border-radius: 22px;
+    border-radius: 7px;
     border-color: #1b535c;
-   
 }
+
+.btn-warning, btn-danger, btn-success, btn-info {
+    border-radius: 7px;
+}
+
 .btn-primary, .label-primary {
-    background-color: rgb(250,91,53);
-    border-radius: 22px;
-    border-color: rgb(250,91,53);
+    background-color: #57b846;
+    border-radius: 7px;
+    border-color: #57b846;
     color: #fff;
 }
 
     .btn-primary:hover,
     .btn-primary:focus,
     .btn-primary.focus {
-        background-color: rgb(250,91,53);
-        border-color: rgb(250,91,53);
+        background-color: #57b846;
+        border-color: #57b846;
         color: #fff;
-        border-radius: 22px;
+        border-radius: 7px;
     }
 
 .form-control,

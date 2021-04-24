@@ -1,0 +1,254 @@
+﻿@page
+@model InversionGloblalWeb.Pages.CuentasContables.IndexModel
+@{
+    ViewData["Title"] = "Cuentas Contables";
+}
+
+@section Title{
+    <h2><i></i> @ViewData["Title"]</h2>
+}
+@using System.Globalization;
+@{
+    NumberFormatInfo formato = new CultureInfo("en-US").NumberFormat;
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+
+
+}
+@section breadcrumb{
+    <li class="breadcrumb-item">
+        <a>Cuentas Contables</a>
+    </li>
+
+    <li class="breadcrumb-item active">
+        <strong>Resumen </strong>
+    </li>
+}
+@section TitleAction{
+    <a asp-page="Nuevo" class="btn btn-primary" title="Agregar"><i class="fa fa-plus"></i> Agregar Cuenta Contable</a>
+}
+@section styles{
+    <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2-bootstrap4.min.css" />
+    <link href="~/lib/dropzone/basic.css" rel="stylesheet" />
+    <link href="~/lib/dropzone/dropzone.css" rel="stylesheet" />
+    <link href="~/lib/iCheck/skins/square/green.css" rel="stylesheet" />
+    <link href="~/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css">
+    <style>
+        .tableFixHead th {
+            position: sticky;
+            top: 0;
+            background: white;
+        }
+    </style>
+
+}
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    <script src="~/lib/dropzone/dropzone.js"></script>
+    <script src="~/lib/iCheck/icheck.js"></script>
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        jQuery(document).ready(function ($) {
+            $(document).ready(function () {
+                $('.mi-selector').select2();
+            });
+        });
+        $(".js-example-responsive").select2({
+            width: 'resolve',// need to override the changed default
+            height: 'resolve'
+        });
+
+        $('.dataTables-example').DataTable({
+            pageLength: 10,
+            responsive: true,
+            order: [[0, "desc"]]
+
+        });
+
+
+
+    });
+
+        var ids = 0;
+        var ids2 = 0;
+        function onClickModal(id) {
+
+        ids = id;
+            console.log("id que viene del eliminar: " + ids);
+
+            Swal.fire({
+                title: '¿Desea eliminar esta cuenta contable?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Aceptar`,
+                denyButtonText: `Cancelar`,
+                customClass: {
+                    confirmButton: 'swalBtnColor',
+                    denyButton: 'swalDeny'
+                },
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+
+                    Eliminar();
+
+                }
+            })
+
+
+    }
+        function  Eliminar() {
+
+
+         $.ajax({
+                        type: 'GET',
+                        dataType: 'json',
+                        url: '@Url.Page("Index", "Eliminar")',
+                        data: { id: ids },
+             success: function (result) {
+
+                             if (result == false) {
+                                 ids = 0;
+                                // $("#Eliminar").hide();
+                                // $("#Error").show();
+                                 Swal.fire({
+                                     icon: 'error',
+                                     title: 'Oops...',
+                                     text: 'Ha ocurrido un error al intentar eliminar'
+
+                                 })
+                             } else {
+                                 Swal.fire({
+                                     title: "Ha sido eliminado con éxito",
+
+                                     icon: 'success',
+                                     showCancelButton: false,
+                                     customClass: {
+                                         confirmButton: 'swalBtnColor',
+
+                                     },
+                                     confirmButtonText: 'OK'
+                                 }).then((result) => {
+                                     if (result.isConfirmed) {
+                                         location.reload();
+                                     }
+                                 })
+                             }
+             },
+             beforeSend: function () {
+                
+             },
+             complete: function () {
+                
+             }
+                     })
+        }
+
+
+    </script>
+
+}
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+
+<div class="ibox ">
+
+
+    <div class="ibox-content lista">
+        <br />
+        <form method="get">
+            <div class="row">
+                &nbsp;
+                <div class="col-md-1"></div>
+                <div class="col-md-6">
+                    <div class="m-b-lg">
+                        <div class="form-row">
+                            <div class="input-group input-group-sm  col-md-12">
+                                <input asp-for="filtro.Texto" class="form-control" placeholder="Buscar Cuenta Contables">
+                            </div>
+                        </div>
+
+
+                        <div class="">
+
+
+
+                            <p style="font-size:14px;">Se encontraron @Model.Objeto.Length registros de Cuentas Contables.</p>
+
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="col-md-3">
+                    <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>
+
+
+
+                </div>
+                <div class="col-md-1">
+
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive" style="padding:inherit;">
+            <table class="table table-striped dataTables-example" style="width: 100%;">
+                <thead>
+                    <tr>
+
+                        <td align="center" style="width: 25%;"><h3>ID</h3></td>
+                        <td align="center" style="width: 50%;"><h3>Nombre</h3></td>
+
+                        <td align="center" style="width: 25%;"><h3>Acción</h3></td>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Objeto)
+                    {
+                        <tr>
+
+                            <td align="center" style="padding-top:15px;">
+                                <a style="font-size:15px;  ">
+                                    @item.CodSAP
+                                    </a>
+                            </td>
+             
+                            <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Nombre</a></td>
+                            <td align="center" style="padding-top:15px;">
+                                <a asp-page="./Editar" asp-route-id="@item.idCuentaContable" title="Editar" class="fa fa-edit icono"> </a> &nbsp;
+                                <a onclick="javascript: onClickModal('@item.idCuentaContable')" title="Eliminar" class="fa fa-trash icono"></a>
+
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+
+        </div>
+        <a asp-page="Nuevo" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Cuenta Contable</a>
+    </div>
+</div>

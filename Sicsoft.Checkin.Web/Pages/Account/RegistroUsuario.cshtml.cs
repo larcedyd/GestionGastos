@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using InversionGloblalWeb.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,8 +14,8 @@ namespace Sicsoft.CostaRica.Checkin.Web.Pages.Account
 {
     public class RegistroUsuarioModel : PageModel
     {
-        private readonly ICrudApi<LoginUsuario, int> checkInService;
-        private readonly ICrudApi<RolesViewModel, int> rolesService;
+        private readonly ICrudApi<LoginUsuario, int> service;
+        private readonly ICrudApi<RolesViewModel, int> roles;
 
         [BindProperty]
         public LoginUsuario Input { get; set; }
@@ -22,14 +23,23 @@ namespace Sicsoft.CostaRica.Checkin.Web.Pages.Account
         [BindProperty]
         public RolesViewModel[] Roles { get; set; }
 
-        public RegistroUsuarioModel(ICrudApi<LoginUsuario, int> checkInService, ICrudApi<RolesViewModel, int> rolesService)
+        public RegistroUsuarioModel(ICrudApi<LoginUsuario, int> service, ICrudApi<RolesViewModel, int> roles)
         {
-            this.checkInService = checkInService;
-            this.rolesService = rolesService;
+            this.service = service;
+            this.roles = roles;
+           
         }
         public async Task<IActionResult> OnGetAsync()
         {
-            Roles = await rolesService.ObtenerLista("");
+            try
+            {
+                Roles = await roles.ObtenerLista("");
+            }
+            catch (Exception)
+            {
+
+                
+            }
             return Page();
         }
 
@@ -37,13 +47,20 @@ namespace Sicsoft.CostaRica.Checkin.Web.Pages.Account
         {
             try
             {
-                await checkInService.Agregar(Input);
+                Input.CedulaJuridica = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.NameIdentifier).Select(s1 => s1.Value).FirstOrDefault();
+                if (string.IsNullOrEmpty(Input.Clave))
+                {
+                    throw new Exception("La clave debe contener elementos");
+                }
+                await service.Agregar(Input);
                 return Redirect("../Index");
             }
-            catch(ApiException ex)
+            catch (Exception ex)
             {
-               return Redirect("/Error");
-             
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+                //return Redirect("/Error");
+                return Page();
             }
         }
     }

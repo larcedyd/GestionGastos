@@ -7,9 +7,9 @@
  *
 */
 @font-face {
-    font-family: 'Glyphicons Halflings';
-    src: url('../fonts/glyphicons-halflings-regular.eot');
-    src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg') format('svg');
+    font-family: 'JosefinSans-Bold';
+    src: url('../fonts/font-awesome-4.7.0/css/font-awesome.min.css');
+    src: url('../fonts/font-awesome-4.7.0/fonts/fontawesome-webfont3e6e.eot') format('embedded-opentype'), url('../fonts/font-awesome-4.7.0/fonts/fontawesome-webfont3e6e.woff2') format('woff2'), url('../fonts/font-awesome-4.7.0/fonts/fontawesome-webfont3e6e.woff') format('woff'), url('../fonts/font-awesome-4.7.0/fonts/fontawesome-webfont3e6e.ttf') format('truetype'), url('../fonts/font-awesome-4.7.0/fonts/fontawesome-webfont3e6e.svg') format('svg');
 }
 
 .glyphicon {
@@ -23,7 +23,11 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+ 
 
+.navbar-default navbar-static-side {
+    background-color: #57b846 !important;
+}
 .glyphicon-asterisk:before {
     content: "\002a";
 }
@@ -1509,7 +1513,7 @@ body.mini-navbar .navbar-default .nav > li > .nav-second-level li a {
 }
 
     .navbar-default .landing_link a:hover {
-        background: rgb(250,91,53) !important;
+        background: #57b846 !important;
         color: white;
     }
 
@@ -2005,16 +2009,16 @@ button:focus {
 
 .btn-primary {
     color: #00545D;
-    background-color: rgb(250,91,53);
-    border-color: rgb(250,91,53);
+    background-color: #57b846;
+    border-color: #57b846;
 }
 
     .btn-primary:hover,
     .btn-primary:focus,
     .btn-primary.focus {
         color: #00545D;
-        background-color: rgb(250,91,53);
-        border-color: rgb(250,91,53);
+        background-color: #57b846;
+        border-color: #57b846;
     }
 
     .btn-primary.disabled,
@@ -2028,8 +2032,8 @@ button:focus {
     .btn-primary:not(:disabled):not(.disabled).active,
     .show > .btn-primary.dropdown-toggle {
         color: #fff;
-        background-color: rgb(250,91,53);
-        border-color: rgb(250,91,53);
+        background-color: #57b846;
+        border-color: #57b846;
     }
 
         .btn-primary:not(:disabled):not(.disabled):active:focus,
@@ -2666,6 +2670,7 @@ button.dim:active:before {
 .page-item.active .page-link {
     background-color: white;
     border-color: black; /*#DDDDDD*/
+     color: black;
 }
 
 .page-link:focus {
@@ -3274,7 +3279,7 @@ div.dt-button-info {
 }
 
 .pace .pace-progress {
-    background: rgb(250,91,53);
+    background: #57b846;
     position: fixed;
     z-index: 2040;
     top: 0;
@@ -6137,7 +6142,7 @@ table.table-mail tr td {
 
 .navy-bg,
 .bg-primary {
-    background-color: rgb(250,91,53) !important;
+    background-color: #57b846 !important;
     color: #ffffff;
 }
 
@@ -6266,7 +6271,7 @@ table.table-mail tr td {
     }
 /* COLORS */
 .text-navy {
-    color: rgb(250,91,53) !important;
+    color: #57b846 !important;
 }
 
 .text-primary {
@@ -7611,7 +7616,7 @@ dd.project-people {
 }
 
     .faq-question:hover {
-        color: rgb(250,91,53);
+        color: #57b846;
     }
 
 .faq-answer {
@@ -9528,7 +9533,7 @@ body.landing-page {
     }
 
         .landing-page a.navy-link:hover {
-            color: rgb(250,91,53);
+            color: #57b846;
         }
 
     .landing-page section p {
@@ -9631,7 +9636,7 @@ body.landing-page {
 
     .landing-page .navbar-default .navbar-brand:hover,
     .landing-page .navbar-default .navbar-brand:focus {
-        background: rgb(250,91,53);
+        background: #57b846;
         color: #fff;
     }
 
@@ -9910,7 +9915,7 @@ body.landing-page {
     }
 
         .landing-page .social-icon a:hover {
-            background: rgb(250,91,53);
+            background: #57b846;
         }
 
     .landing-page .img-small {
@@ -9967,7 +9972,7 @@ body.landing-page {
     }
 
     .landing-page .features .big-icon {
-        color: rgb(250,91,53) !important;
+        color: #57b846 !important;
     }
 
     .landing-page .contact {
@@ -10037,7 +10042,7 @@ body.landing-page {
     }
 
     .landing-page .btn-primary {
-        background-color: rgb(250,91,53);
+        background-color: #57b846;
         border-color: #1ab394;
         color: #FFFFFF;
         font-size: 14px;
@@ -10050,8 +10055,8 @@ body.landing-page {
         .landing-page .btn-primary:active,
         .landing-page .btn-primary.active,
         .landing-page .open .dropdown-toggle.btn-primary {
-            background-color: rgb(250,91,53);
-            border-color: rgb(250,91,53);
+            background-color: #57b846;
+            border-color: #57b846;
             color: #FFFFFF;
         }
 
@@ -10076,8 +10081,8 @@ body.landing-page {
             .landing-page fieldset[disabled] .btn-primary:focus,
             .landing-page fieldset[disabled] .btn-primary:active,
             .landing-page fieldset[disabled] .btn-primary.active {
-                background-color: rgb(250,91,53);
-                border-color: rgb(250,91,53);
+                background-color: #57b846;
+                border-color: #57b846;
             }
 
 @media (min-width: 768px) {
@@ -11240,10 +11245,10 @@ body.light-skin {
     }
 
     .light-skin .nav > li.active {
-        background: rgb(250,91,53);
+        background: #57b846;
     }
     .light-skin .nav > li .navBar {
-        background: rgb(250,91,53);
+        background: #57b846;
     }
     .light-skin ul.nav-second-level {
         background: #FFF;
@@ -11570,7 +11575,7 @@ body.md-skin {
 
 .md-skin .navbar-fixed-top,
 .md-skin .navbar-static-top {
-    background-color: rgb(250,91,53) !important;
+    background-color: #57b846 !important;
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 }
 

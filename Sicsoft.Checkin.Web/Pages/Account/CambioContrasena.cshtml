@@ -9,12 +9,12 @@
 @section breadcrumb{
 
     <li class="breadcrumb-item active">
-        <strong>Registrar Usuario </strong>
+        <strong>Cambio Contraseña </strong>
     </li>
 }
 @section TitleAction{
 
-    <button form="formTipos" type="submit" class="btn btn-w-m btn-primary">Guardar Cambios</button>
+    @*<button form="formTipos" Guardar type="submit" class="btn btn-w-m btn-primary">Guardar Cambios</button>*@
 
 }
 
@@ -51,10 +51,16 @@
 
     </script>
     <script>
+            var btn = document.getElementById('Guardar');
+        $(document).ready(function () {
+            btn.disabled = true;
+
+        });
+       
 
 
         function tiene_caracteres(texto) {
-            var regularExpression = "/^(?=.*[])(?=.*[!#$%^&*])[-!#$%^&*]{,}$/";
+            var regularExpression = "@@/^(?=.*[])(?=.*[!#$%^&*])[-!#$%^&*]{,}$/";
             for (i = 0; i < texto.length; i++) {
                 if (regularExpression.indexOf(texto.charAt(i), 0) != -1) {
                     return 1;
@@ -85,26 +91,34 @@
         //Revisa las contraseñas
 
         function RevisaContraseña() {
+         
             if (tiene_numeros($("#clave").val()) == 0) {
                 var x = document.getElementById("ErrorClave");
                 x.style.display = "block";
                 $("#ErrorClave").text("La contraseña debe contener letras y numeros");
+                btn.disabled = true;
+                
             } else {
                 var x = document.getElementById("ErrorClave");
                 x.style.display = "none";
-
+              
                 if (tiene_caracteres($("#clave").val()) == 0) {
                     console.log("No  tiene");
                     var x = document.getElementById("ErrorClave");
                     x.style.display = "block";
                     $("#ErrorClave").text("La contraseña debe contener al menos un caracter especial");
+                    btn.disabled = true;
                 } else {
                     console.log("Si tiene");
                     var x = document.getElementById("ErrorClave");
                     x.style.display = "none";
+                   // btn.disabled = false;
+
+                    
                 }
             }
 
+            RevisaConfirmacionContraseña();
 
 
 
@@ -116,10 +130,12 @@
                 var x = document.getElementById("ErrorConfirmacionClave");
                 x.style.display = "block";
                 $("#ErrorConfirmacionClave").text("Las contraseñas no coinciden");
+                btn.disabled = true;
             } else {
                 console.log("No son iguales");
                 var x = document.getElementById("ErrorConfirmacionClave");
                 x.style.display = "none";
+                btn.disabled = false;
             }
 
 
@@ -141,28 +157,20 @@
                 <div class="col-sm-6">
 
 
-                    <label asp-for="Input.PasswordAnterior" class="col-form-label">Contraseña Anterior:</label>
+                   
+                    <label asp-for="Input.Clave" class="col-form-label">Contraseña Nueva:</label>
                     <div class="form-group row">
                         <div class="col-sm-12">
-                            <input asp-for="Input.PasswordAnterior" id="clave" type="password" onchange="javascript: RevisaContraseña()" class="form-control">
+                            <input asp-for="Input.Clave" id="clave" type="password" placeholder="Digite su nueva contraseña" onchange="javascript: RevisaContraseña()" class="form-control">
                             <span style="display:none;" id="ErrorClave" class="text-danger"></span>
-                            <span asp-validation-for="Input.PasswordAnterior" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <label asp-for="Input.PasswordNuevo" class="col-form-label">Contraseña:</label>
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <input asp-for="Input.PasswordNuevo" id="clave" type="password" onchange="javascript: RevisaContraseña()" class="form-control">
-                            <span style="display:none;" id="ErrorClave" class="text-danger"></span>
-                            <span asp-validation-for="Input.PasswordNuevo" class="text-danger"></span>
+                            <span asp-validation-for="Input.Clave" class="text-danger"></span>
                         </div>
                     </div>
 
                     <label class="col-form-label">Confirmar Contraseña:</label>
                     <div class="form-group row">
                         <div class="col-sm-12">
-                            <input type="password" id="cClave" onchange="javascript: RevisaConfirmacionContraseña()"  class="form-control">
+                            <input type="password" id="cClave" placeholder="Confirme la contraseña" onchange="javascript: RevisaConfirmacionContraseña()"  class="form-control">
                             <span style="display:none;" id="ErrorConfirmacionClave" class="text-danger"></span>
 
                         </div>
@@ -173,6 +181,6 @@
         </div>
     </div>
     <div class="d-flex justify-content-end">
-        <button type="submit" class="btn btn-w-m btn-primary">Guardar Cambios</button>
+        <button type="submit" id="Guardar" class="btn btn-w-m btn-primary">Guardar Cambios</button>
     </div>
 </form>

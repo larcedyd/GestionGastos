@@ -1,0 +1,218 @@
+﻿@page
+@model InversionGloblalWeb.Pages.Gastos.NuevoModel
+@{
+    ViewData["Title"] = "Tipos de Gastos";
+}
+@section Title{
+    <h2><i></i> @ViewData["Title"]</h2>
+}
+@section breadcrumb{
+    <li class="breadcrumb-item">
+        <a asp-page="./Index">Tipos de Gastos</a>
+    </li>
+
+    <li class="breadcrumb-item active">
+        <strong>Agregar </strong>
+    </li>
+}
+@section TitleAction{
+    <a asp-page="./Index" class="nav-link text-dark"><i class="fa fa-arrow-circle-o-left "></i>  Regresar</a>
+}
+@section styles{
+    <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2-bootstrap4.min.css" />
+    <link href="~/lib/dropzone/basic.css" rel="stylesheet" />
+    <link href="~/lib/dropzone/dropzone.css" rel="stylesheet" />
+    <link href="~/lib/iCheck/skins/square/green.css" rel="stylesheet" />
+    <link href="~/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css">
+
+}
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    <script src="~/lib/dropzone/dropzone.js"></script>
+    <script src="~/lib/iCheck/icheck.js"></script>
+    <script>
+        $(document).ready(function () {
+            jQuery(document).ready(function ($) {
+                $(document).ready(function () {
+                    $('.mi-selector').select2();
+                });
+            });
+            $(".js-example-responsive").select2({
+                width: 'resolve',// need to override the changed default
+                height: 'resolve'
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 10,
+                responsive: true,
+                order: [[0, "desc"]]
+
+            });
+
+
+
+        });
+    </script>
+    <script>
+
+        var PalabraCadena = [];
+        var Pabs = $("#PalabrasClaves").val();
+
+        var Pabs2 = Pabs.split(";");
+        for (let i = 0; i < Pabs2.length - 1; i++) {
+            var palabrita = Pabs2[i] + ";";
+
+            PalabraCadena.push(palabrita);
+        }
+        RellenaPalabras();
+        function onClick() {
+
+            var palabra = " " + $("#PClave").val() + ";";
+
+
+            PalabraCadena.push(palabra);
+            RellenaPalabras();
+            RellenaClaves();
+
+
+        }
+
+
+        function RellenaPalabras() {
+            var sOptions = '';
+
+            $("#RowPalabras").html('');
+
+            for (var i = 0; i < PalabraCadena.length; i++) {
+
+                if (PalabraCadena[i].length <= 10) {
+                    sOptions += '<div class="col-sm-1">'
+                    sOptions += '<button type="button" class="btn btnpage" style="border-radius:17px; border-color:#73E8C6; margin-top: 0px; margin-block-end: 0px;"><a style="text-decoration:none; color:black;" onclick="javascript: EliminaTag(' + i + ')" >' + PalabraCadena[i] + ' </a></button>';
+                    sOptions += '</div>';
+
+                }
+                else {
+                    sOptions += '<div class="col-sm-2" style = "max-width: 11%;">'
+                    sOptions += '<button type="button" class="btn btnpage" style="border-radius:17px; border-color:#73E8C6; margin-top: 0px; margin-block-end: 0px;"><a style="text-decoration:none; color:black;" onclick="javascript: EliminaTag(' + i + ')">' + PalabraCadena[i] + '   </a></button>';
+                    sOptions += '</div>';
+
+                }
+
+            }
+
+
+            $("#RowPalabras").html(sOptions);
+
+
+            $("#PClave").val("");
+
+        }
+        function EliminaTag(pos) {
+            PalabraCadena.splice(pos, 1);
+            RellenaPalabras();
+            RellenaClaves();
+        }
+        function RellenaClaves() {
+
+
+            var palabras = "";
+            for (var i = 0; i < PalabraCadena.length; i++) {
+                palabras = palabras + PalabraCadena[i];
+            }
+
+
+            $("#PalabrasClaves").val(palabras);
+        }
+
+
+
+    </script>
+}
+<form method="post" id="formTipos" role="form" novalidate class="needs-validation " enctype="multipart/form-data">
+    <div class="ibox ">
+        <div class="ibox-title">
+            <h2>Información</h2>
+
+        </div>
+        <div class="ibox-content">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label asp-for="Objeto.Nombre" class="col-form-label">Nombre:</label>
+
+                    <div class="form-group row" style="text-align: center;">
+
+
+
+                        <div class="col-sm-8">
+
+
+                            <input asp-for="Objeto.Nombre" class="form-control" />
+                            <span asp-validation-for="Objeto.Nombre" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-sm-6">
+                    <label asp-for="Objeto.idCuentaContable" class="col-form-label">Cuenta Contable:</label>
+
+                    <div class="form-group row" >
+
+
+
+                        <div class="col-sm-8">
+
+
+                            <select asp-for="Objeto.idCuentaContable" id="idCuentaContable" class="form-control  mi-selector">
+                                <option value="NULL" selected>-Seleccione Cuenta-</option>
+                                @foreach (var item in Model.Cuentas)
+                                {
+                                    <option value="@item.idCuentaContable">@item.idCuentaContable - @item.Nombre</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Objeto.idCuentaContable" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="ibox">
+        <div class="ibox-title">
+            <div class="row">
+                <div class="col-sm-3">
+                    <h2>Palabras Claves</h2>
+                </div>
+                <div class="col-sm-7">
+
+                    <div class="input-group input-group-sm  col-md-12">
+                        <input id="PClave" class="form-control" placeholder="Agregar Palabras Claves">
+                        <span class="input-group-append">
+                            <input class="btn btn btn-primary" onclick="onClick()" style="background-color: #57b846; color: white; border-radius: 5px; width: 85px; cursor:pointer;" value="Guardar" />
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="row" id="RowPalabras">
+
+            </div>
+            <input hidden type="text" asp-for="Objeto.PalabrasClave" id="PalabrasClaves" />
+        </div>
+    </div>
+    <div class="d-flex justify-content-end">
+        <button type="submit" class="btn btn-w-m btn-primary" title="Guardar">Guardar Cambios</button>
+    </div>
+</form>
+

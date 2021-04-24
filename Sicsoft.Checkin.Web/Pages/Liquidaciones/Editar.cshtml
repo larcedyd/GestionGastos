@@ -1,0 +1,1086 @@
+﻿@page "{id}"
+@model InversionGloblalWeb.Pages.Liquidaciones.EditarModel
+@{
+    ViewData["Title"] = "Liquidaciones";
+}
+@section Title{
+    <h2><i></i> @ViewData["Title"]</h2>
+}
+@section breadcrumb{
+    <li class="breadcrumb-item">
+        <a asp-page="./Index">Liquidaciones</a>
+    </li>
+
+    <li class="breadcrumb-item active">
+        <strong>Editar </strong>
+    </li>
+}
+@section TitleAction{
+    <a asp-page="./Index" class="nav-link text-dark"><i class="fa fa-arrow-circle-o-left "></i>  Regresar</a>
+}
+@section styles{
+    <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2-bootstrap4.min.css" />
+    <link href="~/lib/dropzone/basic.css" rel="stylesheet" />
+    <link href="~/lib/dropzone/dropzone.css" rel="stylesheet" />
+    <link href="~/lib/iCheck/skins/square/green.css" rel="stylesheet" />
+    <link href="~/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css">
+    <style>
+        /*     .tableFixHead th {
+            position: sticky;
+            top: 0;
+            background: white;
+        }*/
+        td {
+            border-bottom-style: solid !important;
+            border-bottom-width: 1px !important;
+            border-bottom-color: #dec2e6 !important;
+        }
+
+        h3 {
+            font-size: 13px !important;
+        }
+
+        th {
+            background-color: transparent !important;
+        }
+
+        td p {
+            font-weight: 300 !important;
+        }
+    </style>
+}
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    <script src="~/lib/dropzone/dropzone.js"></script>
+    <script src="~/lib/iCheck/icheck.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input[type=number]').forEach(node => node.addEventListener('keypress', e => {
+            if (e.keyCode == 13) {
+                onChangeProducto();
+            }
+        }))
+    });
+    </script>
+    <script>
+
+        $(document).ready(function () {
+
+        jQuery(document).ready(function ($) {
+            $(document).ready(function () {
+                $('.mi-selector').select2();
+            });
+        });
+        $(".js-example-responsive").select2({
+            width: 'resolve',// need to override the changed default
+            height: 'resolve'
+        });
+
+            Recuperar();
+
+
+
+
+
+    });
+        var ProdCadena = [];
+        var bandera = false;
+        var idP = 0;
+        var subtotal = 0;
+        var impuestos = 0;
+        var descuentos = 0;
+        var totalComprobante = 0;
+
+        var impuesto1 = 0;
+        var impuesto2 = 0;
+        var impuesto4 = 0;
+        var impuesto8 = 0;
+        var impuesto13 = 0;
+
+
+
+        function Recuperar() {
+
+            var det = JSON.parse($("#Liquidacion").val());
+            $("#idCierre").val(det[0].idCierre);
+            console.log(det[0]);
+
+            var Estado = "@Model.Liquidacion.EncCierre.Estado";
+            console.log("Estado " + Estado);
+            if (Estado != "P") {
+                document.getElementById('btnEnviarRevision').disabled = true;
+            }  
+
+            if (Estado != "P" && Estado != "R") {
+                document.getElementById('GuardarCambios').disabled = true;
+            }
+
+            
+
+            for (var i = 0; i < det.length; i++)
+            {
+
+
+                var detalle = {
+                    id: det[i].id,
+                    Proveedor: (det[i].NomProveedor.length > 21 ? det[i].NomProveedor.substr(0, 21) : det[i].NomProveedor),
+                    CHacienda: det[i].ConsecutivoHacienda,
+                //    idTipoGasto: $("#idTipoGasto").val(),
+                    Fecha: det[i].FecFactura.substr(8, 2) + "/" + det[i].FecFactura.substr(5, 2) + "/" + det[i].FecFactura.substr(0, 4),
+                    SubTotal: det[i].TotalVenta,
+                    Descuento: det[i].TotalDescuentos,
+                    Impuesto: det[i].TotalImpuesto,
+                Total: 0,
+                    Impuesto1: det[i].Impuesto1,
+                    Impuesto2: det[i].Impuesto2,
+                    Impuesto4: det[i].Impuesto4,
+                    Impuesto8: det[i].Impuesto8,
+                    Impuesto13: det[i].Impuesto13
+            };
+
+
+            var subtotalT = 0;
+            var descuentoT = 0;
+            var impuestoT = 0;
+            var totalT = 0;
+            subtotalT = parseFloat(detalle.SubTotal);
+            descuentoT = parseFloat(detalle.Descuento);
+            impuestoT = parseFloat(detalle.Impuesto);
+            detalle.Total = (subtotalT - descuentoT) + impuestoT
+            ProdCadena.push(detalle);
+            totalT = parseFloat(detalle.Total);
+            var impuesto1T = parseFloat(detalle.Impuesto1);
+            var impuesto2T = parseFloat(detalle.Impuesto2);
+            var impuesto4T = parseFloat(detalle.Impuesto4);
+            var impuesto8T = parseFloat(detalle.Impuesto8);
+            var impuesto13T = parseFloat(detalle.Impuesto13);
+
+
+
+            subtotal += subtotalT;
+            descuentos += descuentoT;
+            impuestos += impuestoT;
+
+            totalComprobante += totalT;
+            impuesto1 += impuesto1T;
+            impuesto2 += impuesto2T;
+            impuesto4 += impuesto4T;
+            impuesto8 += impuesto8T;
+            impuesto13 += impuesto13T;
+
+            $("#subtotal").text(formatoDecimal(parseFloat(subtotal).toFixed(2)));
+            $("#descuento").text(formatoDecimal(parseFloat(descuentos).toFixed(2)));
+            $("#impuesto").text(formatoDecimal(parseFloat(impuestos).toFixed(2)));
+            $("#total").text(formatoDecimal(parseFloat(totalComprobante).toFixed(2)));
+
+            $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
+            $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
+            $("#impuesto4").text(formatoDecimal(parseFloat(impuesto4).toFixed(2)));
+            $("#impuesto8").text(formatoDecimal(parseFloat(impuesto8).toFixed(2)));
+                $("#impuesto13").text(formatoDecimal(parseFloat(impuesto13).toFixed(2)));
+            }
+            LimpiarDatos();
+
+            RellenaTabla();
+
+        }
+
+    function onChangeProducto() {
+
+        console.log("Busqueda" + $("#Busqueda").val());
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '@Url.Page("Editar", "Buscar")',
+            data: { idB: $("#Busqueda").val(), cierre: $("#idCierre").val() },
+            success: function (result) {
+
+                console.log(result);
+                $("#Existencia").text("");
+                if (result != null) {
+
+                    if (result.nomProveedor.length > 21) {
+                        $("#Proveedor").text(result.nomProveedor.substr(0, 21));
+                    } else {
+                        $("#Proveedor").text(result.nomProveedor);
+                    }
+                    $("#id").val(result.id);
+                    $("#CHacienda").text(result.consecutivoHacienda);
+                    $("#FechaFac").text(result.fecFactura.substr(8, 2) + "/" + result.fecFactura.substr(5, 2) + "/" + result.fecFactura.substr(0, 4));
+
+
+                    $("#SubTotal").text(formatoDecimal(parseFloat(result.totalVenta)));
+
+                    $("#Impuesto").text(formatoDecimal(parseFloat(result.totalImpuesto)));
+                    $("#Descuento").text(formatoDecimal(parseFloat(result.totalDescuentos)));
+                    //  $("#idTipoGasto").val(result.idTipoGasto).trigger('change.select2');;
+
+                    $("#sub").val(result.totalVenta);
+                    $("#desc").val(result.totalDescuentos);
+                    $("#imp").val(result.totalImpuesto);
+
+
+                    $("#imp1").val(result.impuesto1);
+                    $("#imp2").val(result.impuesto2);
+                    $("#imp4").val(result.impuesto4);
+                    $("#imp8").val(result.impuesto8);
+                    $("#imp13").val(result.impuesto13);
+
+
+                    var detalle = {
+                        id: $("#id").val(),
+                        Proveedor: $("#Proveedor").text(),
+                        CHacienda: $("#CHacienda").text(),
+                        //    idTipoGasto: $("#idTipoGasto").val(),
+                        Fecha: $("#FechaFac").text(),
+                        SubTotal: $("#sub").val(),
+                        Descuento: $("#desc").val(),
+                        Impuesto: $("#imp").val(),
+                        Total: 0,
+                        Impuesto1: $("#imp1").val(),
+                        Impuesto2: $("#imp2").val(),
+                        Impuesto4: $("#imp4").val(),
+                        Impuesto8: $("#imp8").val(),
+                        Impuesto13: $("#imp13").val()
+                    };
+
+                    console.log("Ya esta asignada: " + result.idCierre);
+                    if (ProdCadena.find(a => a.id == parseInt(detalle.id)) != undefined) {
+                        var str = "Ya esta asignada";
+                        $("#Existencia").text(str);
+                        LimpiarDatos();
+                    } else if ((result.idCierre != 0 && result.idCierre != parseInt($("#idCierre").val()))) {
+                        var str = "No existe, no es de este periodo o ya esta asignada";
+                        $("#Existencia").text(str);
+                        LimpiarDatos();
+                    }
+
+                } else {
+
+                    var str = "No existe, no es de este periodo o ya esta asignada";
+                    $("#Existencia").text(str);
+                    LimpiarDatos();
+
+
+
+                }
+
+            },
+            beforeSend: function () {
+
+            },
+            complete: function () {
+
+            }
+        });
+
+        }
+
+       function InsertarProductoTabla() {
+
+
+
+                if ($("#Proveedor").text() != "" ) {
+
+
+                    var detalle = {
+                        id: $("#id").val(),
+                        Proveedor: $("#Proveedor").text(),
+                        CHacienda: $("#CHacienda").text(),
+                    //    idTipoGasto: $("#idTipoGasto").val(),
+                        Fecha: $("#FechaFac").text(),
+                        SubTotal: $("#sub").val(),
+                        Descuento: $("#desc").val(),
+                        Impuesto: $("#imp").val(),
+                        Total: 0,
+                        Impuesto1: $("#imp1").val(),
+                        Impuesto2: $("#imp2").val(),
+                        Impuesto4: $("#imp4").val(),
+                        Impuesto8: $("#imp8").val(),
+                        Impuesto13: $("#imp13").val()
+                    };
+
+
+                    var subtotalT = 0;
+                    var descuentoT = 0;
+                    var impuestoT = 0;
+                    var totalT = 0;
+                    subtotalT = parseFloat(detalle.SubTotal);
+                    descuentoT = parseFloat(detalle.Descuento);
+                    impuestoT = parseFloat(detalle.Impuesto);
+                    detalle.Total = (subtotalT - descuentoT )+ impuestoT
+                     ProdCadena.push(detalle);
+                    totalT = parseFloat(detalle.Total);
+                    var impuesto1T = parseFloat(detalle.Impuesto1);
+                    var impuesto2T = parseFloat(detalle.Impuesto2);
+                    var impuesto4T = parseFloat(detalle.Impuesto4);
+                    var impuesto8T = parseFloat(detalle.Impuesto8);
+                    var impuesto13T = parseFloat(detalle.Impuesto13);
+
+
+
+                    subtotal += subtotalT;
+                    descuentos += descuentoT;
+                    impuestos += impuestoT;
+
+                    totalComprobante += totalT;
+                    impuesto1 += impuesto1T;
+                    impuesto2 += impuesto2T;
+                    impuesto4 += impuesto4T;
+                    impuesto8 += impuesto8T;
+                    impuesto13 += impuesto13T;
+
+                    $("#subtotal").text(formatoDecimal(parseFloat(subtotal).toFixed(2)));
+                    $("#descuento").text(formatoDecimal(parseFloat(descuentos).toFixed(2)));
+                    $("#impuesto").text(formatoDecimal(parseFloat(impuestos).toFixed(2)));
+                    $("#total").text(formatoDecimal(parseFloat(totalComprobante).toFixed(2)));
+
+                    $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
+                    $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
+                    $("#impuesto4").text(formatoDecimal(parseFloat(impuesto4).toFixed(2)));
+                    $("#impuesto8").text(formatoDecimal(parseFloat(impuesto8).toFixed(2)));
+                    $("#impuesto13").text(formatoDecimal(parseFloat(impuesto13).toFixed(2)));
+                    LimpiarDatos();
+
+                   RellenaTabla();
+                }
+
+        }
+        function LimpiarDatos() {
+            $("#Proveedor").text("");
+
+
+            $("#CHacienda").text("");
+            $("#FechaFac").text("");
+
+
+            $("#SubTotal").text("");
+
+            $("#Impuesto").text("");
+            $("#Descuento").text("");
+            //$("#idTipoGasto").val("");
+
+            $("#imp1").val(0);
+            $("#imp2").val(0);
+            $("#imp4").val(0);
+            $("#imp8").val(0);
+            $("#imp13").val(0);
+            $("#Busqueda").val("")
+
+           // $("#Busqueda").val("NULL").trigger('change.select2');
+
+        }
+
+        function RellenaTabla() {
+            var sOptions = '';
+
+            $("#tbody").html('');
+
+            for (var i = 0; i < ProdCadena.length; i++) {
+                sOptions += '<tr>';
+
+                sOptions += '<td align="center" style="padding-top:13px;">    <a style="margin-left: -1%; position: inherit !important;" onclick = "javascript: EliminaProducto(' + i + ')" title="Eliminar" class="fa fa-trash icono"></a> ';
+                sOptions += '<td align="center" style="padding-top:15px;">  <p style="font-size:13px;">' + ProdCadena[i].CHacienda + '</p></td>';
+                sOptions += '<td align="center" style="padding-top:15px;">  <p style="font-size:13px;">' + ProdCadena[i].Fecha + '</p></td>';
+                sOptions += '<td align="left" style="padding-top:15px;">  <p style="font-size:13px;">' + ProdCadena[i].Proveedor + '</p></td>';
+                sOptions += '<td align="right" style="padding-top:13px;">  <p style="font-size:13px;">' + formatoDecimal(ProdCadena[i].Total) + '</p></td>';
+
+
+
+
+
+                sOptions += '</tr>'
+            }
+            $("#tbody").html(sOptions);
+        }
+        function EliminaProducto(campo) {
+            console.log("campo: " + campo);
+            Swal.fire({
+                title: '¿Desea eliminar esta factura?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Aceptar`,
+                denyButtonText: `Cancelar`,
+                customClass: {
+                    confirmButton: 'swalBtnColor',
+                    denyButton: 'swalDeny'
+                },
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    console.log(ProdCadena[campo]);
+                    var subtotalT = 0;
+                    var descuentoT = 0;
+                    var impuestoT = 0;
+
+                    subtotalT = parseFloat(ProdCadena[campo].SubTotal);
+                    descuentoT = parseFloat(ProdCadena[campo].Descuento);
+                    impuestoT = parseFloat(ProdCadena[campo].Impuesto);
+
+                    totalT = parseFloat(ProdCadena[campo].Total);
+
+                    subtotal -= subtotalT;
+                    descuentos -= descuentoT;
+                    impuestos -= impuestoT;
+
+                    totalComprobante -= totalT;
+                    var impuesto1T = parseFloat(ProdCadena[campo].Impuesto1);
+                    var impuesto2T = parseFloat(ProdCadena[campo].Impuesto2);
+                    var impuesto4T = parseFloat(ProdCadena[campo].Impuesto4);
+                    var impuesto8T = parseFloat(ProdCadena[campo].Impuesto8);
+                    var impuesto13T = parseFloat(ProdCadena[campo].Impuesto13);
+
+
+                    impuesto1 -= impuesto1T;
+                    impuesto2 -= impuesto2T;
+                    impuesto4 -= impuesto4T;
+                    impuesto8 -= impuesto8T;
+                    impuesto13 -= impuesto13T;
+
+                    $("#subtotal").text(formatoDecimal(subtotal.toFixed(2)));
+                    $("#descuento").text(formatoDecimal(descuentos.toFixed(2)));
+                    $("#impuesto").text(formatoDecimal(impuestos.toFixed(2)));
+                    $("#total").text(formatoDecimal(totalComprobante.toFixed(2)));
+
+                    $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
+                    $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
+                    $("#impuesto4").text(formatoDecimal(parseFloat(impuesto4).toFixed(2)));
+                    $("#impuesto8").text(formatoDecimal(parseFloat(impuesto8).toFixed(2)));
+                    $("#impuesto13").text(formatoDecimal(parseFloat(impuesto13).toFixed(2)));
+
+                    ProdCadena.splice(campo, 1);
+                    RellenaTabla();
+
+                }
+            })
+
+        }
+
+        @*   function escogeCodigo(i) {
+
+                $("#CodPro").val(ProdCadena[i].codPro).trigger('change');
+
+                $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '@Url.Page("Nuevo", "Producto")',
+                    data: { id: ProdCadena[i].codPro },
+            success: function (result) {
+
+                console.log(result);
+
+                if (result.codPro != "") {
+                    $("#Nombre").val(result.nomPro);
+                    $("#PrecioVenta").text( result.costoPro.toFixed(2)) ;
+                    $("#Costo").val(ProdCadena[i].PreVta);
+                    $("#UnidadMedida").text(result.uniMed);
+                    $("#Cantidad").val(ProdCadena[i].cantidad);
+                    $("#Descuento").val(ProdCadena[i].descuento),
+                        $("#Impuesto").val(ProdCadena[i].impuesto)
+                    bandera = true;
+                    idP = i;
+                    //EliminaProducto(i,i);
+
+
+
+                    //$("#Cantidad").val(result.existencia);
+                }
+
+            },
+            beforeSend: function () {
+
+            },
+            complete: function () {
+
+            }
+        });
+        }
+
+
+
+
+
+
+
+
+
+       *@
+
+        function validar(enc) {
+            console.log(enc);
+            if (enc.SubTotal == "" || enc.SubTotal == null) {
+
+                return false;
+            } else if (enc.FechaInicial == "" || enc.FechaInicial == null) {
+                return false;
+            } else if (ProdCadena.length == 0)
+            {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+
+        function Generar() {
+
+            var EncCompras =
+            {
+                idCierre: $("#idCierre").val(),
+                Periodo: $("#Periodo").val(),
+
+                FechaInicial: $("#FechaI").val(),
+                FechaFinal: $("#FechaFinal").val(),
+                SubTotal: $("#subtotal").text(),
+
+                Impuestos: $("#impuesto").text(),
+                Descuento: $("#descuento").text(),
+                Impuesto1: $("#impuesto1").text() ,
+                Impuesto2: $("#impuesto2").text()  ,
+                Impuesto4: $("#impuesto4").text(),
+                Impuesto8: $("#impuesto8").text(),
+                Impuesto13: $("#impuesto13").text(),
+                Total: $("#total").text()
+            };
+
+            var Cadena = [];
+
+            for (var i = 0; i < ProdCadena.length; i++) {
+                Cadena.push(parseInt(ProdCadena[i].id));
+            }
+
+
+            var DetCompras = Cadena;
+
+
+            var recibido = {
+                EncCompras,
+                DetCompras
+            }
+
+
+            console.log(JSON.stringify(recibido));
+
+            if (validar(EncCompras)) {
+
+                Swal.fire({
+                    title: '¿Desea enviar a guardar esta liquidación?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var recibidos = JSON.stringify(recibido);
+
+                        $.ajax({
+                            type: 'POST',
+
+                            url: '@Url.Page("Editar", "Generar")',
+                            dataType: 'text',
+                            data: { recibidos: recibidos.toString() },
+                            headers: {
+                                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (json) {
+
+                                $("#divProcesando").hide();
+
+                                if ($('.modal-backdrop').is(':visible')) {
+
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').hide();
+                                }
+                                console.log("resultado " + json);
+                                if (json == "true") {
+                                    Swal.fire({
+                                        title: "Ha sido generado con éxito",
+
+                                        icon: 'success',
+                                        showCancelButton: false,
+
+                                        confirmButtonText: 'OK',
+                                        customClass: {
+                                            confirmButton: 'swalBtnColor',
+
+                                        },
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            location.reload();
+                                        }
+                                    })
+
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Ha ocurrido un error al intentar guardar'
+
+                                    })
+                                }
+                            },
+
+                            beforeSend: function (xhr) {
+
+                                $("#divProcesando").modal("show");
+                            },
+                            complete: function () {
+
+                            },
+                            error: function (error) {
+
+                            }
+                        });
+                    }
+                }
+               )
+             
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Pareciera que aún falta un campo por llenar'
+
+                });
+            }
+
+        }
+
+
+        function EnviarRevision() {
+            Swal.fire({
+                title: '¿Desea enviar a revisión esta liquidación?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Aceptar`,
+                denyButtonText: `Cancelar`,
+                customClass: {
+                    confirmButton: 'swalBtnColor',
+                    denyButton: 'swalDeny'
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'GET',
+
+                        url: '@Url.Page("Editar", "Estado")',
+                        dataType: 'text',
+                        data: { idB: $("#idCierre").val() },
+                        headers: {
+                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (json) {
+
+                            $("#divProcesando").hide();
+
+                            if ($('.modal-backdrop').is(':visible')) {
+
+                                $('body').removeClass('modal-open');
+                                $('.modal-backdrop').hide();
+                            }
+                            console.log("resultado " + json);
+                            if (json == "true") {
+                                Swal.fire({
+                                    title: "Ha sido enviado con éxito",
+
+                                    icon: 'success',
+                                    showCancelButton: false,
+
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'swalBtnColor',
+
+                                    },
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = window.location.href.split("/Editar")[0];
+                                    }
+                                })
+
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Ha ocurrido un error al intentar enviar'
+
+                                })
+                            }
+                        },
+
+                        beforeSend: function (xhr) {
+
+                            $("#divProcesando").modal("show");
+                        },
+                        complete: function () {
+
+                        },
+                        error: function (error) {
+
+                        }
+                    });
+                }
+            })
+
+        }
+
+        const formatter = new Intl.NumberFormat('es-CR', {
+            style: 'currency',
+            currency: 'CRC',
+            minimumFractionDigits: 0
+        })
+    </script>
+
+}
+@using Newtonsoft.Json;
+
+<div class="row">
+    <div class="col-sm-6">
+        <div class="ibox ">
+            <input hidden id="Liquidacion" value="@JsonConvert.SerializeObject(Model.Objeto)" />
+            <div class="ibox-content">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input id="idCierre" hidden />
+                <div class="row">
+                    <div class="col-sm-6">
+
+                        <label class="col-form-label">Periodo:</label>
+                        <div class="form-group row">
+                            <div class="col-sm-8">
+
+                                <input type="text" readonly value="@Model.Periodo" id="Periodo" class="form-control">
+                            </div>
+                        </div>
+
+                        <label class="col-form-label">Fecha Inicial:</label>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <input type="date" readonly asp-for="filtro.FechaInicio" id="FechaI" class="form-control">
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <label class="col-form-label">Usuario:</label>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <input type="text" readonly id="Cliente" value="@Model.Usuario.Nombre" class="form-control">
+
+                            </div>
+                        </div>
+                        <label class="col-form-label">Fecha Final:</label>
+                        <div class="form-group row">
+                            <div class="col-sm-12">
+                                <input type="date" readonly asp-for="filtro.FechaFinal" id="FechaFinal" class="form-control">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+        <div class="ibox">
+
+            <div class="ibox-content">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label class="col-form-label">Factura:</label>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <input id="Busqueda" class="form-control" type="number" />
+
+                            </div>
+                            <div class="col-sm-3">
+
+                                <button title="Buscar" type="submit" class="btn btn btn-primary" onclick="javascript: onChangeProducto();"> <i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+
+                        <input hidden id="sub" type="number" />
+                        <input hidden id="desc" type="number" />
+                        <input hidden id="imp" type="number" />
+
+                        <input hidden id="imp1" type="number" />
+                        <input hidden id="imp2" type="number" />
+                        <input hidden id="imp4" type="number" />
+                        <input hidden id="imp8" type="number" />
+                        <input hidden id="imp13" type="number" />
+                        <label id="Existencia" style="color: red;"> </label>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Proveedor:</label>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label id="Proveedor" style="line-height: 32px;">
+                                        </label>
+
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Consecutivo:</label>
+
+                                    </div>
+                                    <div class="col-sm-12" style="text-align: left;">
+                                        <label id="CHacienda" style="line-height: 32px;">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Descuento:</label>
+
+                                    </div>
+                                    <div class="col-sm-6" style="text-align: right;">
+                                        <label id="Descuento" style="line-height: 32px;">
+                                        </label>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-sm-6">
+
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+
+                                        <label class="col-form-label">Fecha:</label>
+                                        <input readonly hidden id="id" />
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label id="FechaFac" style="line-height: 32px;">
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+
+                                        <label class="col-form-label">SubTotal:</label>
+                                    </div>
+                                    <div class="col-sm-6" style="text-align: right;">
+                                        <label id="SubTotal" style="line-height: 32px;">
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Impuesto:</label>
+
+                                    </div>
+                                    <div class="col-sm-6" style="text-align: right;">
+                                        <label id="Impuesto" style="line-height: 32px;">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-6">
+
+
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-12" style="text-align: center;">
+                <a title="Eliminar" onclick="javascript: LimpiarDatos();" style="width: 25%;" class="btn btnpage">Cancelar</a>&nbsp;
+                <a title="Agregar" id="Agregar" onclick="javascript: InsertarProductoTabla();" style=" color: #fff; width: 25%;" class="btn btn-primary">Asignar</a>
+            </div>
+        </div>
+
+        <br />
+        <div class="ibox">
+            <div class="row">
+                <div class="col-sm-12">
+                    <label class="col-form-label">Observación:</label>
+                </div>
+                <div class="col-sm-12">
+                    <textarea rows="5"  class="form-control" asp-for="Liquidacion.EncCierre.Observacion" readonly></textarea>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-sm-6">
+        <div class="ibox">
+
+            <div class="ibox-content lista">
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="table-responsive tableFixHead" style=" overflow-y:scroll;    z-index: 5; height: 300px;">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th align="center" style=" text-align: center;"><h3>Eliminar</h3></th>
+                                        <th align="center" style=" text-align: center;"><h3>Cons. Hacienda</h3></th>
+                                        <th align="center" style=" text-align: center;"><h3>Fecha </h3></th>
+                                        <th align="center" style=" text-align: center;"><h3>Proveedor</h3></th>
+                                        <th align="center" style=" text-align: center;"><h3>Total</h3></th>
+
+
+                                    </tr>
+
+                                </thead>
+                                <tbody id="tbody">
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-6">
+                    </div>
+                    <div class="col-sm-6" style="text-align: right;">
+                        <div class="row">
+
+                            <div class="col-sm-12">
+
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table; font-weight: 500 !important; font-style: normal;">SubTotal:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="subtotal" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+
+                                            <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Descuento:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="descuento" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Impuesto:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="impuesto" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+
+                                            <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 1:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 2:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 4:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="impuesto4" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 8:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="impuesto8" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 13:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Total:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="total" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div class="d-flex justify-content-end">
+            <button onclick="javascript: Generar();" class="btn btn-w-m btn-primary" id="GuardarCambios" title="Guardar">Guardar Cambios</button> &nbsp;
+            <button onclick="javascript: EnviarRevision();" id="btnEnviarRevision" class="btn btn-w-m btn-success" title="Enviar a Revisión">Enviar a Revisión</button>
+        </div>
+    </div>
+</div>

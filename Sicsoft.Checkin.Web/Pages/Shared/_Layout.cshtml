@@ -10,7 +10,9 @@
     <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="~/lib/animate.css/animate.min.css" />
     @await RenderSectionAsync("styles", false)
-
+    @*<link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Karantina:wght@300;400;700&display=swap" rel="stylesheet">*@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
     <link rel="stylesheet" href="~/css/inspinia.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/checksboxes.css" />
@@ -98,7 +100,7 @@
 
                 </div>
                 <div>
-                    ©2020, SWISS QUOTE BROKER, Todos los derechos reservados
+                    ©@DateTime.Now.Year, Gestión de Gastos, Todos los derechos reservados
                 </div>
             </div>
 

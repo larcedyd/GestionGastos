@@ -1,0 +1,241 @@
+﻿@page
+@model InversionGloblalWeb.Pages.Liquidaciones.IndexModel
+@{
+    ViewData["Title"] = "Liquidaciones";
+}
+
+@section Title{
+    <h2><i></i> @ViewData["Title"]</h2>
+}
+@using System.Globalization;
+@{
+    NumberFormatInfo formato = new CultureInfo("en-US").NumberFormat;
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+
+
+}
+@section breadcrumb{
+    <li class="breadcrumb-item">
+        <a>Liquidaciones</a>
+    </li>
+
+    <li class="breadcrumb-item active">
+        <strong>Resumen </strong>
+    </li>
+}
+ 
+@section TitleAction{
+    <a asp-page="Nuevo" class="btn btn-primary" title="Agregar"><i class="fa fa-plus"></i> Asignar</a>
+}
+@section styles{
+    <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2-bootstrap4.min.css" />
+    <link href="~/lib/dropzone/basic.css" rel="stylesheet" />
+    <link href="~/lib/dropzone/dropzone.css" rel="stylesheet" />
+    <link href="~/lib/iCheck/skins/square/green.css" rel="stylesheet" />
+    <link href="~/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css">
+    <style>
+        .tableFixHead th {
+            position: sticky;
+            top: 0;
+            background: white;
+        }
+    </style>
+
+}
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    <script src="~/lib/dropzone/dropzone.js"></script>
+    <script src="~/lib/iCheck/icheck.js"></script>
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            jQuery(document).ready(function ($) {
+                $(document).ready(function () {
+                    $('.mi-selector').select2();
+                });
+            });
+            $(".js-example-responsive").select2({
+                width: 'resolve',// need to override the changed default
+                height: 'resolve'
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 10,
+                responsive: true,
+                order: [[0, "desc"]]
+
+            });
+
+
+
+        });
+
+
+
+
+
+    </script>
+
+}
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+<div class="ibox ">
+
+
+    <div class="ibox-content lista">
+        <br />
+        <form method="get">
+            <div class="row">
+                &nbsp;
+                <div class="col-md-1"></div>
+                <div class="col-md-6">
+                    <div class="m-b-lg">
+                        <div class="form-row">
+                            <div class="input-group input-group-sm  col-md-12">
+                                <input asp-for="filtro.Texto" class="form-control" placeholder="Buscar liquidacion">
+                            </div>
+                        </div>
+
+
+                        <div class="">
+
+
+
+                            <p style="font-size:14px;">Se encontraron @Model.Objeto.Length registros de liquidaciones.</p>
+
+
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="col-md-3">
+
+
+                    <select asp-for="filtro.Estado" id="idEstado" class="form-control  mi-selector">
+                        <option value="NULL" selected>-Estado-</option>
+
+
+                        <option value="P">Abiertas</option>
+                        <option value="A">Aprobadas</option>
+                        <option value="R">Rechazadas</option>
+                        <option value="E">Espera</option>
+
+                    </select>
+
+                </div>
+                <div class="col-md-1">
+                    <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </form>
+        <div class="table-responsive" style="padding:inherit;">
+            <table class="table table-striped dataTables-example" style="width: 100%;">
+                <thead>
+                    <tr>
+
+                        <td align="center" style="width: 10%;"><h3>No. Liquidación</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Periodo</h3></td>
+                        <td align="center" style="width: 10%;"><h3>Fecha Asignación</h3></td>
+                        <td align="center" style="width: 20%;"><h3>Usuario</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Moneda</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Total</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Estado</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Acción</h3></td>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Objeto)
+                    {
+                    <tr>
+
+                        <td align="center" style="padding-top:15px;">
+                            <a style="font-size:15px;  " asp-page="./Observar" asp-route-id="@item.idCierre">
+                                @item.idCierre
+                            </a>
+                        </td>
+                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Periodo</a></td>
+                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.FechaCierre.ToString("dd/MM/yyyy")</a></td>
+                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NombreUsuario</a></td>
+                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> CRC</a></td>
+                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.Total, 2).ToString("N", formato)</a></td>
+                        <td align="center" style="padding-top:5px;">
+                            @switch (item.Estado)
+                            {
+                                case "P":
+                                    {
+                                        <button class="btn btn-info">Abierta</button>
+                                        break;
+                                    }
+
+                                case "A":
+                                    {
+                                        <button class="btn btn-success">Aceptado</button>
+                                        break;
+                                    }
+                                case "R":
+                                    {
+                                        <button class="btn btn-danger">Rechazado</button>
+                                        break;
+                                    }
+                                case "E":
+                                    {
+                                        <button class="btn btn-warning">Espera</button>
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        <button class="btn btn-warning">Abierta</button>
+                                        break;
+                                    }
+
+                            }
+
+
+                        </td>
+                        <td align="center" style="padding-top:15px;">
+                            @if (item.Estado == "P" || item.Estado == "R" )
+                            {
+                                <a asp-page="./Editar" asp-route-id="@item.idCierre" title="Editar" class="fa fa-edit icono"> </a>
+
+                            }
+                            &nbsp;
+                            @if(item.Estado == "E")
+                {
+
+                            <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
+                }
+
+                        </td>
+                    </tr>
+
+                    }
+                </tbody>
+            </table>
+
+        </div>
+        <a asp-page="Nuevo" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Asignar</a>
+    </div>
+</div>

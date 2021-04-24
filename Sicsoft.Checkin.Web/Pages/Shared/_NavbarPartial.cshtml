@@ -12,24 +12,16 @@
 @using Refit;
 @using Sicsoft.Checkin.Web.Models;
 @inject IHttpContextAccessor httpContextAccessor
-@*<dl>
-
-
-        @foreach (var item in httpContextAccessor.HttpContext.Request.RouteValues)
-        {
-            <dt>@item.Key</dt>
-          <dd>@item.Value</dd>
-       }
-    </dl>*@
+ 
 <style>
     .colorBlue {
-        background-color: rgb(250,91,53);
+        background-color: #57b846;
     }
 </style>
-<nav class="navbar-default navbar-static-side" role="navigation" style="background-color: rgb(250,91,53)">
+<nav class="navbar-default navbar-static-side" role="navigation" style="background-color: #57b846">
     <div class="sidebar-collapse">
         <ul class="nav metismenu" id="side-menu">
-            <li class="nav-header colorBlue" style="background-color: rgb(250,91,53)">
+            <li class="nav-header colorBlue" style="background-color: #57b846">
                 <div class="dropdown profile-element ">
                     <img alt="image" class="rounded-circle m-l-xl" src="~/img/profile_small.png">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -45,40 +37,68 @@
                 </div>
             </li>
 
-            <li class="active" style="background-color: rgb(250,91,53)">
+            <li class="active" style="background-color: #57b846;">
                 <a href="#" style="color: #fff">@*<img src="~/img/icoSitio.jpg" />*@ <span class="nav-label"> Administrar</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse" aria-expanded="false">
                     @{if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault() == "1")
                         {
-                            <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Planes".ToLower()) ? "active" : null) navBar">
-                                <a asp-page="/TiposPlanes/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Planes</span><span class="fa arrow"></span></a>
+                            <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("NormasReparto".ToLower()) ? "active" : null) navBar">
+                                <a asp-page="/NormasReparto/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Normas Reparto</span><span class="fa arrow"></span></a>
 
                             </li>
                         }
                     }
 
-                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Ejecutivos".ToLower())?"active":null) navBar">
-                        <a asp-page="/Ejecutivos/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Ejecutivos</span><span class="fa arrow"></span></a>
 
-                    </li>
+                    @{if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault() == "1")
+                        {
+                            <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("CuentasContables".ToLower()) ? "active" : null) navBar">
+                                <a asp-page="/CuentasContables/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Cuentas Contables</span><span class="fa arrow"></span></a>
 
-                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Inversionistas".ToLower())?"active":null) navBar">
-                        <a asp-page="/Inversionistas/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Inversionistas</span><span class="fa arrow"></span></a>
+                            </li>
+                        }
+                    }
 
-                    </li>
-                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Inversiones".ToLower())?"active":null) navBar">
-                        <a asp-page="/Inversiones/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Inversiones</span><span class="fa arrow"></span></a>
+                    @{if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault() == "1")
+                        {
+                            <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Gastos".ToLower()) ? "active" : null) navBar">
+                                <a asp-page="/Gastos/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Tipos Gastos</span><span class="fa arrow"></span></a>
 
-                    </li>
-                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Rendimientos".ToLower())?"active":null) navBar">
-                        <a asp-page="/Movimientos/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Rendimientos</span><span class="fa arrow"></span></a>
-
-                    </li>
+                            </li>
+                        }
+                    }
 
                 </ul>
             </li>
 
 
+            <li class="active" style="background-color: #57b846;">
+                <a href="#" style="color: #fff">@*<img src="~/img/icoSitio.jpg" />*@ <span class="nav-label"> Compras</span><span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level collapse" aria-expanded="false">
+
+                    @{if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault() == "1")
+                        {
+                            <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Liquidaciones".ToLower()) ? "active" : null) navBar">
+                                <a asp-page="/Liquidaciones/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Liquidacion</span><span class="fa arrow"></span></a>
+
+                            </li>
+                        }
+                    }
+
+                    @{if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault() == "1")
+                        {
+                            <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Compras".ToLower()) ? "active" : null) navBar">
+                                <a asp-page="/Compras/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Compras</span><span class="fa arrow"></span></a>
+
+                            </li>
+                        }
+                    }
+
+
+
+
+                </ul>
+            </li>
 
 
 

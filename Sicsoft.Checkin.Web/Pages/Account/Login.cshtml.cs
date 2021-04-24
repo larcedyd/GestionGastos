@@ -1,11 +1,13 @@
 ﻿using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using InversionGloblalWeb.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 using Refit;
 using Sicsoft.Checkin.Web.Models;
 using Sicsoft.Checkin.Web.Servicios;
@@ -43,11 +45,11 @@ namespace Sicsoft.Checkin.Web
             {
                 var resultado = await checkInService.Login(Input.Email, Input.Password); 
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-                identity.AddClaim(new Claim(ClaimTypes.Name, resultado.login1.Email));
+                identity.AddClaim(new Claim(ClaimTypes.Name, resultado.Email));
                 identity.AddClaim(new Claim(ClaimTypes.UserData, resultado.token));
-
-                identity.AddClaim(new Claim(ClaimTypes.Actor, resultado.login1.idUsuario.ToString()));
-                identity.AddClaim(new Claim(ClaimTypes.Role, resultado.login1.Rol.ToString()));
+                identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, resultado.CedulaJuridica));
+                identity.AddClaim(new Claim(ClaimTypes.Actor, resultado.idLogin.ToString()));
+                identity.AddClaim(new Claim(ClaimTypes.Role, resultado.idRol.ToString()));
 
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
@@ -66,7 +68,8 @@ namespace Sicsoft.Checkin.Web
             {
                 if(exception.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
-                    ModelState.AddModelError("Email", "Usuario o contraseña invalida");
+                    Errores error = JsonConvert.DeserializeObject<Errores>(exception.Content.ToString());
+                    ModelState.AddModelError("Email", error.Message);
                     return Page();
                 }
                

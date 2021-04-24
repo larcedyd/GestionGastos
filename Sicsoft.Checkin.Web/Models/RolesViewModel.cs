@@ -8,8 +8,10 @@ namespace InversionGloblalWeb.Models
 {
     public class RolesViewModel
     {
-        [Key]
+        
         public int idRol { get; set; }
-        public string NomRol { get; set; }
+
+        [StringLength(50)]
+        public string NombreRol { get; set; }
     }
 }

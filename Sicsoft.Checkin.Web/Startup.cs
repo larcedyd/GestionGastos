@@ -71,13 +71,13 @@ namespace Sicsoft.Checkin.Web
 
             var supportedCultures = new[]
             {
-                new CultureInfo("en-us"), //es-cr
+                new CultureInfo("es-cr"), //es-cr
 
             };
 
             app.UseRequestLocalization(new RequestLocalizationOptions
             {
-                DefaultRequestCulture = new RequestCulture("en-us"),
+                DefaultRequestCulture = new RequestCulture("es-cr"),
 
                 // Formatting numbers, dates, etc.
                 SupportedCultures = supportedCultures,
@@ -105,47 +105,63 @@ namespace Sicsoft.Checkin.Web
 
 
             services.AddRefitClient<ICrudApi<LoginDevolucion, int>>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/Login/iniciarSesion"));
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Login/Conectar"));
             // Add additional IHttpClientBuilder chained methods as required here:
             //  .AddHttpMessageHandler<AuthenticatedHttpClientHandler>()
             // .SetHandlerLifetime(TimeSpan.FromMinutes(2));
 
-            services.AddRefitClient<ICrudApi<RolesViewModel, int>>()
-           .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/Login/Roles"));
+       
 
           
 
             services.AddRefitClient<ICrudApi<LoginUsuario, int>>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/Login"));
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Login"))
+            .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
-            services.AddRefitClient<ICrudApi<LoginCambioClave, int>>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/Login/CambiarClave"));
+            services.AddRefitClient<ICrudApi<LoginUsuarioViewModel, int>>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Login"))
+            .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
-            services.AddRefitClient<ICrudApi<EjecutivosViewModel, int>>()
-            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/Ejecutivos"))
-            // Add additional IHttpClientBuilder chained methods as required here:
-             .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+            services.AddRefitClient<ICrudApi<RolesViewModel, int>>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Roles"))
+            .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
-            services.AddRefitClient<ICrudApi<InversionistasViewModel, int>>()
-     .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/Inversionistas"))
-      // Add additional IHttpClientBuilder chained methods as required here:
+            services.AddRefitClient<ICrudApi<NormasRepartoViewModel, int>>()
+            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/NormasReparto"))
+            .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
+            services.AddRefitClient<ICrudApi<GastosViewModel, int>>()
+          .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Gastos"))
+          .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
+            services.AddRefitClient<ICrudApi<CuentasContablesViewModel, int>>()
+         .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/CuentasContables"))
+         .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
+
+            services.AddRefitClient<ICrudApi<ComprasViewModel, int>>()
+        .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Compras"))
+        .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
+            services.AddRefitClient<ICrudApi<AsignacionViewModel, int>>()
+        .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Compras"))
+        .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
+            services.AddRefitClient<ICrudApi<GastosR, int>>()
+        .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Cierre"))
+        .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
+
+            services.AddRefitClient<ICrudApi<ListadoCierresViewModel, int>>()
+      .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Cierre"))
       .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
-            services.AddRefitClient<ICrudApi<TiposPlanes, int>>()
-    .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/Inversiones/Planes"))
-     .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+            //services.AddRefitClient<ICrudApi<EjecutivosViewModel, int>>()
+            //.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/Ejecutivos"))
+            //// Add additional IHttpClientBuilder chained methods as required here:
+            // .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
-            services.AddRefitClient<ICrudApi<InversionesViewModel, string>>()
-   .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/Inversiones"))
-    .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
-            services.AddRefitClient<ICrudApi<MovimientosViewModel, string>>()
-   .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/InversionesMovimientos"))
-    .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
-
-            services.AddRefitClient<ICrudApi<TiposPlanesViewModel, int>>()
-   .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/TiposPlanes"))
-    .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
 
             return services;

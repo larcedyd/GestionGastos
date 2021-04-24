@@ -7,7 +7,12 @@ namespace Sicsoft.CostaRica.Checkin.Web.Models
 {
     public class LoginDevolucion
     {
-        public LoginUsuario login1 { get; set; }
+        public int idLogin { get; set; }
+        public string NombreUsuario { get; set; }
+        public string CedulaJuridica { get; set; }
+        public string Email { get; set; }
+        public int idRol { get; set; }
+        public DateTime FechaVencimiento { get; set; }
         public string token { get; set; }
     }
 }

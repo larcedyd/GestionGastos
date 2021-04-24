@@ -6,23 +6,7 @@ using System.Threading.Tasks;
 
 namespace Sicsoft.Checkin.Web.Servicios
 {
-    //public interface ICrudApi<T, in TKey, TQuery> where T : class
-    //{
-    //    [Post("")]
-    //    Task Agregar([Body] T payload);
-
-    //    [Get("")]
-    //    Task<T[]> ObtenerLista(TQuery q);
-
-    //    [Get("/{key}")]
-    //    Task<T> ObtenerPorId(TKey key);
-
-    //    [Put("/{key}")]
-    //    Task Editar(TKey key, [Body]T payload);
-
-    //    [Delete("/{key}")]
-    //    Task Eliminar(TKey key);
-    //}
+     
 
     public interface ICrudApi<TEntity, TKey> where TEntity : class
     {
@@ -31,25 +15,32 @@ namespace Sicsoft.Checkin.Web.Servicios
 
         
 
-        [Post("/Insertar")]
+        [Post("")]
         Task<TEntity> Agregar([Body] TEntity payload);
         [Post("")]
         Task<TEntity> CambiarClave([Body] TEntity payload);
 
         [Get("")]
-        Task<TEntity> Login(string email, string pw);
+        Task<TEntity> Login(string email, string clave);
 
 
         [Get("")]
         Task<TEntity[]> ObtenerLista<TQuery>(TQuery q);
 
-       
+        [Get("/RealizarLecturaEmail")]
+        Task RealizarLecturaEmails();
 
-        
+        [Get("/LeerBandejaEntrada")]
+        Task LecturaBandejaEntrada();
+
+
 
 
         [Get("/Consultar")]
         Task<TEntity> ObtenerPorId(int id);
+
+        [Get("/Estado")]
+        Task<TEntity> CambiaEstado(int id, string Estado, string comentario = "");
 
         [Post("/{id}")]
         Task GenerarMovimientos(int id);
@@ -69,8 +60,6 @@ namespace Sicsoft.Checkin.Web.Servicios
         [Delete("/Eliminar")]
         Task EliminarEjecutivo (int idEjecutivo);
 
-
-       
-       // Task<TEntity> ObtenerPorId(TKey key);
+ 
     }
 }
