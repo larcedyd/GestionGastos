@@ -37,7 +37,10 @@
                         {
                             <li><a class="dropdown-item" asp-page="/SeguridadRolesModulos/Index">Roles</a></li>
                         }
-
+                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "7").FirstOrDefault()))
+                        {
+                            <li><a class="dropdown-item" asp-page="/Usuarios/Index">Usuarios</a></li>
+                        }
 
                     </ul>
 

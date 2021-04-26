@@ -11,46 +11,36 @@ using Newtonsoft.Json;
 using Refit;
 using Sicsoft.Checkin.Web.Servicios;
 
-namespace InversionGloblalWeb.Pages.Liquidaciones
+namespace InversionGloblalWeb.Pages.Usuarios
 {
     public class IndexModel : PageModel
     {
         private readonly IConfiguration configuration;
-        private readonly ICrudApi<ListadoCierresViewModel, int> service;
-        private readonly ICrudApi<UsuariosViewModel, int> users;
-
+        private readonly ICrudApi<UsuariosViewModel, int> service;
+        private readonly ICrudApi<RolesViewModel, int> roles;
 
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
 
         [BindProperty]
-        public ListadoCierresViewModel[] Objeto { get; set; }
+        public UsuariosViewModel[] Objeto { get; set; }
 
         [BindProperty]
-        public UsuariosViewModel[] Usuarios { get; set; }
+        public RolesViewModel[] Roles { get; set; }
 
-        public IndexModel(ICrudApi<ListadoCierresViewModel, int> service, ICrudApi<UsuariosViewModel, int> users)
+        public IndexModel(ICrudApi<UsuariosViewModel, int> service, ICrudApi<RolesViewModel, int> roles)
         {
             this.service = service;
-            this.users = users;
+            this.roles = roles;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
             try
             {
-
-                Usuarios = await users.ObtenerLista("");
-                var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
-
-                if(string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
-                {
-                  filtro.Codigo1 = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
-                     
-                }
-
+                // filtro.Codigo1 = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 Objeto = await service.ObtenerLista(filtro);
-
+                Roles = await roles.ObtenerLista("");
 
                 return Page();
             }
@@ -60,6 +50,20 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 ModelState.AddModelError(string.Empty, error.Message);
 
                 return Page();
+            }
+        }
+        public async Task<IActionResult> OnGetEliminar(string id)
+        {
+            try
+            {
+                var ids = Convert.ToInt32(id);
+                await service.Eliminar(ids);
+
+                return new JsonResult(true);
+            }
+            catch (ApiException ex)
+            {
+                return new JsonResult(false);
             }
         }
     }

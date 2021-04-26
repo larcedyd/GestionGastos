@@ -22,6 +22,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         private readonly ICrudApi<LoginUsuarioViewModel, int> usuario;
         private readonly ICrudApi<GastosViewModel, int> gastos;
         private readonly ICrudApi<GastosR, int> liquidaciones;
+        private readonly ICrudApi<ComprasViewModel, int> compras;
+
         [BindProperty(SupportsGet = true)]
         public ComprasViewModel[] Objeto { get; set; }
 
@@ -47,12 +49,13 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
 
         public NuevoModel(ICrudApi<ComprasViewModel, int> service, ICrudApi<LoginUsuarioViewModel, int> usuario, ICrudApi<GastosViewModel, int> gastos,
-            ICrudApi<GastosR, int> liquidaciones)
+            ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> compras)
         {
             this.gastos = gastos;
             this.service = service;
             this.usuario = usuario;
             this.liquidaciones = liquidaciones;
+            this.compras = compras;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -74,6 +77,9 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Usuario = Usuarios.Where(a => a.id == idLogin).FirstOrDefault();
 
                 Gastos = await gastos.ObtenerLista("");
+
+                await compras.RealizarLecturaEmails();
+                await compras.LecturaBandejaEntrada();
 
                 return Page();
             }

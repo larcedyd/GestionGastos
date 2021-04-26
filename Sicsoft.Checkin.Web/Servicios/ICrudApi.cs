@@ -41,7 +41,7 @@ namespace Sicsoft.Checkin.Web.Servicios
         Task<TEntity> ObtenerPorId(int id);
 
         [Get("/Estado")]
-        Task<TEntity> CambiaEstado(int id, string Estado, string comentario = "");
+        Task<TEntity> CambiaEstado(int id, string Estado, string comentario = "", int idLoginAceptacion = 0);
 
         [Post("/{id}")]
         Task GenerarMovimientos(int id);

@@ -205,7 +205,22 @@
     </script>
 
 }
-
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
 <div class="row" style="text-align: center;">
     <div class="col-sm-1"></div>
     <div class="col-sm-10">
@@ -273,7 +288,7 @@
 
 
                     </div>
-                   
+
                 </div>
 
             </div>
@@ -345,8 +360,15 @@
                             <div class="col-sm-8">
                                 @if (Model.Liquidacion.EncCierre.Estado == "E")
                                 {
+                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
+                                    {
 
-                                    <textarea rows="5" class="form-control" id="Comentario" asp-for="Liquidacion.EncCierre.Observacion"></textarea>
+                                        <textarea rows="5" class="form-control" id="Comentario" asp-for="Liquidacion.EncCierre.Observacion"></textarea>
+                                    }
+                                    else
+                                    {
+                                        <textarea rows="5" class="form-control" id="Comentario" asp-for="Liquidacion.EncCierre.Observacion" readonly></textarea>
+                                    }
                                 }
                                 else
                                 {
@@ -368,7 +390,7 @@
 
                                             </td>
                                             <td>
-                                                <label id="subtotal" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.SubTotal.Value,2)</label>
+                                                <label id="subtotal" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.SubTotal.Value, 2).ToString("N", formato)</label>
                                             </td>
 
                                         </tr>
@@ -379,7 +401,7 @@
 
                                             </td>
                                             <td>
-                                                <label id="descuento" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Descuento.Value, 2)</label>
+                                                <label id="descuento" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Descuento.Value, 2).ToString("N", formato)</label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -389,7 +411,7 @@
 
                                             </td>
                                             <td>
-                                                <label id="impuesto" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuestos.Value, 2)</label>
+                                                <label id="impuesto" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuestos.Value, 2).ToString("N", formato)</label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -399,7 +421,7 @@
 
                                             </td>
                                             <td>
-                                                <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto1, 2)</label>
+                                                <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto1, 2).ToString("N", formato)</label>
                                             </td>
                                         </tr>
 
@@ -410,7 +432,7 @@
 
                                             </td>
                                             <td>
-                                                <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto2, 2)</label>
+                                                <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto2, 2).ToString("N", formato)</label>
                                             </td>
                                         </tr>
 
@@ -421,7 +443,7 @@
 
                                             </td>
                                             <td>
-                                                <label id="impuesto4" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto4, 2)</label>
+                                                <label id="impuesto4" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto4, 2).ToString("N", formato)</label>
                                             </td>
                                         </tr>
 
@@ -432,7 +454,7 @@
 
                                             </td>
                                             <td>
-                                                <label id="impuesto8" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto8, 2)</label>
+                                                <label id="impuesto8" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto8, 2).ToString("N", formato)</label>
                                             </td>
                                         </tr>
 
@@ -443,7 +465,7 @@
 
                                             </td>
                                             <td>
-                                                <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto13, 2)</label>
+                                                <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto13, 2).ToString("N", formato)</label>
                                             </td>
                                         </tr>
 
@@ -454,7 +476,7 @@
 
                                             </td>
                                             <td>
-                                                <label id="total" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Total.Value, 2)</label>
+                                                <label id="total" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Total.Value, 2).ToString("N", formato)</label>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -478,17 +500,20 @@
 
 <div class="row">
     <div class="col-sm-6">
-      
+
     </div>
     <div class="col-sm-6">
-        @if(Model.Liquidacion.EncCierre.Estado == "E")
+        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
             {
+                @if (Model.Liquidacion.EncCierre.Estado == "E")
+                {
 
-                <div class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-end">
 
-                    <button onclick="javascript: Aceptar();" class="btn btn-w-m btn-primary" id="btnAceptar" title="Aceptar">Aceptar</button> &nbsp;
-                    <button onclick="javascript: Rechazar();" id="btnRechazar" class="btn btn-w-m btn-danger" title="Rechazar">Rechazar</button>
-                </div>
+                        <button onclick="javascript: Aceptar();" class="btn btn-w-m btn-primary" id="btnAceptar" title="Aceptar">Aceptar</button> &nbsp;
+                        <button onclick="javascript: Rechazar();" id="btnRechazar" class="btn btn-w-m btn-danger" title="Rechazar">Rechazar</button>
+                    </div>
+                }
             }
-    </div>
+            </div>
 </div>

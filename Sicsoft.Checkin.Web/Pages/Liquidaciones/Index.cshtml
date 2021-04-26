@@ -24,7 +24,7 @@
         <strong>Resumen </strong>
     </li>
 }
- 
+
 @section TitleAction{
     <a asp-page="Nuevo" class="btn btn-primary" title="Agregar"><i class="fa fa-plus"></i> Asignar</a>
 }
@@ -97,6 +97,10 @@
 @using Refit;
 @using Sicsoft.Checkin.Web.Models;
 @inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+
 <div class="ibox ">
 
 
@@ -106,7 +110,7 @@
             <div class="row">
                 &nbsp;
                 <div class="col-md-1"></div>
-                <div class="col-md-6">
+                <div class="col-md-3">
                     <div class="m-b-lg">
                         <div class="form-row">
                             <div class="input-group input-group-sm  col-md-12">
@@ -144,6 +148,23 @@
                     </select>
 
                 </div>
+                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
+                    {
+                <div class="col-md-3">
+
+
+                        <select asp-for="filtro.Codigo1" id="idUsuario" class="form-control  mi-selector">
+                            <option value="0" selected>-Usuario-</option>
+
+                            @foreach (var item in Model.Usuarios)
+                            {
+                                <option value="@item.id">@item.id - @item.Nombre</option>
+                            }
+
+
+                        </select>
+                    </div>
+                    }
                 <div class="col-md-1">
                     <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>
                 </div>
@@ -169,67 +190,73 @@
 
                     @foreach (var item in Model.Objeto)
                     {
-                    <tr>
+                        <tr>
 
-                        <td align="center" style="padding-top:15px;">
-                            <a style="font-size:15px;  " asp-page="./Observar" asp-route-id="@item.idCierre">
-                                @item.idCierre
-                            </a>
-                        </td>
-                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Periodo</a></td>
-                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.FechaCierre.ToString("dd/MM/yyyy")</a></td>
-                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NombreUsuario</a></td>
-                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> CRC</a></td>
-                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.Total, 2).ToString("N", formato)</a></td>
-                        <td align="center" style="padding-top:5px;">
-                            @switch (item.Estado)
-                            {
-                                case "P":
+                            <td align="center" style="padding-top:15px;">
+                                <a style="font-size:15px;  " asp-page="./Observar" asp-route-id="@item.idCierre">
+                                    @item.idCierre
+                                </a>
+                            </td>
+                            <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Periodo</a></td>
+                            <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.FechaCierre.ToString("dd/MM/yyyy")</a></td>
+                            <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NombreUsuario</a></td>
+                            <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> CRC</a></td>
+                            <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.Total, 2).ToString("N", formato)</a></td>
+                            <td align="center" style="padding-top:5px;">
+                                @switch (item.Estado)
+                                {
+                                    case "P":
+                                        {
+                                            <button class="btn btn-info">Abierta</button>
+                                            break;
+                                        }
+
+                                    case "A":
+                                        {
+                                            <button class="btn btn-success">Aceptado</button>
+                                            break;
+                                        }
+                                    case "R":
+                                        {
+                                            <button class="btn btn-danger">Rechazado</button>
+                                            break;
+                                        }
+                                    case "E":
+                                        {
+                                            <button class="btn btn-warning">Espera</button>
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            <button class="btn btn-warning">Abierta</button>
+                                            break;
+                                        }
+
+                                }
+
+
+                            </td>
+                            <td align="center" style="padding-top:15px;">
+                                @if (item.Estado == "P" || item.Estado == "R")
+                                {
+                                    @if (item.idLogin == int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()))
                                     {
-                                        <button class="btn btn-info">Abierta</button>
-                                        break;
+                                        <a asp-page="./Editar" asp-route-id="@item.idCierre" title="Editar" class="fa fa-edit icono"> </a>
                                     }
 
-                                case "A":
+
+                                }
+                                &nbsp;
+                                @if (item.Estado == "E")
+                                {
+                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
                                     {
-                                        <button class="btn btn-success">Aceptado</button>
-                                        break;
+
+                                        <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
                                     }
-                                case "R":
-                                    {
-                                        <button class="btn btn-danger">Rechazado</button>
-                                        break;
-                                    }
-                                case "E":
-                                    {
-                                        <button class="btn btn-warning">Espera</button>
-                                        break;
-                                    }
-                                default:
-                                    {
-                                        <button class="btn btn-warning">Abierta</button>
-                                        break;
-                                    }
-
-                            }
-
-
-                        </td>
-                        <td align="center" style="padding-top:15px;">
-                            @if (item.Estado == "P" || item.Estado == "R" )
-                            {
-                                <a asp-page="./Editar" asp-route-id="@item.idCierre" title="Editar" class="fa fa-edit icono"> </a>
-
-                            }
-                            &nbsp;
-                            @if(item.Estado == "E")
-                {
-
-                            <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
-                }
-
-                        </td>
-                    </tr>
+                                }
+                                </td>
+                        </tr>
 
                     }
                 </tbody>

@@ -21,6 +21,9 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         private readonly ICrudApi<LoginUsuarioViewModel, int> usuario;
         private readonly ICrudApi<GastosViewModel, int> gastos;
         private readonly ICrudApi<GastosR, int> liquidaciones;
+        private readonly ICrudApi<ComprasViewModel, int> compras;
+
+
         [BindProperty(SupportsGet = true)]
         public ComprasViewModel[] Objeto { get; set; }
 
@@ -46,12 +49,13 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
 
         public EditarModel(ICrudApi<ComprasViewModel, int> service, ICrudApi<LoginUsuarioViewModel, int> usuario, ICrudApi<GastosViewModel, int> gastos,
-          ICrudApi<GastosR, int> liquidaciones)
+          ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> compras)
         {
             this.gastos = gastos;
             this.service = service;
             this.usuario = usuario;
             this.liquidaciones = liquidaciones;
+            this.compras = compras;
         }
 
         public async Task<IActionResult> OnGetAsync(string id)
@@ -90,7 +94,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 }
 
 
-
+                await compras.RealizarLecturaEmails();
+                await compras.LecturaBandejaEntrada();
 
                 //  Gastos = await gastos.ObtenerLista("");
 

@@ -66,7 +66,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         {
             try
             {
-                await liquidaciones.CambiaEstado(idB, "A", comentario);
+                await liquidaciones.CambiaEstado(idB, "A", comentario, int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()));
 
                 return new JsonResult(true);
             }
