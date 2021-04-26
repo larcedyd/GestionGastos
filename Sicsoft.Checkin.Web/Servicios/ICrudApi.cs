@@ -13,7 +13,8 @@ namespace Sicsoft.Checkin.Web.Servicios
         //[Post("")]
         //Task<TEntity> Agregar<TCreate>([Body] TCreate payload) where TCreate : class;
 
-        
+        [Post("")]
+        Task<TEntity[]> AgregarBulk([Body] TEntity[] payload);
 
         [Post("")]
         Task<TEntity> Agregar([Body] TEntity payload);

@@ -1,5 +1,4 @@
 ﻿@using Microsoft.AspNetCore.Http
-@using Microsoft.AspNetCore.Http
 @using System;
 @using System.Collections.Generic;
 @using System.IO;
@@ -12,7 +11,10 @@
 @using Refit;
 @using Sicsoft.Checkin.Web.Models;
 @inject IHttpContextAccessor httpContextAccessor
- 
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
+
 <style>
     .colorBlue {
         background-color: #57b846;
@@ -25,11 +27,19 @@
                 <div class="dropdown profile-element ">
                     <img alt="image" class="rounded-circle m-l-xl" src="~/img/profile_small.png">
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <span class="block m-t-xs font-bold" style="color: #fff">@User.Identity.Name</span>
+                        <span class="block m-t-xs font-bold" style="color: #fff">@User.Identity.Name <b class="caret"></b></span>
 
 
                     </a>
+                    <ul class="dropdown-menu animated fadeInRight m-t-xs" x-placement="bottom-start" style="position: absolute; top: 91px; left: 0px; will-change: top, left;">
 
+                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "6").FirstOrDefault()))
+                        {
+                            <li><a class="dropdown-item" asp-page="/SeguridadRolesModulos/Index">Roles</a></li>
+                        }
+
+
+                    </ul>
 
                 </div>
                 <div class="logo-element">
@@ -40,7 +50,7 @@
             <li class="active" style="background-color: #57b846;">
                 <a href="#" style="color: #fff">@*<img src="~/img/icoSitio.jpg" />*@ <span class="nav-label"> Administrar</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse" aria-expanded="false">
-                    @{if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault() == "1")
+                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "1").FirstOrDefault()))
                         {
                             <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("NormasReparto".ToLower()) ? "active" : null) navBar">
                                 <a asp-page="/NormasReparto/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Normas Reparto</span><span class="fa arrow"></span></a>
@@ -50,7 +60,7 @@
                     }
 
 
-                    @{if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault() == "1")
+                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "2").FirstOrDefault()))
                         {
                             <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("CuentasContables".ToLower()) ? "active" : null) navBar">
                                 <a asp-page="/CuentasContables/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Cuentas Contables</span><span class="fa arrow"></span></a>
@@ -59,7 +69,7 @@
                         }
                     }
 
-                    @{if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault() == "1")
+                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "3").FirstOrDefault()))
                         {
                             <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Gastos".ToLower()) ? "active" : null) navBar">
                                 <a asp-page="/Gastos/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Tipos Gastos</span><span class="fa arrow"></span></a>
@@ -76,7 +86,7 @@
                 <a href="#" style="color: #fff">@*<img src="~/img/icoSitio.jpg" />*@ <span class="nav-label"> Compras</span><span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level collapse" aria-expanded="false">
 
-                    @{if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault() == "1")
+                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "4").FirstOrDefault()))
                         {
                             <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Liquidaciones".ToLower()) ? "active" : null) navBar">
                                 <a asp-page="/Liquidaciones/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Liquidacion</span><span class="fa arrow"></span></a>
@@ -85,7 +95,7 @@
                         }
                     }
 
-                    @{if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault() == "1")
+                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "5").FirstOrDefault()))
                         {
                             <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Compras".ToLower()) ? "active" : null) navBar">
                                 <a asp-page="/Compras/Index"><span class="nav-label" id="InicioButton" style="color: #fff">Compras</span><span class="fa arrow"></span></a>

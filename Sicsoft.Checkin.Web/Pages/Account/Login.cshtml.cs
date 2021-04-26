@@ -43,13 +43,22 @@ namespace Sicsoft.Checkin.Web
             ActionResult response = Page();
             try
             {
-                var resultado = await checkInService.Login(Input.Email, Input.Password); 
+                var resultado = await checkInService.Login(Input.Email, Input.Password);
+                string str = "";
+
+                foreach(var item in resultado.Seguridad)
+                {
+                    str += item.CodModulo + "|";
+                }
+
+
                 var identity = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
                 identity.AddClaim(new Claim(ClaimTypes.Name, resultado.Email));
                 identity.AddClaim(new Claim(ClaimTypes.UserData, resultado.token));
                 identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, resultado.CedulaJuridica));
                 identity.AddClaim(new Claim(ClaimTypes.Actor, resultado.idLogin.ToString()));
                 identity.AddClaim(new Claim(ClaimTypes.Role, resultado.idRol.ToString()));
+                identity.AddClaim(new Claim("Roles",str));
 
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);

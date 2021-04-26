@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InversionGloblalWeb.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,5 +15,6 @@ namespace Sicsoft.CostaRica.Checkin.Web.Models
         public int idRol { get; set; }
         public DateTime FechaVencimiento { get; set; }
         public string token { get; set; }
+        public List<SeguridadRolesModulos> Seguridad { get; set; }
     }
 }
