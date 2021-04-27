@@ -1,9 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+
 using System.Security.Claims;
 using System.Threading.Tasks;
 using InversionGloblalWeb.Models;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Configuration;
@@ -70,6 +75,25 @@ namespace InversionGloblalWeb.Pages.Compras
             catch (ApiException ex)
             {
                 return new JsonResult(false);
+            }
+        }
+
+
+        public async Task<ActionResult> OnGetPDF(int id)
+        {
+            try
+            {
+                var factura = await service.ObtenerPorId(id);
+                PdfReader reader = new PdfReader(new MemoryStream(factura.PdfFac));
+                PdfStamper stamper = new PdfStamper(reader, new FileStream(factura.PdfFactura, FileMode.Create));
+
+
+                return new JsonResult(true);
+            }
+            catch (Exception ex)
+            {
+                byte[] all = null;
+                return new JsonResult(all);
             }
         }
     }

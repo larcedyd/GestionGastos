@@ -156,8 +156,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Impuesto8 = recibido.EncCompras.Impuesto8;
                 Liquidacion.EncCierre.Impuesto13 = recibido.EncCompras.Impuesto13;
                 Liquidacion.EncCierre.Total = recibido.EncCompras.Total;
+                Liquidacion.EncCierre.Estado = "P";
 
-                
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)
@@ -191,7 +191,75 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
             }
         }
 
-        
+        public async Task<IActionResult> OnPostGeneraryEnviar(string recibidos)
+        {
+            string error = "";
+
+
+            try
+            {
+
+                RecibidoC recibido = JsonConvert.DeserializeObject<RecibidoC>(recibidos);
+
+
+
+                Liquidacion = new GastosR();
+                Liquidacion.EncCierre = new EncCierreViewModel();
+                Liquidacion.DetCierre = new DetCierreViewModel[recibido.DetCompras.Length];
+
+
+                Liquidacion.EncCierre.Periodo = recibido.EncCompras.Periodo;
+                Liquidacion.EncCierre.idLogin = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
+                Liquidacion.EncCierre.Descuento = recibido.EncCompras.Descuento;
+
+                Liquidacion.EncCierre.FechaInicial = recibido.EncCompras.FechaInicial;
+                Liquidacion.EncCierre.FechaFinal = recibido.EncCompras.FechaFinal;
+                Liquidacion.EncCierre.SubTotal = recibido.EncCompras.SubTotal;
+                Liquidacion.EncCierre.Impuestos = recibido.EncCompras.Impuestos;
+                Liquidacion.EncCierre.Impuesto1 = recibido.EncCompras.Impuesto1;
+                Liquidacion.EncCierre.Impuesto2 = recibido.EncCompras.Impuesto2;
+                Liquidacion.EncCierre.Impuesto4 = recibido.EncCompras.Impuesto4;
+                Liquidacion.EncCierre.Impuesto8 = recibido.EncCompras.Impuesto8;
+                Liquidacion.EncCierre.Impuesto13 = recibido.EncCompras.Impuesto13;
+                Liquidacion.EncCierre.Total = recibido.EncCompras.Total;
+                Liquidacion.EncCierre.Estado = "E";
+
+                short cantidad = 1;
+
+                foreach (var item in recibido.DetCompras)
+                {
+                    Liquidacion.DetCierre[cantidad - 1] = new DetCierreViewModel();
+                    Liquidacion.DetCierre[cantidad - 1].idFactura = item;
+
+                    cantidad++;
+                }
+
+
+                error += " Antes de Agregar ";
+                var c = await liquidaciones.Agregar(Liquidacion);
+               
+                error += " DEspues de agregar";
+
+
+
+
+                return new JsonResult(true);
+            }
+            catch (ApiException ex)
+            {
+                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+                ModelState.AddModelError(string.Empty, errores.Message);
+                return new JsonResult(error);
+                //return new JsonResult(false);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+
+                return new JsonResult(false);
+            }
+        }
 
     }
 }

@@ -151,6 +151,25 @@
                      })
         }
 
+        function verPDF(idF) {
+             $.ajax({
+                        type: 'GET',
+                        dataType: 'json',
+                        url: '@Url.Page("Index", "PDF")',
+                        data: { id: idF },
+             success: function (result) {
+
+                            
+             },
+             beforeSend: function () {
+
+             },
+             complete: function () {
+
+             }
+                     })
+        }
+
 
     </script>
 
@@ -233,7 +252,7 @@
                     {
                     <tr>
 
-                        <td align="left" style="padding-top: 15px;"><a style="font-size:15px;">@item.ConsecutivoHacienda</a></td>
+                        <td align="left" style="padding-top: 15px;"><a style="font-size:15px;" onclick="javascript: verPDF('@item.id')">@item.ConsecutivoHacienda</a></td>
                         <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.FecFactura.Value.ToString("dd/MM/yyyy")</a></td>
                         <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NomProveedor</a></td>
                         <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NomCliente</a></td>

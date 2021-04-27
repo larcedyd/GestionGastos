@@ -114,13 +114,13 @@
             console.log("Estado " + Estado);
             if (Estado != "P") {
                 document.getElementById('btnEnviarRevision').disabled = true;
-            }  
+            }
 
             if (Estado != "P" && Estado != "R") {
                 document.getElementById('GuardarCambios').disabled = true;
             }
 
-            
+
 
             for (var i = 0; i < det.length; i++)
             {
@@ -643,7 +643,7 @@
                     }
                 }
                )
-             
+
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -731,6 +731,137 @@
             })
 
         }
+
+
+        //Generar y Enviar
+         function GeneraryEnviar() {
+
+            var EncCompras =
+            {
+                idCierre: $("#idCierre").val(),
+                Periodo: $("#Periodo").val(),
+
+                FechaInicial: $("#FechaI").val(),
+                FechaFinal: $("#FechaFinal").val(),
+                SubTotal: $("#subtotal").text(),
+
+                Impuestos: $("#impuesto").text(),
+                Descuento: $("#descuento").text(),
+                Impuesto1: $("#impuesto1").text() ,
+                Impuesto2: $("#impuesto2").text()  ,
+                Impuesto4: $("#impuesto4").text(),
+                Impuesto8: $("#impuesto8").text(),
+                Impuesto13: $("#impuesto13").text(),
+                Total: $("#total").text()
+            };
+
+            var Cadena = [];
+
+            for (var i = 0; i < ProdCadena.length; i++) {
+                Cadena.push(parseInt(ProdCadena[i].id));
+            }
+
+
+            var DetCompras = Cadena;
+
+
+            var recibido = {
+                EncCompras,
+                DetCompras
+            }
+
+
+            console.log(JSON.stringify(recibido));
+
+            if (validar(EncCompras)) {
+
+                Swal.fire({
+                    title: '¿Desea guardar y enviar a revisión esta liquidación?',
+                    showDenyButton: true,
+                    showCancelButton: false,
+                    confirmButtonText: `Aceptar`,
+                    denyButtonText: `Cancelar`,
+                    customClass: {
+                        confirmButton: 'swalBtnColor',
+                        denyButton: 'swalDeny'
+                    },
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var recibidos = JSON.stringify(recibido);
+
+                        $.ajax({
+                            type: 'POST',
+
+                            url: '@Url.Page("Editar", "GeneraryEnviar")',
+                            dataType: 'text',
+                            data: { recibidos: recibidos.toString() },
+                            headers: {
+                                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function (json) {
+
+                                $("#divProcesando").hide();
+
+                                if ($('.modal-backdrop').is(':visible')) {
+
+                                    $('body').removeClass('modal-open');
+                                    $('.modal-backdrop').hide();
+                                }
+                                console.log("resultado " + json);
+                                if (json == "true") {
+                                    Swal.fire({
+                                        title: "Ha sido generado con éxito",
+
+                                        icon: 'success',
+                                        showCancelButton: false,
+
+                                        confirmButtonText: 'OK',
+                                        customClass: {
+                                            confirmButton: 'swalBtnColor',
+
+                                        },
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            window.location.href = window.location.href.split("/Editar")[0];
+                                        }
+                                    })
+
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: 'Ha ocurrido un error al intentar guardar'
+
+                                    })
+                                }
+                            },
+
+                            beforeSend: function (xhr) {
+
+                                $("#divProcesando").modal("show");
+                            },
+                            complete: function () {
+
+                            },
+                            error: function (error) {
+
+                            }
+                        });
+                    }
+                }
+               )
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Pareciera que aún falta un campo por llenar'
+
+                });
+            }
+
+        }
+
 
         const formatter = new Intl.NumberFormat('es-CR', {
             style: 'currency',
@@ -1081,6 +1212,8 @@
         <div class="d-flex justify-content-end">
             <button onclick="javascript: Generar();" class="btn btn-w-m btn-primary" id="GuardarCambios" title="Guardar">Guardar Cambios</button> &nbsp;
             <button onclick="javascript: EnviarRevision();" id="btnEnviarRevision" class="btn btn-w-m btn-success" title="Enviar a Revisión">Enviar a Revisión</button>
+            &nbsp;
+            <button onclick="javascript: GeneraryEnviar();" class="btn btn-w-m btn-warning" title="Guardar y enviar a revisión">Guardar y Enviar a Revisión</button>
         </div>
     </div>
 </div>
