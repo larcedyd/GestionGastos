@@ -134,5 +134,10 @@ namespace InversionGloblalWeb.Models
         public decimal Impuesto4 { get; set; }
         public decimal Impuesto8 { get; set; }
         public decimal Impuesto13 { get; set; }
+        public byte[] PdfFac { get; set; }
+        public string ImagenBase64 { get; set; }
+
+        public bool RegimenSimplificado { get; set; }
+        public bool FacturaExterior { get; set; }
     }
 }

@@ -107,7 +107,14 @@
                         }
                     }
 
+                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "9").FirstOrDefault()))
+                        {
+                            <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Compras/Nuevo".ToLower()) ? "active" : null) navBar">
+                                <a asp-page="/Compras/Nuevo"><span class="nav-label" id="InicioButton" style="color: #fff">Incluir Factura</span><span class="fa arrow"></span></a>
 
+                            </li>
+                        }
+                    }
 
 
                 </ul>

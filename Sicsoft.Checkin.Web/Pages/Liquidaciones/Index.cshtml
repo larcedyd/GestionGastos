@@ -15,6 +15,22 @@
 
 
 }
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+}
 @section breadcrumb{
     <li class="breadcrumb-item">
         <a>Liquidaciones</a>
@@ -26,7 +42,13 @@
 }
 
 @section TitleAction{
+    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "9").FirstOrDefault()))
+    {
+        <a asp-page="/Compras/Nuevo" class="btn btn-primary" title="Agregar Factura"><i class="fa fa-plus"></i> Incluir Factura</a>
+    }
+    &nbsp;
     <a asp-page="Nuevo" class="btn btn-primary" title="Agregar"><i class="fa fa-plus"></i> Asignar</a>
+
 }
 @section styles{
     <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
@@ -84,22 +106,7 @@
     </script>
 
 }
-@using Microsoft.AspNetCore.Http
-@using System;
-@using System.Collections.Generic;
-@using System.IO;
-@using System.Linq;
-@using System.Security.Claims;
-@using System.Threading.Tasks;
-@using Microsoft.AspNetCore.Mvc;
-@using Microsoft.AspNetCore.Mvc.RazorPages;
-@using Microsoft.Extensions.Configuration;
-@using Refit;
-@using Sicsoft.Checkin.Web.Models;
-@inject IHttpContextAccessor httpContextAccessor
-@{
-    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
-}
+
 
 <div class="ibox ">
 
@@ -148,9 +155,9 @@
                     </select>
 
                 </div>
-                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
-                    {
-                <div class="col-md-3">
+                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
+                {
+                    <div class="col-md-3">
 
 
                         <select asp-for="filtro.Codigo1" id="idUsuario" class="form-control  mi-selector">
@@ -164,7 +171,7 @@
 
                         </select>
                     </div>
-                    }
+                }
                 <div class="col-md-1">
                     <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>
                 </div>
@@ -255,7 +262,7 @@
                                         <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
                                     }
                                 }
-                                </td>
+                            </td>
                         </tr>
 
                     }
