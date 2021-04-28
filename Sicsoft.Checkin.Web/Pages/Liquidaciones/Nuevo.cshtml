@@ -126,6 +126,10 @@
 
                     $("#Impuesto").text(formatoDecimal(parseFloat(result.totalImpuesto)));
                     $("#Descuento").text(formatoDecimal(parseFloat(result.totalDescuentos)));
+                    $("#tipoGasto").text(result.tipoGasto);
+                    console.log(result.pdfFactura);
+
+                    $("#adjunto").attr('href', result.pdfFactura);
                   //  $("#idTipoGasto").val(result.idTipoGasto).trigger('change.select2');;
 
                     $("#sub").val(result.totalVenta);
@@ -275,7 +279,8 @@
             $("#imp8").val(0);
             $("#imp13").val(0);
             $("#idBusqueda").val("")
-
+            $("#adjunto").attr('href', '');
+            $("#tipoGasto").text("");
            // $("#idBusqueda").val("NULL").trigger('change.select2');
 
         }
@@ -756,7 +761,16 @@
                                         </label>
                                     </div>
                                 </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Tipo Gasto:</label>
 
+                                    </div>
+                                    <div class="col-sm-6" style="text-align: right;">
+                                        <label id="tipoGasto" style="line-height: 32px;">
+                                        </label>
+                                    </div>
+                                </div>
 
                             </div>
                             <div class="col-sm-6">
@@ -792,6 +806,16 @@
                                     <div class="col-sm-6" style="text-align: right;">
                                         <label id="Impuesto" style="line-height: 32px;">
                                         </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label"></label>
+
+                                    </div>
+                                    <div class="col-sm-6" style="text-align: right;">
+                                        <a href="" target="_blank" id="adjunto">Mirar Adjunto</a>
                                     </div>
                                 </div>
                             </div>

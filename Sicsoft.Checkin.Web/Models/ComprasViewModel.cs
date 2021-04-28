@@ -126,7 +126,7 @@ namespace InversionGloblalWeb.Models
         public int? idNormaReparto { get; set; }
 
         public int? idTipoGasto { get; set; }
-
+        public string TipoGasto { get; set; }
         public int? idCierre { get; set; }
 
         public decimal Impuesto1 { get; set; }
