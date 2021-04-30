@@ -105,7 +105,7 @@ namespace InversionGloblalWeb.Pages.Compras
                     Objeto.DetCompras[cantidad - 1].ImpuestoMonto = item.ImpuestoMonto;
                     Objeto.DetCompras[cantidad - 1].MontoTotalLinea = item.MontoTotalLinea;
                     Objeto.DetCompras[cantidad - 1].MontoTotal = item.MontoTotalLinea;
-                    Objeto.DetCompras[cantidad - 1].SubTotal = (item.Cantidad * item.PrecioUnitario) - item.MontoDescuento;
+                    Objeto.DetCompras[cantidad - 1].SubTotal =  item.PrecioUnitario - item.MontoDescuento;
                     Objeto.DetCompras[cantidad - 1].idTipoGasto = item.idTipoGasto;
 
                     Objeto.DetCompras[cantidad - 1].UnidadMedida = "";

@@ -188,17 +188,17 @@
 @using Sicsoft.Checkin.Web.Models;
 @inject IHttpContextAccessor httpContextAccessor
 
-<div class="ibox ">
-
-
-    <div class="ibox-content lista">
-        <br />
+<div class="ibox">
+    <div class="ibox-content">
         <form method="get">
-            <div class="row">
-                &nbsp;
-                <div class="col-md-1"></div>
-                <div class="col-md-6">
-                    <div class="m-b-lg">
+            <h2>Filtros:</h2>
+
+            <div>
+                <div class="row">
+
+
+
+                    <div class="col-sm-6">
                         <div class="form-row">
                             <div class="input-group input-group-sm  col-md-12">
                                 <input asp-for="filtro.Texto" class="form-control" placeholder="Buscar Compras">
@@ -215,34 +215,96 @@
 
 
                         </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <select asp-for="filtro.CodMoneda" id="CodCajero" class="form-control  mi-selector">
+                            <option value="NULL" selected>-Moneda-</option>
+                            <option value="CRC">Colones</option>
+                            <option value="USD">Dólares</option>
+                            <option value="EUR">Euros</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-12">
+                        <br />
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control" id="FecInicial" type="date" asp-for="filtro.FechaInicio" />
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal" />
+                    </div>
+                    <div class="col-sm-12">
+                        <br />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                            Regimen Simplificado
+                            <input type="checkbox" id="anulada" asp-for="filtro.RegimeSimplificado" />
+                            <span class="check"></span>
+                        </label>
 
                     </div>
 
+                    <div class="col-md-4">
+                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                            Factura Exterior
+                            <input type="checkbox" id="cnTarjeta" asp-for="filtro.FacturaExterior" />
+                            <span class="check"></span>
+                        </label>
+
+                    </div>
+                    <div class="col-md-4">
+                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                            Facturas Sin Asignar
+                            <input type="checkbox" id="exentas" asp-for="filtro.Asignados" />
+                            <span class="check"></span>
+                        </label>
+
+                    </div>
+                  
+
+
+                    <div class="col-sm-12">
+                        <br />
+                    </div>
+
+
+
+
+
 
                 </div>
-                <div class="col-md-3">
-                    <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>
+                <div class="row">
+                    <div class="col-sm-6">
 
-
-
-                </div>
-                <div class="col-md-1">
-
+                    </div>
+                    <div class="col-sm-6" style="text-align: right;">
+                        <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>&nbsp;
+                        
+                    </div>
                 </div>
             </div>
         </form>
+    </div>
+</div>
+
+
+<div class="ibox ">
+
+
+    <div class="ibox-content lista">
         <div class="table-responsive" style="padding:inherit;">
             <table class="table table-striped dataTables-example" style="width: 100%;">
                 <thead>
                     <tr>
 
-                        <td align="center" style="width: 7%;"><h3>Consecutivo Hacienda</h3></td>
+                        <td align="center" style="width: 5%;"><h3>Consecutivo Hacienda</h3></td>
                         <td align="center" style="width: 6%;"><h3>Fecha</h3></td>
-                        <td align="center" style="width: 30%;"><h3>Proveedor</h3></td>
-                        <td align="center" style="width: 33%;"><h3>Cliente</h3></td>
+                        <td align="center" style="width: 13%;"><h3>Céd. Proveedor</h3></td>
+                        <td align="center" style="width: 47%;"><h3>Proveedor</h3></td>
                         <td align="center" style="width: 6%;"><h3>Moneda</h3></td>
-                        <td align="center" style="width: 6%;"><h3>Total</h3></td>
-                        <td align="center" style="width: 12%;"><h3>Acción</h3></td>
+                        <td align="center" style="width: 11%;"><h3>Total</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Estado</h3></td>
                     </tr>
 
                 </thead>
@@ -252,10 +314,10 @@
                     {
                     <tr>
 
-                        <td align="left" style="padding-top: 15px;"><a style="font-size:15px;" onclick="javascript: verPDF('@item.id')">@item.ConsecutivoHacienda</a></td>
+                        <td align="left" style="padding-top: 15px;"><a style="font-size:15px;" href="@item.PdfFactura" target="_blank">@item.ConsecutivoHacienda</a></td>
                         <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.FecFactura.Value.ToString("dd/MM/yyyy")</a></td>
+                        <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.CodProveedor</a></td>
                         <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NomProveedor</a></td>
-                        <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NomCliente</a></td>
                         <td align="center" style="padding-top:15px;">
                             <a style="font-size:15px;  ">
                             @item.CodMoneda
@@ -265,12 +327,22 @@
                         <td align="right" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato)</a></td>
 
 
-                        <td align="center" style="padding-top:15px;">
-            @*<a asp-page="./Editar" asp-route-id="@item.NumFactura" title="Editar" class="fa fa-edit icono"> </a> &nbsp;*@
-                           
-                            
+                        <td align="center" style="padding-top:5px;">
+                            @if (item.idCierre != 0 && item.idCierre != null)
+                            {
 
-        </td>
+
+                                <button class="btn btn-success">Asignado</button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-danger">No Asignado</button>
+                            }
+                             
+
+
+
+                        </td>
                     </tr>
 
                     }

@@ -46,7 +46,16 @@ namespace InversionGloblalWeb.Pages.Compras
                 await service.RealizarLecturaEmails();
                 await service.LecturaBandejaEntrada();
                 }
-                Objeto = await service.ObtenerLista(filtro);
+
+                DateTime time = new DateTime();
+
+                if(time == filtro.FechaInicio)
+                {
+                    filtro.FechaFinal = DateTime.Now;
+                    filtro.FechaInicio = filtro.FechaFinal.AddMonths(-1);
+                }
+
+                Objeto = await service.ObtenerListaCompras(filtro);
 
 
                 return Page();

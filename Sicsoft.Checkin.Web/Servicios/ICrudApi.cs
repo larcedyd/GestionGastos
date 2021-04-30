@@ -25,6 +25,9 @@ namespace Sicsoft.Checkin.Web.Servicios
         Task<TEntity> Login(string email, string clave);
 
 
+        [Get("/Listado")]
+        Task<TEntity[]> ObtenerListaCompras<TQuery>(TQuery q);
+
         [Get("")]
         Task<TEntity[]> ObtenerLista<TQuery>(TQuery q);
 

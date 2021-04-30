@@ -42,5 +42,6 @@ namespace InversionGloblalWeb.Models
         public int? CantidadRegistros { get; set; }
 
         public DateTime? FechaCierre { get; set; }
+        public string CodMoneda { get; set; }
     }
 }

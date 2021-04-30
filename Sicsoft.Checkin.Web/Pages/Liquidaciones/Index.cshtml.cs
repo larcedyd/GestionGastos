@@ -62,5 +62,22 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 return Page();
             }
         }
+
+        public async Task<IActionResult> OnGetEstado(int idB)
+        {
+            try
+            {
+                await service.CambiaEstado(idB, "P", "");
+
+                return new JsonResult(true);
+            }
+            catch (Exception ex)
+            {
+
+
+
+                return new JsonResult(ex.Message);
+            }
+        }
     }
 }

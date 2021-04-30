@@ -23,6 +23,7 @@ namespace InversionGloblalWeb.Models
         public decimal Impuesto13 { get; set; }
 
         public decimal Total { get; set; }
+        public string CodMoneda { get; set; }
     }
 
 }

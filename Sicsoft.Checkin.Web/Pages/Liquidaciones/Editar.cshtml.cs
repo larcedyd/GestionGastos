@@ -22,7 +22,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         private readonly ICrudApi<GastosViewModel, int> gastos;
         private readonly ICrudApi<GastosR, int> liquidaciones;
         private readonly ICrudApi<ComprasViewModel, int> compras;
-
+        private readonly ICrudApi<ComprasInsercionViewModel, int> insercionCompras;
 
         [BindProperty(SupportsGet = true)]
         public ComprasViewModel[] Objeto { get; set; }
@@ -46,16 +46,20 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
         [BindProperty]
         public LoginUsuarioViewModel Usuario { get; set; }
-
+        //Programacion para el modal de insercion
+        [BindProperty(SupportsGet = true)]
+        public ComprasInsercionViewModel Objeto1 { get; set; }
+        //Termina
 
         public EditarModel(ICrudApi<ComprasViewModel, int> service, ICrudApi<LoginUsuarioViewModel, int> usuario, ICrudApi<GastosViewModel, int> gastos,
-          ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> compras)
+          ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> compras, ICrudApi<ComprasInsercionViewModel, int> insercionCompras)
         {
             this.gastos = gastos;
             this.service = service;
             this.usuario = usuario;
             this.liquidaciones = liquidaciones;
             this.compras = compras;
+            this.insercionCompras = insercionCompras;
         }
 
         public async Task<IActionResult> OnGetAsync(string id)
@@ -80,8 +84,14 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 Usuario = Usuarios.Where(a => a.id == idLogin).FirstOrDefault();
                 ParametrosFiltros filt = new ParametrosFiltros();
-                filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 26);
-                filt.FechaFinal = filt.FechaInicio.AddMonths(1);
+
+
+
+                /*  filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 26);
+                  filt.FechaFinal = filt.FechaInicio.AddMonths(1);*/
+                filt.FechaInicio = filtro.FechaInicio;
+                filt.FechaFinal = filtro.FechaFinal;
+
                 //filt.Asignados = true;
                 var objetos = await service.ObtenerLista(filt);
 
@@ -97,7 +107,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 await compras.RealizarLecturaEmails();
                 await compras.LecturaBandejaEntrada();
 
-                //  Gastos = await gastos.ObtenerLista("");
+                  Gastos = await gastos.ObtenerLista("");
 
                 return Page();
             }
@@ -193,7 +203,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Impuesto13 = recibido.EncCompras.Impuesto13;
                 Liquidacion.EncCierre.Total = recibido.EncCompras.Total;
                 Liquidacion.EncCierre.Estado = "P";
-
+                Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)
@@ -262,7 +272,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Impuesto13 = recibido.EncCompras.Impuesto13;
                 Liquidacion.EncCierre.Total = recibido.EncCompras.Total;
                 Liquidacion.EncCierre.Estado = "E";
-
+                Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)
@@ -296,5 +306,102 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
             }
         }
 
+
+        //Programacion para inserta factura Manual
+        public async Task<IActionResult> OnPostInsertar(string recibidos)
+        {
+            string error = "";
+
+
+            try
+            {
+
+                ComprasRecibidoViewModel recibido = JsonConvert.DeserializeObject<ComprasRecibidoViewModel>(recibidos);
+
+
+
+                Objeto1 = new ComprasInsercionViewModel();
+                Objeto1.EncCompras = new EncComprasViewModel();
+                Objeto1.DetCompras = new DetComprasViewModel[recibido.DetCompras.Length];
+
+
+                Objeto1.EncCompras.ConsecutivoHacienda = recibido.EncCompras.ConsecutivoHacienda;
+                Objeto1.EncCompras.ClaveHacienda = recibido.EncCompras.ClaveHacienda;
+                Objeto1.EncCompras.NumFactura = recibido.EncCompras.NumFactura;
+
+                Objeto1.EncCompras.TipoIdentificacionCliente = recibido.EncCompras.TipoIdentificacionCliente;
+                Objeto1.EncCompras.CodProveedor = recibido.EncCompras.CodProveedor;
+                Objeto1.EncCompras.NomProveedor = recibido.EncCompras.NomProveedor;
+                Objeto1.EncCompras.FecFactura = recibido.EncCompras.FecFactura;
+                Objeto1.EncCompras.CodigoActividadEconomica = recibido.EncCompras.CodActividadEconomica;
+                Objeto1.EncCompras.CodMoneda = recibido.EncCompras.CodMoneda == "NULL" ? "CRC" : recibido.EncCompras.CodMoneda;
+                Objeto1.EncCompras.CodCliente = recibido.EncCompras.CodCliente;
+                Objeto1.EncCompras.NomCliente = recibido.EncCompras.NomCliente;
+                Objeto1.EncCompras.TotalImpuesto = recibido.EncCompras.TotalImpuesto;
+                Objeto1.EncCompras.TotalDescuentos = recibido.EncCompras.Impuesto1;
+                Objeto1.EncCompras.Impuesto1 = recibido.EncCompras.Impuesto1;
+                Objeto1.EncCompras.Impuesto2 = recibido.EncCompras.Impuesto2;
+                Objeto1.EncCompras.Impuesto4 = recibido.EncCompras.Impuesto4;
+                Objeto1.EncCompras.Impuesto8 = recibido.EncCompras.Impuesto8;
+                Objeto1.EncCompras.Impuesto13 = recibido.EncCompras.Impuesto13;
+                Objeto1.EncCompras.TotalComprobante = recibido.EncCompras.TotalComprobante;
+                Objeto1.EncCompras.ImagenBase64 = recibido.EncCompras.ImagenBase64;
+                Objeto1.EncCompras.TotalVenta = recibido.EncCompras.TotalVenta;
+                Objeto1.EncCompras.RegimenSimplificado = recibido.EncCompras.RegimenSimplificado;
+                Objeto1.EncCompras.FacturaExterior = recibido.EncCompras.FacturaExterior;
+                short cantidad = 1;
+
+                foreach (var item in recibido.DetCompras)
+                {
+                    Objeto1.DetCompras[cantidad - 1] = new DetComprasViewModel();
+                    Objeto1.DetCompras[cantidad - 1].CodPro = item.CodPro;
+                    Objeto1.DetCompras[cantidad - 1].NomPro = item.NomPro;
+                    Objeto1.DetCompras[cantidad - 1].Cantidad = item.Cantidad;
+                    Objeto1.DetCompras[cantidad - 1].PrecioUnitario = item.PrecioUnitario;
+                    Objeto1.DetCompras[cantidad - 1].MontoDescuento = item.MontoDescuento;
+                    Objeto1.DetCompras[cantidad - 1].ImpuestoTarifa = item.ImpuestoTarifa;
+                    Objeto1.DetCompras[cantidad - 1].ImpuestoMonto = item.ImpuestoMonto;
+                    Objeto1.DetCompras[cantidad - 1].MontoTotalLinea = item.MontoTotalLinea;
+                    Objeto1.DetCompras[cantidad - 1].MontoTotal = item.MontoTotalLinea;
+                    Objeto1.DetCompras[cantidad - 1].SubTotal = item.PrecioUnitario - item.MontoDescuento;
+                    Objeto1.DetCompras[cantidad - 1].idTipoGasto = item.idTipoGasto;
+
+                    Objeto1.DetCompras[cantidad - 1].UnidadMedida = "";
+
+                    cantidad++;
+                }
+
+
+
+                var resp = await insercionCompras.Agregar(Objeto1);
+
+                var obj = new
+                {
+                    success = true,
+                    resp = resp.EncCompras.id
+                };
+
+                return new JsonResult(obj);
+            }
+            catch (ApiException ex)
+            {
+                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+                ModelState.AddModelError(string.Empty, errores.Message);
+
+                return new JsonResult(error);
+                //return new JsonResult(false);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+                var obj = new
+                {
+                    success = false,
+                    resp = ex.Message
+                };
+                return new JsonResult(obj);
+            }
+        }
     }
 }

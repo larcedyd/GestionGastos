@@ -27,6 +27,7 @@ namespace InversionGloblalWeb.Models
         public string Estado { get; set; }
         public string Observacion { get; set; }
         public int idLoginAceptacion { get; set; }
+        public string CodMoneda { get; set; }
         public DetalleCierreViewModel[] Detalle { get; set; }
     }
 }

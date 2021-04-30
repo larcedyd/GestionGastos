@@ -156,7 +156,7 @@
 
                 var detalle = {
 
-                    CodPro: $("#CodPro").val(),
+                    CodPro: "1",
                     NomPro: $("#NomPro").val(),
                     idTipoGasto: $("#idTipoGasto").val(),
                     Cantidad: $("#cantidad").val(),
@@ -200,13 +200,13 @@
                         }
                 }
 
-                detalle.MontoTotalLinea = ((detalle.PrecioUnitario * detalle.Cantidad) - detalle.MontoDescuento) + parseFloat(detalle.ImpuestoMonto);
+                detalle.MontoTotalLinea = ((detalle.PrecioUnitario) - detalle.MontoDescuento) + parseFloat(detalle.ImpuestoMonto);
 
                 var subtotalT = 0;
                 var descuentoT = 0;
                 var impuestoT = 0;
                 var totalT = 0;
-                subtotalT = parseFloat(detalle.PrecioUnitario) * parseFloat(detalle.Cantidad);
+                subtotalT = parseFloat(detalle.PrecioUnitario);
                 descuentoT = parseFloat(detalle.MontoDescuento);
                 impuestoT = parseFloat(detalle.ImpuestoMonto);
                 totalT = parseFloat(detalle.MontoTotalLinea);
@@ -288,7 +288,7 @@
                         var descuentoT = 0;
                         var impuestoT = 0;
 
-                        subtotalT = parseFloat(Productos[campo].PrecioUnitario) * parseFloat(Productos[campo].Cantidad);
+                        subtotalT = parseFloat(Productos[campo].PrecioUnitario);
                         descuentoT = parseFloat(Productos[campo].MontoDescuento);
                         impuestoT = parseFloat(Productos[campo].ImpuestoMonto);
 
@@ -334,9 +334,9 @@
             }
 
             function LimpiarDatos() {
-                $("#CodPro").val("");
+               // $("#CodPro").val("");
                 $("#NomPro").val("");
-                $("#cantidad").val("");
+               // $("#cantidad").val("");
                 $("#PrecUni").val(0);
                 $("#desc").val(0);
                 $("#TipoImpuesto").val("NULL").trigger('change');
@@ -405,33 +405,32 @@
              {
                  var checkbox1 = document.getElementById("simp");
                  var checkbox2 = document.getElementById("ext");
-      var EncCompras =
-            {
-                ClaveHacienda: $("#CHacienda").val(),
-                ConsecutivoHacienda: $("#ConsHacienda").val(),
-
-                TipoIdentificacionCliente: $("#idCliente").val(),
-                NumFactura: $("#NumFactura").val(),
-                CodProveedor: $("#CodProveedor").val(),
-                NomProveedor: $("#NomProveedor").val(),
-                FecFactura: $("#FecFactura").val(),
-                CodigoActividadEconomica: $("#CodActividadEconomica").val() ,
-                CodMoneda: $("#CodMoneda").val(),
-                CodCliente: $("#CodCliente").val(),
-                NomCliente: $("#NomCliente").val(),
-                TotalVenta: $("#subtotal").text(),
-                TotalImpuesto: $("#impuesto").text(),
-                TotalDescuentos: $("#descuento").text(),
-                Impuesto1: $("#impuesto1").text() ,
-                Impuesto2: $("#impuesto2").text()  ,
-                Impuesto4: $("#impuesto4").text(),
-                Impuesto8: $("#impuesto8").text(),
-                Impuesto13: $("#impuesto13").text(),
-                TotalComprobante: $("#total").text(),
-          ImagenBase64: (ImageBae64 === '' ? '' : ImageBae64.toString().replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '')),
-          RegimenSimplificado: checkbox1.checked,
-          FacturaExterior: checkbox2.checked
-            };
+                 var EncCompras =
+                    {
+                        ClaveHacienda: $("#NumFactura").val(),
+                        ConsecutivoHacienda: $("#NumFactura").val(),
+                        TipoIdentificacionCliente: "0",
+                        NumFactura: $("#NumFactura").val(),
+                        CodProveedor: $("#CodProveedor").val(),
+                        NomProveedor: $("#NomProveedor").val(),
+                        FecFactura: $("#FecFactura").val(),
+                        CodigoActividadEconomica: "0" ,
+                        CodMoneda: $("#CodMoneda").val(),
+                        CodCliente: "0",
+                        NomCliente: "0",
+                        TotalVenta: $("#subtotal").text(),
+                        TotalImpuesto: $("#impuesto").text(),
+                        TotalDescuentos: $("#descuento").text(),
+                        Impuesto1: $("#impuesto1").text() ,
+                        Impuesto2: $("#impuesto2").text()  ,
+                        Impuesto4: $("#impuesto4").text(),
+                        Impuesto8: $("#impuesto8").text(),
+                        Impuesto13: $("#impuesto13").text(),
+                        TotalComprobante: $("#total").text(),
+                        ImagenBase64: (ImageBae64 === '' ? '' : ImageBae64.toString().replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '')),
+                        RegimenSimplificado: checkbox1.checked,
+                        FacturaExterior: checkbox2.checked
+                    };
 
         var DetCompras = Productos;
         var recibido = {
@@ -570,13 +569,7 @@
         <div class="row">
             <div class="col-sm-6">
 
-                <label class="col-form-label">Clave Hacienda:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <input type="number" asp-for="Objeto.EncCompras.ClaveHacienda" maxlength="50" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" id="CHacienda" class="form-control">
-                    </div>
-                </div>
+                
 
                 <label class="col-form-label">Tipo Indentificación:</label>
                 <div class="form-group row">
@@ -612,38 +605,7 @@
                     </div>
                 </div>
 
-                <label class="col-form-label">Tipo Indentificación:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <select asp-for="Objeto.EncCompras.TipoIdentificacionCliente" onchange="javascript: mask();" id="idCliente" class="form-control  mi-selector">
-                            <option value="NULL" selected>-Identificación-</option>
-
-
-                            <option value="01">Física</option>
-                            <option value="02">Jurídica</option>
-                            <option value="03">DIMEX</option>
-                            <option value="04">NITE</option>
-
-                        </select>
-                    </div>
-                </div>
-
-                <label class="col-form-label">Cédula Cliente:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <input type="text"   id="CodCliente" class="form-control">
-                    </div>
-                </div>
-
-                <label class="col-form-label">Nombre Cliente:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <input type="text" asp-for="Objeto.EncCompras.NomProveedor" id="NomCliente" class="form-control">
-                    </div>
-                </div>
+                
 
                 
 
@@ -652,13 +614,7 @@
 
             <div class="col-sm-6">
 
-                <label class="col-form-label">Consecutivo Hacienda:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <input type="number" asp-for="Objeto.EncCompras.ConsecutivoHacienda" maxlength="20" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" id="ConsHacienda" class="form-control">
-                    </div>
-                </div>
+                
 
                 <label class="col-form-label">Número Factura:</label>
                 <div class="form-group row">
@@ -677,13 +633,7 @@
                 </div>
 
 
-                <label class="col-form-label">Código Actividad Económica:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <input type="text" asp-for="Objeto.EncCompras.CodigoActividadEconomica" id="CodActividadEconomica" class="form-control">
-                    </div>
-                </div>
+                
 
                 <label class="col-form-label">Moneda:</label>
                 <div class="form-group row">
@@ -731,11 +681,11 @@
     <div class="ibox-content">
         <div class="row">
             <div class="col-sm-3">
-                <label class="col-form-label">Código Producto:</label>
+                <label class="col-form-label">Detalle:</label>
                 <div class="form-group row">
                     <div class="col-sm-12">
 
-                        <input type="text" maxlength="50" id="CodPro" class="form-control">
+                        <input type="text" maxlength="200" id="NomPro" class="form-control">
                     </div>
                 </div>
 
@@ -748,13 +698,7 @@
                 </div>
             </div>
             <div class="col-sm-3">
-                <label class="col-form-label">Nombre Producto:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
 
-                        <input type="text" maxlength="200" id="NomPro" class="form-control">
-                    </div>
-                </div>
                 <label class="col-form-label">Tipo Impuesto:</label>
                 <div class="form-group row">
                     <div class="col-sm-12">
@@ -762,7 +706,7 @@
                         <select id="TipoImpuesto" class="form-control  mi-selector">
                             <option value="NULL" selected>-IVA-</option>
 
-
+                            <option value="0">I.V.A 0</option>
                             <option value="1">I.V.A 1</option>
                             <option value="2">I.V.A 2</option>
                             <option value="4">I.V.A 4</option>
@@ -773,16 +717,27 @@
                         </select>
                     </div>
                 </div>
-
-            </div>
-            <div class="col-sm-3">
-                <label class="col-form-label">Cantidad:</label>
+                <label class="col-form-label">Tipo Gasto:</label>
                 <div class="form-group row">
                     <div class="col-sm-12">
 
-                        <input type="number" id="cantidad" class="form-control">
+                        <select id="idTipoGasto" class="form-control  mi-selector">
+                            <option value="NULL" selected>-Tipo Gasto-</option>
+                            @foreach (var item in Model.Gastos)
+                            {
+                                <option value="@item.idTipoGasto">@item.Nombre</option>
+                            }
+
+
+
+
+                        </select>
                     </div>
                 </div>
+
+            </div>
+            <div class="col-sm-3">
+              
                 <label class="col-form-label">Monto Impuesto:</label>
                 <div class="form-group row">
                     <div class="col-sm-12">
@@ -800,23 +755,7 @@
                     </div>
                 </div>
 
-                <label class="col-form-label">Tipo Gasto:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <select id="idTipoGasto" class="form-control  mi-selector">
-                            <option value="NULL" selected>-Tipo Gasto-</option>
-                            @foreach (var item in Model.Gastos)
-                            {
-                                <option value="@item.idTipoGasto">@item.Nombre</option>
-                            }
-
-                            
-
-
-                        </select>
-                    </div>
-                </div>
+               
 
 
 

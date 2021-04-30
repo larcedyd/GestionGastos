@@ -99,6 +99,81 @@
 
         });
 
+         function CambiarEstado(idCierre) {
+            Swal.fire({
+                title: '¿Desea poner abierta esta liquidación?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Aceptar`,
+                denyButtonText: `Cancelar`,
+                customClass: {
+                    confirmButton: 'swalBtnColor',
+                    denyButton: 'swalDeny'
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'GET',
+
+                        url: '@Url.Page("Index", "Estado")',
+                        dataType: 'text',
+                        data: { idB: idCierre },
+                        headers: {
+                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (json) {
+
+                            $("#divProcesando").hide();
+
+                            if ($('.modal-backdrop').is(':visible')) {
+
+                                $('body').removeClass('modal-open');
+                                $('.modal-backdrop').hide();
+                            }
+                            console.log("resultado " + json);
+                            if (json == "true") {
+                                Swal.fire({
+                                    title: "Ha sido enviado con éxito",
+
+                                    icon: 'success',
+                                    showCancelButton: false,
+
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'swalBtnColor',
+
+                                    },
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = window.location.href.split("/Editar")[0];
+                                    }
+                                })
+
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: 'Ha ocurrido un error al intentar enviar'
+
+                                })
+                            }
+                        },
+
+                        beforeSend: function (xhr) {
+
+                            $("#divProcesando").modal("show");
+                        },
+                        complete: function () {
+
+                        },
+                        error: function (error) {
+
+                        }
+                    });
+                }
+            })
+
+        }
 
 
 
@@ -207,7 +282,7 @@
                             <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Periodo</a></td>
                             <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.FechaCierre.ToString("dd/MM/yyyy")</a></td>
                             <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NombreUsuario</a></td>
-                            <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> CRC</a></td>
+                            <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.CodMoneda</a></td>
                             <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.Total, 2).ToString("N", formato)</a></td>
                             <td align="center" style="padding-top:5px;">
                                 @switch (item.Estado)
@@ -246,21 +321,26 @@
                             <td align="center" style="padding-top:15px;">
                                 @if (item.Estado == "P" || item.Estado == "R")
                                 {
-                                    @if (item.idLogin == int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()))
+                                @if (item.idLogin == int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()))
                                     {
-                                        <a asp-page="./Editar" asp-route-id="@item.idCierre" title="Editar" class="fa fa-edit icono"> </a>
+                                <a asp-page="./Editar" asp-route-id="@item.idCierre" title="Editar" class="fa fa-edit icono"> </a>
                                     }
 
 
                                 }
                                 &nbsp;
-                                @if (item.Estado == "E")
-                                {
-                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
-                                    {
+                                @if (item.Estado == "E"){
+                               
+                                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
+                                            {
 
                                         <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
-                                    }
+                                            }
+                                        
+                                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "10").FirstOrDefault()))
+                                            {
+                                        <a  onclick="javascript: CambiarEstado('@item.idCierre');" title="Cambiar estaddo a abierta" class="fa fa-clock-o icono" style="padding-left: 10px;"></a>
+                                            }
                                 }
                             </td>
                         </tr>
