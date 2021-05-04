@@ -94,6 +94,8 @@
                     $(":input").inputmask();
                     $('.mi-selector').select2();
                     check(1);
+                    $("input:radio[name=idProveedor]:checked").val("01");
+                    mask2();
                 });
             });
             $(".js-example-responsive").select2({
@@ -122,32 +124,65 @@
             var impuesto8 = 0;
         var impuesto13 = 0;
 
-        function readFilePrincipal(input) {
+       async function  readFilePrincipal(input) {
             if (input.files && input.files[0]) {
-                const maxAllowSize = 512000;
-
+            /*const maxAllowSize = 512000;*/
+                //const maxAllowSize = 2800000;
+                const maxAllowSize = 5000000;
                 if (input.files[0].size > maxAllowSize) {
-
+                    alert("Esta imagen es muy pesada");
                     input.value = '';
                 } else {
-
-
-
                     var reader = new FileReader();
+                    var img = document.createElement("img");
+                    var canvas = document.createElement('canvas');
+                   
                     reader.onload = function (e) {
-                        document.getElementById('imgPrincipalG').src = e.target.result;
-                        //  console.log(e.target.result);
-                        ImageBae64 = e.target.result;
-                    }
-                }
+                        img.src = e.target.result;
+                        var ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0);
 
+                        var MAX_WIDTH = 800;
+                        var MAX_HEIGHT = 600;
+                        var width = img.width;
+                        var height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        var ctx = canvas.getContext("2d");
+                        ctx.drawImage(img, 0, 0, width, height);
+                        var dataurl = canvas.toDataURL("image/jpg");
+                        document.getElementById('imgPrincipalG').src = e.target.result;
+                     
+                        console.log(dataurl);
+                        ImageBae64 = dataurl;//e.target.result;
+                       
+                    }
+                    
+                }
+            
                 reader.readAsDataURL(input.files[0]);
             }
+
+
+             
         }
         var fileUploadPrincipal = document.getElementById('imgPrincipalUploadG');
-        fileUploadPrincipal.onchange = function (e) {
+        fileUploadPrincipal.onchange = async function (e) {
 
-            readFilePrincipal(e.srcElement);
+            await readFilePrincipal(e.srcElement);
+            await readFilePrincipal(e.srcElement);
         }
 
 
@@ -258,7 +293,7 @@
                     texto += '<tr>';
 
                     texto += '<td align="left" style="padding-top:15px;">  <p style="font-size:13px;">' + Productos[i].NomPro + '</p></td>';
-                    texto += '<td align="center" style="padding-top:15px;">  <p style="font-size:13px;">' + Productos[i].Cantidad + '</p></td>';
+                    
                     texto += '<td align="right" style="padding-top:15px;">  <p style="font-size:13px;">' + formatoDecimal(Productos[i].PrecioUnitario) + '</p></td>';
                     texto += '<td align="right" style="padding-top:15px;">  <p style="font-size:13px;">' + formatoDecimal(Productos[i].MontoDescuento) + '</p></td>';
                     texto += '<td align="right" style="padding-top:15px;">  <p style="font-size:13px;">' + formatoDecimal(Productos[i].ImpuestoMonto) + '</p></td>';
@@ -373,7 +408,7 @@
             }
         }
         function mask2() {
-            switch ($("#idProveedor").val()) {
+            switch ($("input:radio[name=idProveedor]:checked").val()) {
                 case "01":
                     {
                         $("#CodProveedor").inputmask({ "mask": "9-9999-9999" });
@@ -432,7 +467,8 @@
                         FacturaExterior: checkbox2.checked
                     };
 
-        var DetCompras = Productos;
+                 var DetCompras = Productos;
+                
         var recibido = {
                 EncCompras,
                 DetCompras
@@ -450,6 +486,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var recibidos = JSON.stringify(recibido);
+                        console.log(recibido);
 
                         $.ajax({
                             type: 'POST',
@@ -468,7 +505,7 @@
                                     $('body').removeClass('modal-open');
                                     $('.modal-backdrop').hide();
                                 }
-
+                               
                                 if (json == "true") {
                                     Swal.fire({
                                         title: "Ha sido generado con éxito",
@@ -573,18 +610,12 @@
 
                 <label class="col-form-label">Tipo Indentificación:</label>
                 <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <select id="idProveedor" onchange="javascript: mask2()" class="form-control  mi-selector">
-                            <option value="NULL" selected>-Identificación-</option>
-
-
-                            <option value="01">Física</option>
-                            <option value="02">Jurídica</option>
-                            <option value="03">DIMEX</option>
-                            <option value="04">NITE</option>
-
-                        </select>
+                    <div class="col-sm-12" style="text-align: center;">
+                        <input type="radio" name="idProveedor" id="idProveedor1" onclick="javascript: mask2();" value="01"> Física &nbsp;
+                        <input type="radio" name="idProveedor" id="idProveedor2" onclick="javascript: mask2();" value="02"> Jurídica &nbsp;
+                        <input type="radio" name="idProveedor" id="idProveedor3" onclick="javascript: mask2();" value="03"> DIMEX &nbsp;
+                        <input type="radio" name="idProveedor" id="idProveedor4" onclick="javascript: mask2();" value="04"> NITE
+                       
                     </div>
                 </div>
 
@@ -783,7 +814,7 @@
                         <thead>
                             <tr>
                                 <th align="center" style=" text-align: center;"><h3>Nombre</h3></th>
-                                <th align="center" style=" text-align: center;"><h3>Cantidad </h3></th>
+                
                                 <th align="center" style=" text-align: center;"><h3>Precio Unitario</h3></th>
                                 <th align="center" style=" text-align: center;"><h3>Descuento</h3></th>
                                 <th align="center" style=" text-align: center;"><h3>Impuesto</h3></th>

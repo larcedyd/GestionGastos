@@ -210,13 +210,14 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Total = recibido.EncCompras.Total;
                 Liquidacion.EncCierre.Estado = "P";
                 Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
+                
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)
                 {
                     Liquidacion.DetCierre[cantidad - 1] = new DetCierreViewModel();
-                    Liquidacion.DetCierre[cantidad - 1].idFactura = item;
-      
+                    Liquidacion.DetCierre[cantidad - 1].idFactura = item.idFactura;
+                    Liquidacion.DetCierre[cantidad - 1].idTipoGasto = item.idTipoGasto;
                     cantidad++;
                 }
 
@@ -281,7 +282,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 foreach (var item in recibido.DetCompras)
                 {
                     Liquidacion.DetCierre[cantidad - 1] = new DetCierreViewModel();
-                    Liquidacion.DetCierre[cantidad - 1].idFactura = item;
+                    Liquidacion.DetCierre[cantidad - 1].idFactura = item.idFactura;
+                    Liquidacion.DetCierre[cantidad - 1].idTipoGasto = item.idTipoGasto;
 
                     cantidad++;
                 }

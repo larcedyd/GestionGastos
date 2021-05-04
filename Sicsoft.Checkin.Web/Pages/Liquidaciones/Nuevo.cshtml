@@ -103,6 +103,7 @@
                 $(":input").inputmask();
                 $('.mi-selector').select2();
                 $("#TipoImpuesto").val("0");
+                $("input:radio[name=idProveedor]:checked").val("01");
             });
         });
         $(".js-example-responsive").select2({
@@ -173,7 +174,7 @@
                     $("#imp4").val(result.impuesto4);
                     $("#imp8").val(result.impuesto8);
                     $("#imp13").val(result.impuesto13);
-
+                    $("#idTipoGastoEditar").val(result.idTipoGasto).trigger('change.select2');
                     var detalle = {
                         id: $("#id").val(),
                         Proveedor: $("#Proveedor").text(),
@@ -188,7 +189,8 @@
                         Impuesto2: $("#imp2").val(),
                         Impuesto4: $("#imp4").val(),
                         Impuesto8: $("#imp8").val(),
-                        Impuesto13: $("#imp13").val()
+                        Impuesto13: $("#imp13").val(),
+
                     };
 
                     console.log("Ya esta asignada: " + detalle);
@@ -241,7 +243,8 @@
                         Impuesto2: $("#imp2").val(),
                         Impuesto4: $("#imp4").val(),
                         Impuesto8: $("#imp8").val(),
-                        Impuesto13: $("#imp13").val()
+                        Impuesto13: $("#imp13").val(),
+                        idTipoGasto: $("#idTipoGastoEditar").val()
                     };
 
 
@@ -312,7 +315,7 @@
             $("#idBusqueda").val("")
             $("#adjunto").attr('href', '');
             $("#tipoGasto").text("");
-           // $("#idBusqueda").val("NULL").trigger('change.select2');
+            $("#idTipoGastoEditar").val("NULL").trigger('change.select2');
 
         }
 
@@ -447,7 +450,11 @@
             var Cadena = [];
 
             for (var i = 0; i < ProdCadena.length; i++) {
-                Cadena.push(parseInt(ProdCadena[i].id));
+                var det = {
+                    idFactura: ProdCadena[i].id,
+                    idTipoGasto: ProdCadena[i].idTipoGasto
+                };
+                Cadena.push(det);
             }
 
 
@@ -574,7 +581,11 @@
             var Cadena = [];
 
             for (var i = 0; i < ProdCadena.length; i++) {
-                Cadena.push(parseInt(ProdCadena[i].id));
+                var det = {
+                    idFactura: ProdCadena[i].id,
+                    idTipoGasto: ProdCadena[i].idTipoGasto
+                };
+                Cadena.push(det);
             }
 
 
@@ -820,12 +831,26 @@
                                         <label class="col-form-label">Tipo Gasto:</label>
 
                                     </div>
-                                    <div class="col-sm-6" style="text-align: right;">
-                                        <label id="tipoGasto" style="line-height: 32px;">
-                                        </label>
-                                    </div>
-                                </div>
+                                    <div class="col-sm-8" >
+                                         
 
+                                                <select id="idTipoGastoEditar" class="form-control  mi-selector">
+                                                    <option value="0" selected>-Sin Asignar-</option>
+                                                    @foreach (var item in Model.Gastos)
+                                                 {
+                                                    <option value="@item.idTipoGasto">@item.Nombre</option>
+                                                  }
+
+
+
+
+                                                </select>
+                                       
+                                    </div>
+
+                                      
+
+                                </div>
                             </div>
                             <div class="col-sm-6">
 
@@ -1048,9 +1073,9 @@
 
 
         <div class="d-flex justify-content-end">
-            <button onclick="javascript: Generar();" class="btn btn-w-m btn-primary" title="Guardar">Guardar Cambios</button>
+            <button onclick="javascript: Generar();" class="btn btn-w-m btn-primary botonAbajo" title="Guardar">Guardar Cambios</button>
             &nbsp;
-            <button onclick="javascript: GeneraryEnviar();" class="btn btn-w-m btn-success" title="Guardar y enviar a revisión">Guardar y Enviar a Revisión</button>
+            <button onclick="javascript: GeneraryEnviar();" class="btn btn-w-m btn-success botonAbajo" title="Guardar y enviar a revisión">Guardar y Revisión</button>
         </div>
     </div>
 </div>   
@@ -1092,18 +1117,11 @@
 
                                 <label class="col-form-label">Tipo Indentificación:</label>
                                 <div class="form-group row">
-                                    <div class="col-sm-12">
-
-                                        <select id="idProveedor" onchange="javascript: mask2()" class="form-control  ">
-                                            <option value="NULL" selected>-Identificación-</option>
-
-
-                                            <option value="01">Física</option>
-                                            <option value="02">Jurídica</option>
-                                            <option value="03">DIMEX</option>
-                                            <option value="04">NITE</option>
-
-                                        </select>
+                                    <div class="col-sm-12" style="text-align: center;">
+                                        <input type="radio" name="idProveedor" id="idProveedor1" onclick="javascript: mask2();" value="01"> Física &nbsp;
+                                        <input type="radio" name="idProveedor" id="idProveedor2" onclick="javascript: mask2();" value="02"> Jurídica &nbsp;
+                                        <input type="radio" name="idProveedor" id="idProveedor3" onclick="javascript: mask2();" value="03"> DIMEX &nbsp;
+                                        <input type="radio" name="idProveedor" id="idProveedor4" onclick="javascript: mask2();" value="04"> NITE
                                     </div>
                                 </div>
 
@@ -1306,6 +1324,7 @@
                                 <div class="row">
                                     <div class="col-sm-8">
                                         <label class="text-danger" id="ErrorFactura" style="display: none;"> Ha ocurrido un error al intentar insertar la factura, por favor volver a intentar</label>
+                                        <label class="text-danger" id="FaltaDatos" style="display: none;"> Parecen que faltan datos por rellenar</label>
                                     </div>
                                     <div class="col-sm-4" style="text-align: right;">
                                         <div class="row">
@@ -1449,32 +1468,66 @@
     var impuestoI13 = 0;
 
 
-    function readFilePrincipal(input) {
+    async function readFilePrincipal(input) {
         if (input.files && input.files[0]) {
-            const maxAllowSize = 512000;
-
+            /*const maxAllowSize = 512000;*/
+            //const maxAllowSize = 2800000;
+            const maxAllowSize = 5000000;
             if (input.files[0].size > maxAllowSize) {
-
+                alert("Esta imagen es muy pesada");
                 input.value = '';
             } else {
-
-
-
                 var reader = new FileReader();
+                var img = document.createElement("img");
+                var canvas = document.createElement('canvas');
+
                 reader.onload = function (e) {
+                    img.src = e.target.result;
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+
+                    var MAX_WIDTH = 800;
+                    var MAX_HEIGHT = 600;
+                    var width = img.width;
+                    var height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, width, height);
+                    var dataurl = canvas.toDataURL("image/jpg");
                     document.getElementById('imgPrincipalG').src = e.target.result;
-                    //  console.log(e.target.result);
-                    ImageBae64 = e.target.result;
+                     
+                    console.log(dataurl);
+                    ImageBae64 = dataurl;//e.target.result;
+                 
                 }
+
             }
 
             reader.readAsDataURL(input.files[0]);
         }
-    }
-    var fileUploadPrincipal = document.getElementById('imgPrincipalUploadG');
-    fileUploadPrincipal.onchange = function (e) {
 
-        readFilePrincipal(e.srcElement);
+
+
+    }
+
+    var fileUploadPrincipal = document.getElementById('imgPrincipalUploadG');
+    fileUploadPrincipal.onchange = async function (e) {
+        await readFilePrincipal(e.srcElement);
+        await readFilePrincipal(e.srcElement);
+
     }
 
     function check(i) {
@@ -1713,7 +1766,7 @@
         }
     }
     function mask2() {
-        switch ($("#idProveedor").val()) {
+        switch ($("input:radio[name=idProveedor]:checked").val()) {
             case "01":
                 {
                     $("#CodProveedor").inputmask({ "mask": "9-9999-9999" });
@@ -1772,114 +1825,119 @@
                         FacturaExterior: checkbox2.checked
                     };
 
-        var DetCompras = Productos;
-        var recibido = {
-                EncCompras,
-                DetCompras
-            };
+                    var DetCompras = Productos;
+                    var recibido = {
+                            EncCompras,
+                            DetCompras
+                        };
         
-                        var recibidos = JSON.stringify(recibido);
+                  var recibidos = JSON.stringify(recibido);
+                  if (ValidarFactura()) {
+                      $("#FaltaDatos").css("display", "none");
 
-                        $.ajax({
-                            type: 'POST',
+                      $.ajax({
+                          type: 'POST',
 
-                            url: '@Url.Page("Nuevo", "Insertar")',
-                            datatype: "application/json",
-                            data: { recibidos: recibidos.toString() },
-                            headers: {
-                                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
-                            },
-                            success: function (json) {
-                                     
-                                console.log(json);
-                                if (json.success == true) {
-                                    $("#ErrorFactura").css("display","none");
-                                    //Aqui se meteria en el detalle
-                                    var detalle = {
-                                        id: json.resp,
-                                        Proveedor: EncCompras.NomProveedor,
-                                        CHacienda: EncCompras.NumFactura,
-                                        //    idTipoGasto: $("#idTipoGasto").val(),
-                                        Fecha: EncCompras.FecFactura,
-                                        SubTotal: EncCompras.TotalVenta,
-                                        Descuento: EncCompras.TotalDescuentos,
-                                        Impuesto: EncCompras.TotalImpuesto,
-                                        Total: 0,
-                                        Impuesto1: EncCompras.Impuesto1,
-                                        Impuesto2: EncCompras.Impuesto2,
-                                        Impuesto4: EncCompras.Impuesto4,
-                                        Impuesto8: EncCompras.Impuesto8,
-                                        Impuesto13: EncCompras.Impuesto13
-                                    };
+                          url: '@Url.Page("Nuevo", "Insertar")',
+                          datatype: "application/json",
+                          data: { recibidos: recibidos.toString() },
+                          headers: {
+                              RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                          },
+                          success: function (json) {
 
-                                    console.log(EncCompras);
-                                    console.log(detalle);
-                                    var subtotalT = 0;
-                                    var descuentoT = 0;
-                                    var impuestoT = 0;
-                                    var totalT = 0;
-                                    subtotalT = parseFloat(detalle.SubTotal.replace(",", ""));
-                                    descuentoT = parseFloat(detalle.Descuento.replace(",", ""));
-                                    impuestoT = parseFloat(detalle.Impuesto.replace(",", ""));
-                                    detalle.Total = (subtotalT - descuentoT) + impuestoT
-                                    ProdCadena.push(detalle);
-                                    totalT = parseFloat(detalle.Total);
-                                    var impuesto1T = parseFloat(detalle.Impuesto1.replace(",", ""));
-                                    var impuesto2T = parseFloat(detalle.Impuesto2.replace(",", ""));
-                                    var impuesto4T = parseFloat(detalle.Impuesto4.replace(",", ""));
-                                    var impuesto8T = parseFloat(detalle.Impuesto8.replace(",", ""));
-                                    var impuesto13T = parseFloat(detalle.Impuesto13.replace(",", ""));
+                              console.log(json);
+                              if (json.success == true) {
+                                  $("#ErrorFactura").css("display", "none");
+                                  //Aqui se meteria en el detalle
+                                  var detalle = {
+                                      id: json.resp,
+                                      Proveedor: EncCompras.NomProveedor,
+                                      CHacienda: EncCompras.NumFactura,
+                                      //    idTipoGasto: $("#idTipoGasto").val(),
+                                      Fecha: EncCompras.FecFactura,
+                                      SubTotal: EncCompras.TotalVenta,
+                                      Descuento: EncCompras.TotalDescuentos,
+                                      Impuesto: EncCompras.TotalImpuesto,
+                                      Total: 0,
+                                      Impuesto1: EncCompras.Impuesto1,
+                                      Impuesto2: EncCompras.Impuesto2,
+                                      Impuesto4: EncCompras.Impuesto4,
+                                      Impuesto8: EncCompras.Impuesto8,
+                                      Impuesto13: EncCompras.Impuesto13
+                                  };
+
+                                  console.log(EncCompras);
+                                  console.log(detalle);
+                                  var subtotalT = 0;
+                                  var descuentoT = 0;
+                                  var impuestoT = 0;
+                                  var totalT = 0;
+                                  subtotalT = parseFloat(detalle.SubTotal.replace(",", ""));
+                                  descuentoT = parseFloat(detalle.Descuento.replace(",", ""));
+                                  impuestoT = parseFloat(detalle.Impuesto.replace(",", ""));
+                                  detalle.Total = (subtotalT - descuentoT) + impuestoT
+                                  ProdCadena.push(detalle);
+                                  totalT = parseFloat(detalle.Total);
+                                  var impuesto1T = parseFloat(detalle.Impuesto1.replace(",", ""));
+                                  var impuesto2T = parseFloat(detalle.Impuesto2.replace(",", ""));
+                                  var impuesto4T = parseFloat(detalle.Impuesto4.replace(",", ""));
+                                  var impuesto8T = parseFloat(detalle.Impuesto8.replace(",", ""));
+                                  var impuesto13T = parseFloat(detalle.Impuesto13.replace(",", ""));
 
 
 
-                                    subtotal += subtotalT;
-                                    descuentos += descuentoT;
-                                    impuestos += impuestoT;
+                                  subtotal += subtotalT;
+                                  descuentos += descuentoT;
+                                  impuestos += impuestoT;
 
-                                    totalComprobante += totalT;
-                                    impuesto1 += impuesto1T;
-                                    impuesto2 += impuesto2T;
-                                    impuesto4 += impuesto4T;
-                                    impuesto8 += impuesto8T;
-                                    impuesto13 += impuesto13T;
+                                  totalComprobante += totalT;
+                                  impuesto1 += impuesto1T;
+                                  impuesto2 += impuesto2T;
+                                  impuesto4 += impuesto4T;
+                                  impuesto8 += impuesto8T;
+                                  impuesto13 += impuesto13T;
 
-                                    $("#subtotal").text(formatoDecimal(parseFloat(subtotal).toFixed(2)));
-                                    $("#descuento").text(formatoDecimal(parseFloat(descuentos).toFixed(2)));
-                                    $("#impuesto").text(formatoDecimal(parseFloat(impuestos).toFixed(2)));
-                                    $("#total").text(formatoDecimal(parseFloat(totalComprobante).toFixed(2)));
+                                  $("#subtotal").text(formatoDecimal(parseFloat(subtotal).toFixed(2)));
+                                  $("#descuento").text(formatoDecimal(parseFloat(descuentos).toFixed(2)));
+                                  $("#impuesto").text(formatoDecimal(parseFloat(impuestos).toFixed(2)));
+                                  $("#total").text(formatoDecimal(parseFloat(totalComprobante).toFixed(2)));
 
-                                    $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
-                                    $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
-                                    $("#impuesto4").text(formatoDecimal(parseFloat(impuesto4).toFixed(2)));
-                                    $("#impuesto8").text(formatoDecimal(parseFloat(impuesto8).toFixed(2)));
-                                    $("#impuesto13").text(formatoDecimal(parseFloat(impuesto13).toFixed(2)));
-                                    LimpiarDatos();
+                                  $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
+                                  $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
+                                  $("#impuesto4").text(formatoDecimal(parseFloat(impuesto4).toFixed(2)));
+                                  $("#impuesto8").text(formatoDecimal(parseFloat(impuesto8).toFixed(2)));
+                                  $("#impuesto13").text(formatoDecimal(parseFloat(impuesto13).toFixed(2)));
+                                  LimpiarDatos();
 
-                                    RellenaTabla();
-                                    LimpiarDatosGenerales();
-                                    $("#ModalInclusion").modal("hide");
+                                  RellenaTabla();
+                                  LimpiarDatosGenerales();
+                                  $("#ModalInclusion").modal("hide");
 
-                                } else {
-                                    $("#ErrorFactura").css("display", "block");
+                              } else {
+                                  $("#ErrorFactura").css("display", "block");
 
-                                    
-                                }
-                            },
 
-                            beforeSend: function (xhr) {
+                              }
+                          },
 
-                                
-                            },
-                            complete: function () {
+                          beforeSend: function (xhr) {
 
-                            },
-                            error: function (error) {
 
-                                $("#ErrorFactura").css("display", "block");
+                          },
+                          complete: function () {
 
-                                
-                            }
-                        });
+                          },
+                          error: function (error) {
+
+                              $("#ErrorFactura").css("display", "block");
+
+
+                          }
+                      });
+                  } else {
+                      $("#FaltaDatos").css("display", "block");
+                  }
                  
     }
 
@@ -1924,5 +1982,22 @@
         LimpiarDatosI();
         RellenaTablaI();
     }
-
+    function ValidarFactura() {
+        if ($("#NumFactura").val() == "") {
+            return false;
+        } else if ($("#CodProveedor").val() == "") {
+            return false;
+        } else if ($("#NomProveedor").val() == "") {
+            return false;
+        } else if ($("#FecFactura").val() == "") 
+        {
+            return false;
+        } else if (Productos.length == 0)
+        {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 </script>

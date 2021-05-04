@@ -98,7 +98,7 @@ h2 {
 }
 .logo-name {
     background: url("../img/logo.jpg") no-repeat;
-    height:90px;
+    height:30px;
     width:300px;
     margin-left:0px;
 }
@@ -645,3 +645,48 @@ h2 {
         .btn-toggle.btn-secondary.active {
             background-color: #1B535C !important;
         }
+
+
+@media (max-width: 768px) {
+
+   .botonAbajo
+    {
+        height: 10%;
+        width: 50%;
+    }
+    .justify-content-end
+    {
+        padding-bottom: 6%;
+    }
+     .navbar-top-links{
+         margin-left: 18%;
+    }
+
+
+    .body-small .navbar-static-side {
+        display: block ;
+        z-index: 2001 !important;
+        width: 70% !important;
+        overflow: hidden  ;
+    }
+     
+    body:not(.mini-navbar) .wrapper {
+        display: none;
+    }
+
+    body:not(.mini-navbar) .footer {
+        display: none;
+    }
+
+    body:not(.mini-navbar) .nav {
+        display: none;
+    }
+
+    body:not(.mini-navbar) #page-wrapper {
+        width: calc(100% - 220px) !important;
+    }
+    .body-small.mini-navbar .navbar-static-side {
+        display: none;
+        overflow: visible;
+    }
+}

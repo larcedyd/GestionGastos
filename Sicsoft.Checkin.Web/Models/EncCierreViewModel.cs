@@ -43,5 +43,6 @@ namespace InversionGloblalWeb.Models
 
         public DateTime? FechaCierre { get; set; }
         public string CodMoneda { get; set; }
+
     }
 }

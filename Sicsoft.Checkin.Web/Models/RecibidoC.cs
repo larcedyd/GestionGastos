@@ -8,6 +8,6 @@ namespace InversionGloblalWeb.Models
     public class RecibidoC
     {
         public EncCierre EncCompras { get; set; }
-        public int[] DetCompras { get; set; }
+        public DetCierreInsercionViewModel[] DetCompras { get; set; }
     }
 }

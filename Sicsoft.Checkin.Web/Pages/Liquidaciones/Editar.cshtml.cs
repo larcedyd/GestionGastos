@@ -127,14 +127,18 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
 
                 var ids = Convert.ToInt32(idB);
-
+                var cierres = await liquidaciones.ObtenerPorId(cierre); 
                 ParametrosFiltros filt = new ParametrosFiltros();
                 filt.Texto = idB.ToString();
                 filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 25);
                 filt.FechaFinal = filt.FechaInicio.AddMonths(1);
-                filt.Codigo2 = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
+
+                filt.FechaInicio = cierres.EncCierre.FechaInicial;
+                filt.FechaFinal = cierres.EncCierre.FechaFinal;
+
+                filt.Codigo2 = 0; //int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 filt.Codigo3 = cierre;
-                filt.Asignados = true;
+               // filt.Asignados = true;
                 var objetos = await service.ObtenerLista(filt);
 
                 var objeto = objetos.Where(a => a.ClaveHacienda.ToString().Contains(filt.Texto.ToUpper()) || a.ConsecutivoHacienda.ToString().Contains(filt.Texto.ToUpper()) 
@@ -209,8 +213,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 foreach (var item in recibido.DetCompras)
                 {
                     Liquidacion.DetCierre[cantidad - 1] = new DetCierreViewModel();
-                    Liquidacion.DetCierre[cantidad - 1].idFactura = item;
-
+                    Liquidacion.DetCierre[cantidad - 1].idFactura = item.idFactura;
+                    Liquidacion.DetCierre[cantidad - 1].idTipoGasto = item.idTipoGasto;
                     cantidad++;
                 }
 
@@ -278,8 +282,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 foreach (var item in recibido.DetCompras)
                 {
                     Liquidacion.DetCierre[cantidad - 1] = new DetCierreViewModel();
-                    Liquidacion.DetCierre[cantidad - 1].idFactura = item;
-
+                    Liquidacion.DetCierre[cantidad - 1].idFactura = item.idFactura;
+                    Liquidacion.DetCierre[cantidad - 1].idTipoGasto = item.idTipoGasto;
                     cantidad++;
                 }
 
