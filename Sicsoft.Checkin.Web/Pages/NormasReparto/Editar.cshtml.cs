@@ -18,16 +18,23 @@ namespace InversionGloblalWeb.Pages.NormasReparto
         private readonly IConfiguration configuration;
         private readonly ICrudApi<NormasRepartoViewModel, int> service;
         private readonly ICrudApi<LoginUsuarioViewModel, int> usuario;
+        private readonly ICrudApi<DimensionesViewModel, int> dimensiones;
+
+
         [BindProperty]
         public NormasRepartoViewModel Objeto { get; set; }
 
         [BindProperty]
         public LoginUsuarioViewModel[] Usuarios { get; set; }
 
-        public EditarModel(ICrudApi<NormasRepartoViewModel, int> service, ICrudApi<LoginUsuarioViewModel, int> usuario)
+        [BindProperty]
+        public DimensionesViewModel[] Dimensiones { get; set; }
+
+        public EditarModel(ICrudApi<NormasRepartoViewModel, int> service, ICrudApi<LoginUsuarioViewModel, int> usuario,  ICrudApi<DimensionesViewModel, int> dimensiones)
         {
             this.service = service;
             this.usuario = usuario;
+            this.dimensiones = dimensiones;
         }
 
         public async Task<IActionResult> OnGetAsync(string id)
@@ -36,6 +43,7 @@ namespace InversionGloblalWeb.Pages.NormasReparto
             {
                 Usuarios = await usuario.ObtenerLista("");
                 int ids = Convert.ToInt32(id);
+                Dimensiones = await dimensiones.ObtenerLista("");
                 Objeto = await service.ObtenerPorId(ids);
 
                 return Page();

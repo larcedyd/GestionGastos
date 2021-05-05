@@ -120,7 +120,25 @@
                             <span asp-validation-for="Objeto.Nombre" class="text-danger"></span>
                         </div>
                     </div>
+                    <label asp-for="Objeto.idDimension" class="col-form-label">Dimensión:</label>
 
+                    <div class="form-group row">
+
+
+
+                        <div class="col-sm-8">
+
+
+                            <select asp-for="Objeto.idDimension" id="idDimension" class="form-control  mi-selector">
+                                <option value="NULL" selected>-Seleccione Dimensión-</option>
+                                @foreach (var item in Model.Dimensiones)
+                                {
+                                    <option value="@item.id">@item.id - @item.Nombre</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Objeto.idDimension" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
 
             </div>
