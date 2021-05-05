@@ -65,6 +65,9 @@
             top: 0;
             background: white;
         }
+        .ibox .label {
+            font-size: 12px !important;
+        }
     </style>
 
 }
@@ -190,8 +193,8 @@
         <br />
         <form method="get">
             <div class="row">
-                &nbsp;
-                <div class="col-md-1"></div>
+
+
                 <div class="col-md-3">
                     <div class="m-b-lg">
                         <div class="form-row">
@@ -201,39 +204,37 @@
                         </div>
 
 
-                        <div class="">
-
-
-
-                            <p style="font-size:14px;">Se encontraron @Model.Objeto.Length registros de liquidaciones.</p>
-
-
-
-                        </div>
 
                     </div>
 
 
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
+
+                    <div class="form-group row">
+
+                        <div class="col-sm-10">
+                            <select asp-for="filtro.Estado" id="idEstado" class="form-control  mi-selector">
+                                <option value="NULL" selected>-Estado-</option>
 
 
-                    <select asp-for="filtro.Estado" id="idEstado" class="form-control  mi-selector">
-                        <option value="NULL" selected>-Estado-</option>
+                                <option value="P">Abiertas</option>
+                                <option value="A">Aprobadas</option>
+                                <option value="R">Rechazadas</option>
+                                <option value="E">Espera</option>
+
+                            </select>
+                        </div>
 
 
-                        <option value="P">Abiertas</option>
-                        <option value="A">Aprobadas</option>
-                        <option value="R">Rechazadas</option>
-                        <option value="E">Espera</option>
-
-                    </select>
-
+                    </div>
                 </div>
-                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
-                {
-                    <div class="col-md-3">
+                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
+                    {
+            <div class="col-md-4">
+                <div class="form-group row">
 
+                    <div class="col-sm-10">
 
                         <select asp-for="filtro.Codigo1" id="idUsuario" class="form-control  mi-selector">
                             <option value="0" selected>-Usuario-</option>
@@ -246,12 +247,25 @@
 
                         </select>
                     </div>
-                }
-                <div class="col-md-1">
-                    <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>
+                    </div>
                 </div>
-            </div>
-        </form>
+                    }
+                    <div class="col-md-1">
+                        <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>
+                    </div>
+
+
+                    <div class="col-sm-6">
+
+
+
+                        <p style="font-size:14px;">Se encontraron @Model.Objeto.Length registros de liquidaciones.</p>
+
+
+
+                    </div>
+                </div>
+</form>
         <div class="table-responsive" style="padding:inherit;">
             <table class="table table-striped dataTables-example" style="width: 100%;">
                 <thead>
@@ -284,33 +298,34 @@
                             <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NombreUsuario</a></td>
                             <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.CodMoneda</a></td>
                             <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.Total, 2).ToString("N", formato)</a></td>
-                            <td align="center" style="padding-top:5px;">
+                            <td align="center" style="padding-top:15px;">
                                 @switch (item.Estado)
                                 {
                                     case "P":
                                         {
-                                            <button class="btn btn-info">Abierta</button>
+                                            <p><span class="label label-info">Abierta</span></p>
+                                          
                                             break;
                                         }
 
                                     case "A":
                                         {
-                                            <button class="btn btn-success">Aceptado</button>
+                                             <p><span class="label label-success">Aprobada</span></p>
                                             break;
                                         }
                                     case "R":
                                         {
-                                            <button class="btn btn-danger">Rechazado</button>
+                                            <p><span class="label label-danger">Rechazada</span></p>
                                             break;
                                         }
                                     case "E":
                                         {
-                                            <button class="btn btn-warning">Espera</button>
+                                             <p><span class="label label-warning">Espera</span></p>
                                             break;
                                         }
                                     default:
                                         {
-                                            <button class="btn btn-warning">Abierta</button>
+                                          <p><span class="label label-info">Abierta</span></p>
                                             break;
                                         }
 

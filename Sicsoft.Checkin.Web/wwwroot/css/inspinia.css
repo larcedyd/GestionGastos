@@ -1923,12 +1923,14 @@ body.canvas-menu.mini-navbar nav.navbar-static-side {
     .menu-visible-lg {
         display: block !important;
     }
+   
 }
 
 @media (min-width: 992px) {
     .menu-visible-md {
         display: block !important;
     }
+   
 }
 
 @media (max-width: 767px) {

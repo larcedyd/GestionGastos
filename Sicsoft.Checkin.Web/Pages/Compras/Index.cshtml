@@ -42,6 +42,9 @@
             top: 0;
             background: white;
         }
+        .ibox .label {
+            font-size: 12px !important;
+        }
     </style>
 
 }
@@ -217,73 +220,80 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <select asp-for="filtro.CodMoneda" id="CodCajero" class="form-control  mi-selector">
-                            <option value="NULL" selected>-Moneda-</option>
-                            <option value="CRC">Colones</option>
-                            <option value="USD">Dólares</option>
-                            <option value="EUR">Euros</option>
-                        </select>
+
+                        <div class="form-group row">
+
+                            <div class="col-sm-10">
+
+                                <select asp-for="filtro.CodMoneda" id="CodCajero" class="form-control  mi-selector">
+                                    <option value="NULL" selected>-Moneda-</option>
+                                    <option value="CRC">Colones</option>
+                                    <option value="USD">Dólares</option>
+                                    <option value="EUR">Euros</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-sm-12">
-                        <br />
+                            <div class="col-sm-12">
+                                <br />
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="FecInicial" type="date" asp-for="filtro.FechaInicio" />
+                            </div>
+                            <div class="col-sm-6">
+                                <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal" />
+                            </div>
+                            <div class="col-sm-12">
+                                <br />
+                            </div>
+                            <div class="col-md-4">
+                                <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                    Regimen Simplificado
+                                    <input type="checkbox" id="anulada" asp-for="filtro.RegimeSimplificado" />
+                                    <span class="check"></span>
+                                </label>
+
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                    Factura Exterior
+                                    <input type="checkbox" id="cnTarjeta" asp-for="filtro.FacturaExterior" />
+                                    <span class="check"></span>
+                                </label>
+
+                            </div>
+                            <div class="col-md-4">
+                                <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                    Facturas Sin Asignar
+                                    <input type="checkbox" id="exentas" asp-for="filtro.Asignados" />
+                                    <span class="check"></span>
+                                </label>
+
+                            </div>
+
+
+
+                            <div class="col-sm-12">
+                                <br />
+                            </div>
+
+
+
+
+
+
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+
+                            </div>
+                            <div class="col-sm-6" style="text-align: right;">
+                                <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>&nbsp;
+
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-sm-6">
-                        <input class="form-control" id="FecInicial" type="date" asp-for="filtro.FechaInicio" />
-                    </div>
-                    <div class="col-sm-6">
-                        <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal" />
-                    </div>
-                    <div class="col-sm-12">
-                        <br />
-                    </div>
-                    <div class="col-md-4">
-                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                            Regimen Simplificado
-                            <input type="checkbox" id="anulada" asp-for="filtro.RegimeSimplificado" />
-                            <span class="check"></span>
-                        </label>
-
-                    </div>
-
-                    <div class="col-md-4">
-                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                            Factura Exterior
-                            <input type="checkbox" id="cnTarjeta" asp-for="filtro.FacturaExterior" />
-                            <span class="check"></span>
-                        </label>
-
-                    </div>
-                    <div class="col-md-4">
-                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                            Facturas Sin Asignar
-                            <input type="checkbox" id="exentas" asp-for="filtro.Asignados" />
-                            <span class="check"></span>
-                        </label>
-
-                    </div>
-                  
-
-
-                    <div class="col-sm-12">
-                        <br />
-                    </div>
-
-
-
-
-
-
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-
-                    </div>
-                    <div class="col-sm-6" style="text-align: right;">
-                        <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>&nbsp;
-                        
-                    </div>
-                </div>
-            </div>
         </form>
     </div>
 </div>
@@ -327,18 +337,19 @@
                         <td align="right" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato)</a></td>
 
 
-                        <td align="center" style="padding-top:5px;">
+                        <td align="center" style="padding-top:15px;">
                             @if (item.idCierre != 0 && item.idCierre != null)
                             {
 
-
-                                <button class="btn btn-success">Asignado</button>
+                                <p><span class="badge badge-primary">Asignado</span></p>
+                               
                             }
                             else
                             {
-                                <button class="btn btn-danger">No Asignado</button>
+                                <p><span class="badge badge-danger">No Asignado</span></p>
+                                 
                             }
-                             
+
 
 
 

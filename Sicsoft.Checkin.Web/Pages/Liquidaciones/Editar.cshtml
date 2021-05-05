@@ -70,7 +70,14 @@
             font-size: 17px;
             padding: 8px 18px !important;
         }
-
+        .label-submit {
+            color: #fff !important;
+            background-color: #57b846 !important;
+            cursor: pointer;
+            background: none;
+            font-size: 13px;
+            padding: 8px 18px !important;
+        }
         /*label
     {
         font-size: 15px;
@@ -105,7 +112,15 @@
             $(document).ready(function () {
                 $(":input").inputmask();
                 $('.mi-selector').select2();
-                $("#TipoImpuesto").val("0");
+            
+                $("#NomPro").val("");
+
+                $("#PrecUniI").val(0);
+                $("#descI").val(0);
+                $("#TipoImpuesto").val("0").trigger('change');
+                $("#idTipoGasto").val("NULL").trigger('change');
+                $("#ImpuestoMonto").val(0);
+
                 $("input:radio[name=idProveedor]:checked").val("01");
             });
         });
@@ -146,13 +161,13 @@
             var Estado = "@Model.Liquidacion.EncCierre.Estado";
             $("#CodMoneda").val("@Model.Liquidacion.EncCierre.CodMoneda");
             console.log("Estado " + Estado);
-            if (Estado != "P") {
-                document.getElementById('btnEnviarRevision').disabled = true;
-            }
+            //if (Estado != "P") {
+            //    document.getElementById('btnEnviarRevision').disabled = true;
+            //}
 
-            if (Estado != "P" && Estado != "R") {
-                document.getElementById('GuardarCambios').disabled = true;
-            }
+            //if (Estado != "P" && Estado != "R") {
+            //    document.getElementById('GuardarCambios').disabled = true;
+            //}
 
 
 
@@ -1315,8 +1330,8 @@
 
         <div class="d-flex justify-content-end">
             <button onclick="javascript: Generar();" class="btn btn-w-m btn-primary botonAbajo" id="GuardarCambios" title="Guardar">Guardar Cambios</button> &nbsp;
-            <button onclick="javascript: EnviarRevision();" id="btnEnviarRevision botonAbajo" class="btn btn-w-m btn-success" title="Enviar a Revisión">Enviar a Revisión</button>
-            &nbsp;
+            @*<button onclick="javascript: EnviarRevision();" id="btnEnviarRevision botonAbajo" class="btn btn-w-m btn-success" title="Enviar a Revisión">Enviar a Revisión</button>
+            &nbsp;*@
             <button onclick="javascript: GeneraryEnviar();" class="btn btn-w-m btn-warning botonAbajo" title="Guardar y enviar a revisión">Guardar y Revisión</button>
         </div>
     </div>
@@ -1378,7 +1393,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <input type="text" asp-for="Objeto1.EncCompras.NomProveedor" id="NomProveedor" class="form-control">
+                                        <input type="text" maxlength="200" asp-for="Objeto1.EncCompras.NomProveedor" id="NomProveedor" class="form-control">
                                     </div>
                                 </div>
 
@@ -1684,8 +1699,8 @@
                 </div>
 
                 <div class="d-flex justify-content-end">
-                    <button onclick="javascript: GenerarI();" class="btn btn-w-m btn-primary" title="Guardar">Guardar Cambios</button>
-
+                    @*<button onclick="javascript: GenerarI();" class="btn btn-w-m btn-primary" title="Guardar">Guardar Cambios</button>*@
+                    <button id="buttonSpin" onclick="javascript: GenerarI();" class="ladda-button green expand-left"><span class="label-submit">Guardar Cambios</span> <span class="spinner"></span></button>
                 </div>
 
             </div>
@@ -1802,7 +1817,7 @@
 
             CodPro: "1",
             NomPro: $("#NomPro").val(),
-            idTipoGasto: $("#idTipoGasto").val(),
+            idTipoGasto: $("#idTipoGasto").val() == "NULL" ? "0" : $("#idTipoGasto").val(),
             Cantidad: "0",
             PrecioUnitario: $("#PrecUniI").val(),
             MontoDescuento: $("#descI").val(),
@@ -1930,7 +1945,7 @@
                 var subtotalT = 0;
                 var descuentoT = 0;
                 var impuestoT = 0;
-
+        var totalT = 0;
                 subtotalT = parseFloat(Productos[campo].PrecioUnitario);
                 descuentoT = parseFloat(Productos[campo].MontoDescuento);
                 impuestoT = parseFloat(Productos[campo].ImpuestoMonto);
@@ -2035,7 +2050,15 @@
     }
 
               function GenerarI()
-             {
+              {
+                  var button = document.getElementById('buttonSpin');
+                  if (typeof (button.getAttribute('data-loading')) === 'string') {
+                      button.removeAttribute('data-loading');
+                  }
+                  else {
+                      button.setAttribute('data-loading', '');
+                  }
+
                  var checkbox1 = document.getElementById("simp");
                  var checkbox2 = document.getElementById("ext");
                  var EncCompras =
@@ -2087,6 +2110,7 @@
 
                               console.log(json);
                               if (json.success == true) {
+                                  button.removeAttribute('data-loading');
                                   $("#ErrorFactura").css("display", "none");
                                   //Aqui se meteria en el detalle
                                   var detalle = {
@@ -2095,15 +2119,16 @@
                                       CHacienda: EncCompras.NumFactura,
                                       //    idTipoGasto: $("#idTipoGasto").val(),
                                       Fecha: EncCompras.FecFactura,
-                                      SubTotal: EncCompras.TotalVenta,
-                                      Descuento: EncCompras.TotalDescuentos,
-                                      Impuesto: EncCompras.TotalImpuesto,
+                                      SubTotal: parseFloat(EncCompras.TotalVenta.replace(",", "")),
+                                      Descuento: parseFloat(EncCompras.TotalDescuentos.replace(",", "")),
+                                      Impuesto: parseFloat(EncCompras.TotalImpuesto.replace(",", "")),
                                       Total: 0,
-                                      Impuesto1: EncCompras.Impuesto1,
-                                      Impuesto2: EncCompras.Impuesto2,
-                                      Impuesto4: EncCompras.Impuesto4,
-                                      Impuesto8: EncCompras.Impuesto8,
-                                      Impuesto13: EncCompras.Impuesto13
+                                      Impuesto1: parseFloat(EncCompras.Impuesto1.replace(",", "")),
+                                      Impuesto2: parseFloat(EncCompras.Impuesto2.replace(",", "")),
+                                      Impuesto4: parseFloat(EncCompras.Impuesto4.replace(",", "")),
+                                      Impuesto8: parseFloat(EncCompras.Impuesto8.replace(",", "")),
+                                      Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "")),
+                                      idTipoGasto: Productos[0].idTipoGasto
                                   };
 
                                   console.log(EncCompras);
@@ -2112,17 +2137,18 @@
                                   var descuentoT = 0;
                                   var impuestoT = 0;
                                   var totalT = 0;
-                                  subtotalT = parseFloat(detalle.SubTotal.replace(",", ""));
-                                  descuentoT = parseFloat(detalle.Descuento.replace(",", ""));
-                                  impuestoT = parseFloat(detalle.Impuesto.replace(",", ""));
+                                  subtotalT = parseFloat(detalle.SubTotal);
+                                  descuentoT = parseFloat(detalle.Descuento);
+                                  impuestoT = parseFloat(detalle.Impuesto);
                                   detalle.Total = (subtotalT - descuentoT) + impuestoT
                                   ProdCadena.push(detalle);
                                   totalT = parseFloat(detalle.Total);
-                                  var impuesto1T = parseFloat(detalle.Impuesto1.replace(",", ""));
-                                  var impuesto2T = parseFloat(detalle.Impuesto2.replace(",", ""));
-                                  var impuesto4T = parseFloat(detalle.Impuesto4.replace(",", ""));
-                                  var impuesto8T = parseFloat(detalle.Impuesto8.replace(",", ""));
-                                  var impuesto13T = parseFloat(detalle.Impuesto13.replace(",", ""));
+                                  var impuesto1T = parseFloat(detalle.Impuesto1);
+                                  var impuesto2T = parseFloat(detalle.Impuesto2);
+                                  var impuesto4T = parseFloat(detalle.Impuesto4);
+                                  var impuesto8T = parseFloat(detalle.Impuesto8);
+                                  var impuesto13T = parseFloat(detalle.Impuesto13);
+
 
 
 
@@ -2156,7 +2182,7 @@
 
                               } else {
                                   $("#ErrorFactura").css("display", "block");
-
+                                  button.removeAttribute('data-loading');
 
                               }
                           },
@@ -2169,7 +2195,7 @@
 
                           },
                           error: function (error) {
-
+                              button.removeAttribute('data-loading');
                               $("#ErrorFactura").css("display", "block");
 
 
@@ -2177,6 +2203,7 @@
                       });
                   } else {
                       $("#FaltaDatos").css("display", "block");
+                      button.removeAttribute('data-loading');
                   }
     }
 
@@ -2217,7 +2244,9 @@
          impuestoI2 = 0;
          impuestoI4 = 0;
          impuestoI8 = 0;
-         impuestoI13 = 0;
+        impuestoI13 = 0;
+        document.getElementById('imgPrincipalG').src = "/img/cm.jpg";
+        ImageBae64 = "";
         LimpiarDatosI();
         RellenaTablaI();
     }
