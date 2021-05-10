@@ -30,6 +30,11 @@ namespace InversionGloblalWeb.Pages.CuentasContables
         {
             try
             {
+                var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "15").FirstOrDefault()))
+                {
+                    return RedirectToPage("/NoPermiso");
+                }
                 int ids = Convert.ToInt32(id);
                 Objeto = await service.ObtenerPorId(ids);
                 return Page();

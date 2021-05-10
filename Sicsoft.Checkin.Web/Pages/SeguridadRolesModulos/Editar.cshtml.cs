@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using InversionGloblalWeb.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,11 @@ namespace InversionGloblalWeb.Pages.SeguridadRolesModulos
         {
             try
             {
+                var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "6").FirstOrDefault()))
+                {
+                    return RedirectToPage("/NoPermiso");
+                }
 
                 Rol = await service.ObtenerPorId(id);
                 return Page();

@@ -22,7 +22,8 @@ namespace InversionGloblalWeb.Pages.Usuarios
 
         [BindProperty]
         public RolesViewModel[] Roles { get; set; }
-
+        [BindProperty]
+        public UsuariosViewModel[] Usuarios { get; set; }
         public EditarModel(ICrudApi<UsuariosViewModel, int> service, ICrudApi<RolesViewModel, int> roles)
         {
             this.service = service;
@@ -34,7 +35,10 @@ namespace InversionGloblalWeb.Pages.Usuarios
             try
             {
                 Roles = await roles.ObtenerLista("");
+                Usuarios = await service.ObtenerLista("");
                 Input = await service.ObtenerPorId(id);
+                var Rol = Roles.Where(a => a.NombreRol.ToUpper().Contains("Aprobador".ToUpper())).FirstOrDefault();
+                Usuarios = Usuarios.Where(a => a.idRol == Rol.idRol).ToArray();
                 return Page();
             }
             catch (Exception ex)
@@ -49,7 +53,10 @@ namespace InversionGloblalWeb.Pages.Usuarios
             try
             {
                 
-              
+               if(Input.idLoginAceptacion == 0)
+                {
+                    throw new Exception("Debe seleccionar un usuario aprobador");
+                }
                 await service.Editar(Input);
                 return Redirect("../Index");
             }

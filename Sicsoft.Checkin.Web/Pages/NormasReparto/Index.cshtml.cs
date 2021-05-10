@@ -33,9 +33,16 @@ namespace InversionGloblalWeb.Pages.NormasReparto
         {
             try
             {
-               // filtro.Codigo1 = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
+                // filtro.Codigo1 = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
+
+                var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "1").FirstOrDefault()))
+                {
+                    return RedirectToPage("/NoPermiso");
+                }
                 Objeto = await service.ObtenerLista(filtro);
             
+
 
                 return Page();
             }

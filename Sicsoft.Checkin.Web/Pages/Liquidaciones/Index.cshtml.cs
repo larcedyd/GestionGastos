@@ -18,7 +18,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         private readonly IConfiguration configuration;
         private readonly ICrudApi<ListadoCierresViewModel, int> service;
         private readonly ICrudApi<UsuariosViewModel, int> users;
-
+        private readonly ICrudApi<RolesViewModel, int> roles;
 
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
@@ -29,26 +29,46 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         [BindProperty]
         public UsuariosViewModel[] Usuarios { get; set; }
 
-        public IndexModel(ICrudApi<ListadoCierresViewModel, int> service, ICrudApi<UsuariosViewModel, int> users)
+
+        [BindProperty]
+        public RolesViewModel[] Rols { get; set; }
+
+        public IndexModel(ICrudApi<ListadoCierresViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<RolesViewModel, int> roles)
         {
             this.service = service;
             this.users = users;
+            this.roles = roles;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
             try
             {
-
-                Usuarios = await users.ObtenerLista("");
                 var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
-
-                if(string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "4").FirstOrDefault()))
                 {
-                  filtro.Codigo1 = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
-                     
+                    return RedirectToPage("/NoPermiso");
                 }
 
+                Rols = await roles.ObtenerLista("");
+                var MiRol = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault());
+
+
+
+                var Rol = Rols.Where(a => a.NombreRol.ToUpper().Contains("Administrador".ToUpper())).FirstOrDefault();
+
+               
+
+
+                Usuarios = await users.ObtenerLista("");
+                var idUsuarioAsignacion = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
+                if (Rol.idRol != MiRol)
+                {
+                    Usuarios = Usuarios.Where(a => a.idLoginAceptacion == idUsuarioAsignacion).ToArray();
+
+                }
+                filtro.Codigo2 = idUsuarioAsignacion;
+                
                 Objeto = await service.ObtenerLista(filtro);
 
 

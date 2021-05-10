@@ -26,15 +26,33 @@ namespace InversionGloblalWeb.Pages.CuentasContables
             this.service = service;
         }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
+            try
+            {
+                var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "14").FirstOrDefault()))
+                {
+                    return RedirectToPage("/NoPermiso");
+                }
+                return Page();
+            }
+            catch (Exception ex)
+            {
 
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return Page();
+            }
         }
         public async Task<IActionResult> OnPostAsync()
         {
             try
             {
-                
+                var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "2").FirstOrDefault()))
+                {
+                    return RedirectToPage("/NoPermiso");
+                }
                 await service.Agregar(Objeto);
                 return RedirectToPage("./Index");
             }

@@ -21,7 +21,7 @@ namespace InversionGloblalWeb.Models
         public decimal Impuesto4 { get; set; }
         public decimal Impuesto8 { get; set; }
         public decimal Impuesto13 { get; set; }
-
+        public decimal TotalOtrosCargos { get; set; }
         public decimal Total { get; set; }
         public string CodMoneda { get; set; }
     }

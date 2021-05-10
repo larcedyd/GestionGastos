@@ -68,6 +68,11 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         {
             try
             {
+                var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "4").FirstOrDefault()))
+                {
+                    return RedirectToPage("/NoPermiso");
+                }
                 DateTime time = DateTime.Now;
 
                 Periodos = new string[12] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre" };
@@ -129,7 +134,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
             {
 
 
-                var ids = Convert.ToInt32(id);
+                //var ids = Convert.ToInt32(id);
 
                 ParametrosFiltros filt = new ParametrosFiltros();
                 filt.Texto = id;
@@ -210,7 +215,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Total = recibido.EncCompras.Total;
                 Liquidacion.EncCierre.Estado = "P";
                 Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
-                
+                Liquidacion.EncCierre.TotalOtrosCargos = recibido.EncCompras.TotalOtrosCargos;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)
@@ -277,6 +282,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Total = recibido.EncCompras.Total;
                 Liquidacion.EncCierre.Estado = "E";
                 Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
+                Liquidacion.EncCierre.TotalOtrosCargos = recibido.EncCompras.TotalOtrosCargos;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)
@@ -357,6 +363,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Objeto1.EncCompras.TotalVenta = recibido.EncCompras.TotalVenta;
                 Objeto1.EncCompras.RegimenSimplificado = recibido.EncCompras.RegimenSimplificado;
                 Objeto1.EncCompras.FacturaExterior = recibido.EncCompras.FacturaExterior;
+                Objeto1.EncCompras.GastosVarios = recibido.EncCompras.GastosVarios;
+
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)

@@ -208,6 +208,20 @@
 
                         </div>
                     </div>
+
+                    <label asp-for="Input.idLoginAceptacion" class="col-form-label">Usuario Aprobador:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <select asp-for="Input.idLoginAceptacion" class="form-control form-contro-sm">
+                                <option value="0">Seleccione</option>
+                                @foreach (var item in Model.Usuarios)
+                                {
+                                    <option value="@item.id">@item.Nombre </option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

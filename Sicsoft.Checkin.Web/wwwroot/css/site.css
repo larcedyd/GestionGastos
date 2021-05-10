@@ -690,3 +690,16 @@ h2 {
         overflow: visible;
     }
 }
+
+.imgNav {
+    width: 27px;
+    image-resolution: from-image;
+    image-rendering: unset;
+    
+}
+.NAVA, .NAVA:hover{
+    font-size: 12px !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    margin-left: -10px !important;
+}

@@ -37,7 +37,11 @@ namespace InversionGloblalWeb.Pages.Gastos
         {
             try
             {
-               
+                var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "3").FirstOrDefault()))
+                {
+                    return RedirectToPage("/NoPermiso");
+                }
                 Objeto = await service.ObtenerLista(filtro);
                 Cuentas = await cuentas.ObtenerLista("");
 

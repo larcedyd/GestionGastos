@@ -2,6 +2,7 @@
 @model InversionGloblalWeb.Pages.Gastos.IndexModel
 @{
     ViewData["Title"] = "Tipos de Gastos";
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
 }
 
 @section Title{
@@ -25,7 +26,10 @@
     </li>
 }
 @section TitleAction{
-    <a asp-page="Nuevo" class="btn btn-primary" title="Agregar"><i class="fa fa-plus"></i> Agregar Gasto</a>
+    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "16").FirstOrDefault()))
+    {
+        <a asp-page="Nuevo" class="btn btn-primary" title="Agregar"><i class="fa fa-plus"></i> Agregar Gasto</a>
+    }
 }
 @section styles{
     <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
@@ -143,10 +147,10 @@
                              }
              },
              beforeSend: function () {
-                 
+
              },
              complete: function () {
-         
+
              }
                      })
         }
@@ -226,7 +230,7 @@
                         <td align="center" style="width: 25%;"><h3>ID. Cuenta</h3></td>
                         <td align="center" style="width: 25%;"><h3>Cuenta Contable</h3></td>
                         <td align="center" style="width: 25%;"><h3>Nombre</h3></td>
-                      
+
                         <td align="center" style="width: 25%;"><h3>Acción</h3></td>
                     </tr>
 
@@ -235,27 +239,34 @@
 
                     @foreach (var item in Model.Objeto)
                     {
-                    <tr>
+                        <tr>
 
-                        <td align="center" style="padding-top:15px;">
-                            <a style="font-size:15px;  ">
-                                @(Model.Cuentas.Where(a => a.idCuentaContable == item.idCuentaContable).FirstOrDefault() == null ? "" : Model.Cuentas.Where(a => a.idCuentaContable == item.idCuentaContable).FirstOrDefault().CodSAP  )
-                            </a>
-                        </td>
-                        <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @(Model.Cuentas.Where(a => a.idCuentaContable == item.idCuentaContable).FirstOrDefault() == null ? "" : Model.Cuentas.Where(a => a.idCuentaContable == item.idCuentaContable).FirstOrDefault().Nombre  ) </a></td>
-                        <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Nombre</a></td>
-                        <td align="center" style="padding-top:15px;">
-                            <a asp-page="./Editar" asp-route-id="@item.idTipoGasto" title="Editar" class="fa fa-edit icono"> </a> &nbsp;
-                            <a onclick="javascript: onClickModal('@item.idTipoGasto')" title="Eliminar" class="fa fa-trash icono"></a>
+                            <td align="center" style="padding-top:15px;">
+                                <a style="font-size:15px;  ">
+                                    @(Model.Cuentas.Where(a => a.idCuentaContable == item.idCuentaContable).FirstOrDefault() == null ? "" : Model.Cuentas.Where(a => a.idCuentaContable == item.idCuentaContable).FirstOrDefault().CodSAP  )
+                                </a>
+                            </td>
+                            <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @(Model.Cuentas.Where(a => a.idCuentaContable == item.idCuentaContable).FirstOrDefault() == null ? "" : Model.Cuentas.Where(a => a.idCuentaContable == item.idCuentaContable).FirstOrDefault().Nombre  ) </a></td>
+                            <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Nombre</a></td>
+                            <td align="center" style="padding-top:15px;">
+                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "17").FirstOrDefault()))
+                                {
+                                    <a asp-page="./Editar" asp-route-id="@item.idTipoGasto" title="Editar" class="fa fa-edit icono"> </a>
+                                }
+                                &nbsp;
+                                <a onclick="javascript: onClickModal('@item.idTipoGasto')" title="Eliminar" class="fa fa-trash icono"></a>
 
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
 
                     }
                 </tbody>
             </table>
 
         </div>
-        <a asp-page="Nuevo" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Gasto</a>
+        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "16").FirstOrDefault()))
+        {
+            <a asp-page="Nuevo" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Agregar Gasto</a>
+        }
     </div>
 </div>

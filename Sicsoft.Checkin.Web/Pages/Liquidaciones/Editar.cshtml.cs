@@ -66,6 +66,11 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         {
             try
             {
+                var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "4").FirstOrDefault()))
+                {
+                    return RedirectToPage("/NoPermiso");
+                }
                 var ids = Convert.ToInt32(id);
                 Liquidacion = await liquidaciones.ObtenerPorId(ids);
 
@@ -120,13 +125,13 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
             }
         }
 
-        public async Task<IActionResult> OnGetBuscar(int idB, int cierre)
+        public async Task<IActionResult> OnGetBuscar(string idB, int cierre)
         {
             try
             {
 
 
-                var ids = Convert.ToInt32(idB);
+                //var ids = Convert.ToInt32(idB);
                 var cierres = await liquidaciones.ObtenerPorId(cierre); 
                 ParametrosFiltros filt = new ParametrosFiltros();
                 filt.Texto = idB.ToString();
@@ -208,6 +213,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Total = recibido.EncCompras.Total;
                 Liquidacion.EncCierre.Estado = "P";
                 Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
+                Liquidacion.EncCierre.TotalOtrosCargos = recibido.EncCompras.TotalOtrosCargos;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)
@@ -277,6 +283,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Total = recibido.EncCompras.Total;
                 Liquidacion.EncCierre.Estado = "E";
                 Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
+                Liquidacion.EncCierre.TotalOtrosCargos = recibido.EncCompras.TotalOtrosCargos;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)
@@ -352,6 +359,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Objeto1.EncCompras.ImagenBase64 = recibido.EncCompras.ImagenBase64;
                 Objeto1.EncCompras.TotalVenta = recibido.EncCompras.TotalVenta;
                 Objeto1.EncCompras.RegimenSimplificado = recibido.EncCompras.RegimenSimplificado;
+                Objeto1.EncCompras.GastosVarios = recibido.EncCompras.GastosVarios;
                 Objeto1.EncCompras.FacturaExterior = recibido.EncCompras.FacturaExterior;
                 short cantidad = 1;
 

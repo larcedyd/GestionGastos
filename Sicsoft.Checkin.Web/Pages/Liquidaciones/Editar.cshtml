@@ -149,7 +149,7 @@
         var impuesto4 = 0;
         var impuesto8 = 0;
         var impuesto13 = 0;
-
+        var oCargos = 0;
 
 
         function Recuperar() {
@@ -177,14 +177,15 @@
 
                 var detalle = {
                     id: det[i].id,
-                    Proveedor: (det[i].NomProveedor.length > 21 ? det[i].NomProveedor.substr(0, 21) : det[i].NomProveedor),
+                    Proveedor: (det[i].NomProveedor.length > 40 ? det[i].NomProveedor.substr(0, 40) : det[i].NomProveedor),
                     CHacienda: det[i].ConsecutivoHacienda,
                 //    idTipoGasto: $("#idTipoGasto").val(),
                     Fecha: det[i].FecFactura.substr(8, 2) + "/" + det[i].FecFactura.substr(5, 2) + "/" + det[i].FecFactura.substr(0, 4),
                     SubTotal: det[i].TotalVenta,
                     Descuento: det[i].TotalDescuentos,
                     Impuesto: det[i].TotalImpuesto,
-                Total: 0,
+                    Total: 0,
+                    TotalOtrosCargos : det[i].TotalOtrosCargos,
                     Impuesto1: det[i].Impuesto1,
                     Impuesto2: det[i].Impuesto2,
                     Impuesto4: det[i].Impuesto4,
@@ -197,11 +198,13 @@
             var subtotalT = 0;
             var descuentoT = 0;
             var impuestoT = 0;
-            var totalT = 0;
+                var totalT = 0;
+                var oCargosT = 0;
             subtotalT = parseFloat(detalle.SubTotal);
             descuentoT = parseFloat(detalle.Descuento);
             impuestoT = parseFloat(detalle.Impuesto);
-            detalle.Total = (subtotalT - descuentoT) + impuestoT
+                oCargosT = parseFloat(detalle.TotalOtrosCargos);
+                detalle.Total = (subtotalT - descuentoT) + impuestoT + oCargosT;
             ProdCadena.push(detalle);
             totalT = parseFloat(detalle.Total);
             var impuesto1T = parseFloat(detalle.Impuesto1);
@@ -215,7 +218,7 @@
             subtotal += subtotalT;
             descuentos += descuentoT;
             impuestos += impuestoT;
-
+                oCargos += oCargosT;
             totalComprobante += totalT;
             impuesto1 += impuesto1T;
             impuesto2 += impuesto2T;
@@ -227,7 +230,7 @@
             $("#descuento").text(formatoDecimal(parseFloat(descuentos).toFixed(2)));
             $("#impuesto").text(formatoDecimal(parseFloat(impuestos).toFixed(2)));
             $("#total").text(formatoDecimal(parseFloat(totalComprobante).toFixed(2)));
-
+                $("#tOCargos").text(formatoDecimal(parseFloat(oCargos).toFixed(2)));
             $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
             $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
             $("#impuesto4").text(formatoDecimal(parseFloat(impuesto4).toFixed(2)));
@@ -254,8 +257,8 @@
                 $("#Existencia").text("");
                 if (result != null) {
 
-                    if (result.nomProveedor.length > 21) {
-                        $("#Proveedor").text(result.nomProveedor.substr(0, 21));
+                    if (result.nomProveedor.length > 40) {
+                        $("#Proveedor").text(result.nomProveedor.substr(0, 40));
                     } else {
                         $("#Proveedor").text(result.nomProveedor);
                     }
@@ -273,13 +276,14 @@
                     $("#sub").val(result.totalVenta);
                     $("#desc").val(result.totalDescuentos);
                     $("#imp").val(result.totalImpuesto);
-
+                    $("#otrosCargos").val(result.totalOtrosCargos);
 
                     $("#imp1").val(result.impuesto1);
                     $("#imp2").val(result.impuesto2);
                     $("#imp4").val(result.impuesto4);
                     $("#imp8").val(result.impuesto8);
                     $("#imp13").val(result.impuesto13);
+                    $("#otrosCargos").val(result.totalOtrosCargos);
                     $("#idTipoGastoEditar").val(result.idTipoGasto).trigger('change.select2');
                     $("#tipoGasto").text(result.tipoGasto);
                     console.log(result.pdfFactura);
@@ -299,7 +303,8 @@
                         Impuesto2: $("#imp2").val(),
                         Impuesto4: $("#imp4").val(),
                         Impuesto8: $("#imp8").val(),
-                        Impuesto13: $("#imp13").val()
+                        Impuesto13: $("#imp13").val(),
+                        TotalOtrosCargos: $("#otrosCargos").val()
                     };
 
                     console.log("Ya esta asignada: " + result.idCierre);
@@ -308,14 +313,14 @@
                         $("#Existencia").text(str);
                         LimpiarDatos();
                     } else if ((result.idCierre != 0 && result.idCierre != parseInt($("#idCierre").val()))) {
-                        var str = "No existe, no es de este periodo o ya esta asignada";
+                        var str = "No existe, no es de este periodo o ya esta asignada. Puedes intentar colocando más dígitos del consecutivo de hacienda.";
                         $("#Existencia").text(str);
                         LimpiarDatos();
                     }
 
                 } else {
 
-                    var str = "No existe, no es de este periodo o ya esta asignada";
+                    var str = "No existe, no es de este periodo o ya esta asignada. Puedes intentar colocando más dígitos del consecutivo de hacienda.";
                     $("#Existencia").text(str);
                     LimpiarDatos();
 
@@ -334,11 +339,22 @@
 
         }
 
+        function ValidarAntesTabla() {
+            if ($("#Proveedor").text() == "") {
+                return false;
+            } else if ($("#idTipoGastoEditar").val() == "0" || $("#idTipoGastoEditar").val() == null) {
+                return false;
+            }
+
+            else {
+                return true;
+            }
+        }
        function InsertarProductoTabla() {
 
 
 
-                if ($("#Proveedor").text() != "" ) {
+           if (ValidarAntesTabla()) {
 
 
                     var detalle = {
@@ -356,7 +372,8 @@
                         Impuesto4: $("#imp4").val(),
                         Impuesto8: $("#imp8").val(),
                         Impuesto13: $("#imp13").val(),
-                        idTipoGasto: $("#idTipoGastoEditar").val()
+                        idTipoGasto: $("#idTipoGastoEditar").val(),
+                        TotalOtrosCargos: $("#otrosCargos").val()
                     };
 
 
@@ -364,10 +381,12 @@
                     var descuentoT = 0;
                     var impuestoT = 0;
                     var totalT = 0;
+               var oCargosT = 0;
                     subtotalT = parseFloat(detalle.SubTotal);
                     descuentoT = parseFloat(detalle.Descuento);
-                    impuestoT = parseFloat(detalle.Impuesto);
-                    detalle.Total = (subtotalT - descuentoT )+ impuestoT
+               impuestoT = parseFloat(detalle.Impuesto);
+               oCargosT = parseFloat(detalle.TotalOtrosCargos);
+               detalle.Total = (subtotalT - descuentoT) + impuestoT + oCargosT;
                      ProdCadena.push(detalle);
                     totalT = parseFloat(detalle.Total);
                     var impuesto1T = parseFloat(detalle.Impuesto1);
@@ -375,7 +394,6 @@
                     var impuesto4T = parseFloat(detalle.Impuesto4);
                     var impuesto8T = parseFloat(detalle.Impuesto8);
                     var impuesto13T = parseFloat(detalle.Impuesto13);
-
 
 
                     subtotal += subtotalT;
@@ -388,12 +406,12 @@
                     impuesto4 += impuesto4T;
                     impuesto8 += impuesto8T;
                     impuesto13 += impuesto13T;
-
+               oCargos += oCargosT;
                     $("#subtotal").text(formatoDecimal(parseFloat(subtotal).toFixed(2)));
                     $("#descuento").text(formatoDecimal(parseFloat(descuentos).toFixed(2)));
                     $("#impuesto").text(formatoDecimal(parseFloat(impuestos).toFixed(2)));
                     $("#total").text(formatoDecimal(parseFloat(totalComprobante).toFixed(2)));
-
+               $("#tOCargos").text(formatoDecimal(parseFloat(oCargos).toFixed(2)));
                     $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
                     $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
                     $("#impuesto4").text(formatoDecimal(parseFloat(impuesto4).toFixed(2)));
@@ -403,7 +421,14 @@
 
                    RellenaTabla();
                 }
+           else {
+               Swal.fire({
+                   icon: 'error',
+                   title: 'Oops...',
+                   text: 'Pareciera que aún falta un campo por llenar'
 
+               });
+           }
         }
         function LimpiarDatos() {
             $("#Proveedor").text("");
@@ -424,6 +449,7 @@
             $("#imp4").val(0);
             $("#imp8").val(0);
             $("#imp13").val(0);
+            $("#otrosCargos").val(0);
             $("#Busqueda").val("")
             $("#adjunto").attr('href', '');
             $("#tipoGasto").text("");
@@ -472,17 +498,17 @@
                     var subtotalT = 0;
                     var descuentoT = 0;
                     var impuestoT = 0;
-
+                    var oCargosT = 0;
                     subtotalT = parseFloat(ProdCadena[campo].SubTotal);
                     descuentoT = parseFloat(ProdCadena[campo].Descuento);
                     impuestoT = parseFloat(ProdCadena[campo].Impuesto);
-
+                    oCargosT = parseFloat(ProdCadena[campo].TotalOtrosCargos);
                     totalT = parseFloat(ProdCadena[campo].Total);
 
                     subtotal -= subtotalT;
                     descuentos -= descuentoT;
                     impuestos -= impuestoT;
-
+                    oCargos -= oCargosT;
                     totalComprobante -= totalT;
                     var impuesto1T = parseFloat(ProdCadena[campo].Impuesto1);
                     var impuesto2T = parseFloat(ProdCadena[campo].Impuesto2);
@@ -501,7 +527,7 @@
                     $("#descuento").text(formatoDecimal(descuentos.toFixed(2)));
                     $("#impuesto").text(formatoDecimal(impuestos.toFixed(2)));
                     $("#total").text(formatoDecimal(totalComprobante.toFixed(2)));
-
+                    $("#tOCargos").text(formatoDecimal(parseFloat(oCargos).toFixed(2)));
                     $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
                     $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
                     $("#impuesto4").text(formatoDecimal(parseFloat(impuesto4).toFixed(2)));
@@ -603,6 +629,7 @@
                 Impuesto4: $("#impuesto4").text(),
                 Impuesto8: $("#impuesto8").text(),
                 Impuesto13: $("#impuesto13").text(),
+                TotalOtrosCargos: $("#tOCargos").text(),
                 Total: $("#total").text()
             };
 
@@ -631,7 +658,7 @@
             if (validar(EncCompras)) {
 
                 Swal.fire({
-                    title: '¿Desea enviar a guardar esta liquidación?',
+                    title: '¿Desea guardar los cambios de esta liquidación?',
                     showDenyButton: true,
                     showCancelButton: false,
                     confirmButtonText: `Aceptar`,
@@ -814,6 +841,7 @@
                 Impuesto4: $("#impuesto4").text(),
                 Impuesto8: $("#impuesto8").text(),
                 Impuesto13: $("#impuesto13").text(),
+                TotalOtrosCargos: $("#tOCargos").text(),
                 Total: $("#total").text()
             };
 
@@ -1035,6 +1063,7 @@
                         <input hidden id="imp4" type="number" />
                         <input hidden id="imp8" type="number" />
                         <input hidden id="imp13" type="number" />
+                        <input hidden id="otrosCargos" type="number" />
                         <label id="Existencia" style="color: red;"> </label>
                         <div class="row">
                             <div class="col-sm-6">
@@ -1079,9 +1108,9 @@
                                         <select id="idTipoGastoEditar" class="form-control  mi-selector">
                                             <option value="0" selected>-Sin Asignar-</option>
                                             @foreach (var item in Model.Gastos)
-                                                 {
-                                            <option value="@item.idTipoGasto">@item.Nombre</option>
-                                                  }
+                                            {
+                                                <option value="@item.idTipoGasto">@item.Nombre</option>
+                                            }
 
 
 
@@ -1301,7 +1330,16 @@
                                                 <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
                                             </td>
                                         </tr>
+                                        <tr>
 
+                                            <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Otros Cargos:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="tOCargos" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                            </td>
+                                        </tr>
                                         <tr>
 
                                             <td style="text-align: center;">
@@ -1332,7 +1370,7 @@
             <button onclick="javascript: Generar();" class="btn btn-w-m btn-primary botonAbajo" id="GuardarCambios" title="Guardar">Guardar Cambios</button> &nbsp;
             @*<button onclick="javascript: EnviarRevision();" id="btnEnviarRevision botonAbajo" class="btn btn-w-m btn-success" title="Enviar a Revisión">Enviar a Revisión</button>
             &nbsp;*@
-            <button onclick="javascript: GeneraryEnviar();" class="btn btn-w-m btn-warning botonAbajo" title="Guardar y enviar a revisión">Guardar y Revisión</button>
+            <button onclick="javascript: GeneraryEnviar();" class="btn btn-w-m btn-warning botonAbajo" title="Guardar y enviar a revisión">Guardar y Aprobar</button>
         </div>
     </div>
 </div>
@@ -1429,7 +1467,7 @@
 
 
 
-                                <label class="col-form-label">Tipo Factura:</label>
+                                <label class="col-form-label">Tipo Documento:</label>
                                 <div class="row">
                                     <div class="col-sm-12">
                                         <label class="checkbox" style="text-decoration: none; font-size: 13px;">
@@ -1442,6 +1480,13 @@
                                         <label class="checkbox" style="text-decoration: none; font-size: 13px;">
                                             Factura Exterior
                                             <input type="checkbox" id="ext" onchange="javascript: check('2');">
+                                            <span class="check"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                            Gastos Varios
+                                            <input type="checkbox" id="var" onchange="javascript: check('3');">
                                             <span class="check"></span>
                                         </label>
                                     </div>
@@ -1673,6 +1718,8 @@
                                                             </td>
                                                         </tr>
 
+
+                                                       
                                                         <tr>
 
                                                             <td style="text-align: center;">
@@ -1789,15 +1836,18 @@
 
         var checkbox1 = document.getElementById("simp");
         var checkbox2 = document.getElementById("ext");
+        var checkbox3 = document.getElementById("var");
         if (i == "1") {
-            console.log("aca 1");
+
             checkbox2.checked = false;
+            checkbox3.checked = false;
             checkbox1.checked = true;
             $("#CHacienda").removeAttr("readonly");
             $("#ConsHacienda").removeAttr("readonly");
 
-        } else {
-            console.log("aca 2");
+        }
+        else if (i == "2") {
+            checkbox3.checked = false;
             checkbox2.checked = true;
             checkbox1.checked = false;
             $("#CHacienda").attr("readonly", "readonly");
@@ -1805,6 +1855,10 @@
 
             $("#CHacienda").val("");
             $("#ConsHacienda").val("");
+        } else {
+            checkbox3.checked = true;
+            checkbox2.checked = false;
+            checkbox1.checked = false;
         }
     }
     function AbrirModal() {
@@ -2060,7 +2114,8 @@
                   }
 
                  var checkbox1 = document.getElementById("simp");
-                 var checkbox2 = document.getElementById("ext");
+                  var checkbox2 = document.getElementById("ext");
+                  var checkbox3 = document.getElementById("var");
                  var EncCompras =
                     {
                         ClaveHacienda: $("#NumFactura").val(),
@@ -2085,7 +2140,8 @@
                         TotalComprobante: $("#totalI").text(),
                         ImagenBase64: (ImageBae64 === '' ? '' : ImageBae64.toString().replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '')),
                         RegimenSimplificado: checkbox1.checked,
-                        FacturaExterior: checkbox2.checked
+                     FacturaExterior: checkbox2.checked,
+                     GastosVarios: checkbox3.checked
                     };
 
                     var DetCompras = Productos;
@@ -2128,7 +2184,8 @@
                                       Impuesto4: parseFloat(EncCompras.Impuesto4.replace(",", "")),
                                       Impuesto8: parseFloat(EncCompras.Impuesto8.replace(",", "")),
                                       Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "")),
-                                      idTipoGasto: Productos[0].idTipoGasto
+                                      idTipoGasto: Productos[0].idTipoGasto,
+                                      TotalOtrosCargos: 0
                                   };
 
                                   console.log(EncCompras);

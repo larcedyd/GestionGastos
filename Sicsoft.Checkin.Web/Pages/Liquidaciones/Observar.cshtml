@@ -472,6 +472,17 @@
                                         <tr>
 
                                             <td style="text-align: center;">
+                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Otros Cargos:</label>
+
+                                            </td>
+                                            <td>
+                                                <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.TotalOtrosCargos, 2).ToString("N", formato)</label>
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+
+                                            <td style="text-align: center;">
                                                 <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Total:</label>
 
                                             </td>

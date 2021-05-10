@@ -15,6 +15,7 @@ namespace Sicsoft.CostaRica.Checkin.Web.Pages.Account
     public class RegistroUsuarioModel : PageModel
     {
         private readonly ICrudApi<LoginUsuario, int> service;
+        private readonly ICrudApi<UsuariosViewModel, int> users;
         private readonly ICrudApi<RolesViewModel, int> roles;
 
         [BindProperty]
@@ -23,17 +24,24 @@ namespace Sicsoft.CostaRica.Checkin.Web.Pages.Account
         [BindProperty]
         public RolesViewModel[] Roles { get; set; }
 
-        public RegistroUsuarioModel(ICrudApi<LoginUsuario, int> service, ICrudApi<RolesViewModel, int> roles)
+        [BindProperty]
+        public UsuariosViewModel[] Usuarios { get; set; }
+
+        public RegistroUsuarioModel(ICrudApi<LoginUsuario, int> service, ICrudApi<RolesViewModel, int> roles, ICrudApi<UsuariosViewModel, int> users)
         {
             this.service = service;
             this.roles = roles;
-           
+            this.users = users;
         }
         public async Task<IActionResult> OnGetAsync()
         {
             try
             {
                 Roles = await roles.ObtenerLista("");
+                Usuarios = await users.ObtenerLista("");
+
+                var Rol = Roles.Where(a => a.NombreRol.ToUpper().Contains("Aprobador".ToUpper())).FirstOrDefault();
+                Usuarios = Usuarios.Where(a => a.idRol == Rol.idRol).ToArray();
             }
             catch (Exception)
             {
@@ -51,6 +59,22 @@ namespace Sicsoft.CostaRica.Checkin.Web.Pages.Account
                 if (string.IsNullOrEmpty(Input.Clave))
                 {
                     throw new Exception("La clave debe contener elementos");
+                }
+
+                if (Input.idLoginAceptacion == 0)
+                {
+                    Usuarios = await users.ObtenerLista("");
+
+                    var Rol = Roles.Where(a => a.NombreRol.ToUpper().Contains("Aprobador".ToUpper())).FirstOrDefault();
+                    Usuarios = Usuarios.Where(a => a.idRol == Rol.idRol).ToArray();
+
+                    if(Usuarios.Count() > 0)
+                    {
+
+
+                        throw new Exception("Debe seleccionar un usuario aprobador");
+                    }
+                   
                 }
                 await service.Agregar(Input);
                 return Redirect("../Index");
