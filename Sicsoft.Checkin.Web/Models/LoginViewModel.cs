@@ -13,5 +13,7 @@ namespace Sicsoft.Checkin.Web.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
 
+        public string CedulaJuridica { get; set; }
+
     }
 }

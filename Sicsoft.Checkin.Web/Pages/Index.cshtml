@@ -2,5 +2,306 @@
 @model IndexModel
 @{
     ViewData["Title"] = "Inicio";
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
 }
-    
+
+
+@using System.Globalization;
+@{
+    NumberFormatInfo formato = new CultureInfo("en-US").NumberFormat;
+    formato.CurrencyGroupSeparator = ",";
+    formato.NumberDecimalSeparator = ".";
+
+
+}
+
+
+@section styles{
+    <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2-bootstrap4.min.css" />
+    <link href="~/lib/dropzone/basic.css" rel="stylesheet" />
+    <link href="~/lib/dropzone/dropzone.css" rel="stylesheet" />
+    <link href="~/lib/iCheck/skins/square/green.css" rel="stylesheet" />
+    <link href="~/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css">
+    <style>
+        .tableFixHead th {
+            position: sticky;
+            top: 0;
+            background: white;
+        }
+    </style>
+
+}
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    <script src="~/lib/dropzone/dropzone.js"></script>
+    <script src="~/lib/iCheck/icheck.js"></script>
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            jQuery(document).ready(function ($) {
+                $(document).ready(function () {
+                    $('.mi-selector').select2();
+                });
+            });
+            $(".js-example-responsive").select2({
+                width: 'resolve',// need to override the changed default
+                height: 'resolve'
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 10,
+                responsive: true,
+                order: [[0, "desc"]]
+
+            });
+
+
+            PintarGrafico();
+            PintarGraficoAnual();
+        });
+        var det = [];
+        var Leyendas1 = [];
+        var datas = [];
+
+        var detA = [];
+        var Leyendas2 = [];
+        var datasA = [];
+
+        var colores = [];//['#42a5f5', 'red', 'green', 'blue', 'violet', 'yellow', ''];
+        function PintarGrafico() {
+
+            det = JSON.parse($("#Compras").val());
+
+            console.log(det);
+            for (var i = 0; i < det.length; i++) {
+                Leyendas1.push(det[i][0].TipoGasto);
+                colores.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16));
+                console.log(typeof (det[i][0].TipoGasto));
+                var sum = 0;
+                for (var j = 0; j < det[i].length; j++) {
+                    sum += det[i][j].TotalComprobante;
+                }
+                datas.push(sum);
+
+            }
+            console.log("Datos: " + Leyendas1);
+            console.log("Datos1: " + datas);
+
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: datas,
+                        backgroundColor: colores,
+                        label: 'Compras Mensuales'
+                    }],
+                    labels: Leyendas1
+                },
+                options: { responsive: true }
+            });
+        }
+
+        function PintarGraficoAnual() {
+
+            detA = JSON.parse($("#ComprasA").val());
+
+
+            for (var i = 0; i < detA.length; i++) {
+                Leyendas2.push(detA[i][0].TipoGasto);
+                colores.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16));
+                console.log(typeof (detA[i][0].TipoGasto));
+                var sum = 0;
+                for (var j = 0; j < detA[i].length; j++) {
+                    sum += detA[i][j].TotalComprobante;
+                }
+                datasA.push(sum);
+
+            }
+
+
+            var ctx = document.getElementById('myChart2').getContext('2d');
+            var chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: datasA,
+                        backgroundColor: colores,
+                        label: 'Compras Anuales'
+                    }],
+                    labels: Leyendas2
+                },
+                options: { responsive: true }
+            });
+        }
+
+    </script>
+
+}
+@using Microsoft.AspNetCore.Http
+@using System;
+@using System.Collections.Generic;
+@using System.IO;
+@using System.Linq;
+@using System.Security.Claims;
+@using System.Threading.Tasks;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.Extensions.Configuration;
+@using Refit;
+@using Sicsoft.Checkin.Web.Models;
+@using Newtonsoft.Json;
+@inject IHttpContextAccessor httpContextAccessor
+
+@if (!string.IsNullOrEmpty(Roles.Where(a => a == "20").FirstOrDefault()))
+{
+    <div class="ibox">
+        <div class="ibox-content">
+            <form method="get">
+                <h2>Filtros:</h2>
+
+                <div>
+                    <div class="row">
+
+
+
+                        <div class="col-sm-6">
+
+                        </div>
+                        <div class="col-sm-6">
+
+                            <div class="form-group row">
+
+                                <div class="col-sm-10">
+
+                                    <select asp-for="filtro.Codigo1" id="user" class="form-control  mi-selector">
+                                        @{var iD = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()); }
+                                        <option value="0" selected>@(Model.Usuarios.Where(a => a.id == iD).FirstOrDefault() == null ? "Propio" : Model.Usuarios.Where(a => a.id == iD).FirstOrDefault().Nombre)</option>
+
+                                        @foreach (var item in Model.Usuarios.Where(a => a.id != iD).ToArray())
+                                        {
+                                            <option value="@item.id">@item.id -  @item.Nombre</option>
+                                        }
+                                        <option value="-1">Acumulado</option>
+
+
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-sm-12">
+                            <br />
+                        </div>
+
+
+
+
+
+
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+
+                        </div>
+                        <div class="col-sm-6" style="text-align: right;">
+                            <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>&nbsp;
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+}
+
+<div class="ibox">
+    <input hidden id="Compras" value="@JsonConvert.SerializeObject(Model.Compras)" />
+    <input hidden id="ComprasA" value="@JsonConvert.SerializeObject(Model.ComprasAnuales)" />
+    <div class="ibox-content">
+        <div class="row">
+            <div class="col-sm-4">
+                <div class="ibox ">
+                    <div class="ibox-title">
+                        <span class="label label-info float-right">Mensual</span>
+                        <h5>Mes Actual</h5>
+                    </div>
+                    <div class="ibox-content">
+                        <h1 class="no-margins">@decimal.Round(Model.MesActual.MontoAcumulado, 2).ToString("N", formato)</h1>
+                        @{ decimal a = 0; try
+                            {
+
+                                a =
+                               decimal.Round(
+(((Model.MesActual.MontoAcumulado - Model.MesAnterior.MontoAcumulado) / Model.MesAnterior.MontoAcumulado) * 100), 2);
+                            }
+                            catch (Exception) { a = Model.MesActual.MontoAcumulado; } }
+                        
+                        <div class=" @(a > 0 ? "stat-percent font-bold text-info" : "stat-percent font-bold text-danger")">
+                            @a.ToString("N", formato)  % <i class="@(a > 0 ? "fa fa-level-up" : "fa fa-level-down")"></i>
+                        </div>
+
+                    </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <span class="label label-info float-right">Mensual</span>
+                            <h5>Mes Anterior</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins">@decimal.Round(Model.MesAnterior.MontoAcumulado, 2).ToString("N", formato)</h1>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="ibox ">
+                        <div class="ibox-title">
+                            <span class="label label-warning float-right">Anual</span>
+                            <h5>Año</h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h1 class="no-margins">@decimal.Round(Model.Año.MontoAcumulado, 2).ToString("N", formato)</h1>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ibox">
+        <div class=" ibox-content">
+            <div class="row">
+                <div class="col-sm-6">
+                    <center>
+
+                        <canvas id="myChart"></canvas>
+                        <h5>Gastos Mensuales</h5>
+                    </center>
+                </div>
+
+                <div class="col-sm-6">
+                    <center>
+
+                        <canvas id="myChart2"></canvas>
+                        <h5>Gastos Anuales</h5>
+                    </center>
+                </div>
+
+            </div>
+
+        </div>
+    </div>

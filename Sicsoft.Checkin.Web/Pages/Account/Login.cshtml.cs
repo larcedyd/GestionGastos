@@ -43,7 +43,7 @@ namespace Sicsoft.Checkin.Web
             ActionResult response = Page();
             try
             {
-                var resultado = await checkInService.Login(Input.Email, Input.Password);
+                var resultado = await checkInService.Login(Input.Email, Input.Password, Input.CedulaJuridica);
                 string str = "";
 
                 foreach(var item in resultado.Seguridad)

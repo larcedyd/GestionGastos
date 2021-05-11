@@ -54,7 +54,9 @@
 
                 </div>
                 <div class="logo-element">
-                    <div class="row"></div>
+                    <div class="row">
+                        <img alt="image" class="m-l-xl" style="max-width: 66%; margin-left: 13px;" src="@(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Logo").Select(s1 => s1.Value).FirstOrDefault())">
+                    </div>
                 </div>
             </li>
 

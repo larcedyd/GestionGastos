@@ -22,7 +22,7 @@ namespace Sicsoft.Checkin.Web.Servicios
         Task<TEntity> CambiarClave([Body] TEntity payload);
 
         [Get("")]
-        Task<TEntity> Login(string email, string clave);
+        Task<TEntity> Login(string email, string clave, string CedulaJuridica);
 
 
         [Get("/Listado")]
@@ -30,6 +30,9 @@ namespace Sicsoft.Checkin.Web.Servicios
 
         [Get("")]
         Task<TEntity[]> ObtenerLista<TQuery>(TQuery q);
+
+        [Get("")]
+        Task<TEntity> ObtenerHeader<TQuery>(TQuery q);
 
         [Get("/RealizarLecturaEmail")]
         Task RealizarLecturaEmails();
