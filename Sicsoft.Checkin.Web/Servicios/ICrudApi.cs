@@ -34,6 +34,9 @@ namespace Sicsoft.Checkin.Web.Servicios
         [Get("")]
         Task<TEntity> ObtenerHeader<TQuery>(TQuery q);
 
+        [Get("/Insertar")]
+        Task<TEntity> InsertarAsiento(int idCierre);
+
         [Get("/RealizarLecturaEmail")]
         Task RealizarLecturaEmails();
 

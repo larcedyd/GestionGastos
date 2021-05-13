@@ -194,7 +194,7 @@
                                 <a onclick="javascript: onClickModal('@item.idRol')" class="fa fa-trash icono"></a>&nbsp;
                                 @if (!string.IsNullOrEmpty(Roles.Where(a => a == "6").FirstOrDefault()))
                                 {
-                                    <a asp-page="./RolesModulos" asp-route-id="@item.idRol" class="fa fa-exchange icono" style="color: #FFB700;"> </a>
+                                    <a asp-page="./RolesModulos" asp-route-id="@item.idRol" title="Asignar módulos" class="fa fa-exchange icono" style="color: #FFB700;"> </a>
                                 }
                             </td>
 

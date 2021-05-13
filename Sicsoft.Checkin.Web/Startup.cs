@@ -186,6 +186,10 @@ namespace Sicsoft.Checkin.Web
      .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Reportes/Graficos"))
      .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
+            services.AddRefitClient<ICrudApi<DevolucionSAP, int>>()
+     .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Asientos"))
+     .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
             //services.AddRefitClient<ICrudApi<EjecutivosViewModel, int>>()
             //.ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["CheckInAPIEndpoint"]}/api/Ejecutivos"))
             //// Add additional IHttpClientBuilder chained methods as required here:

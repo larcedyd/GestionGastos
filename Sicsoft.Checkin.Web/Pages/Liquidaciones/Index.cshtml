@@ -47,7 +47,7 @@
         <a asp-page="/Compras/Nuevo" class="btn btn-primary" title="Agregar Factura"><i class="fa fa-plus"></i> Incluir Factura</a>
     }
     &nbsp;
-    <a asp-page="Nuevo" class="btn btn-primary" title="Agregar"><i class="fa fa-plus"></i> Asignar</a>
+    <a asp-page="Nuevo" class="btn btn-primary" title="Agregar"><i class="fa fa-plus"></i> Liquidar</a>
 
 }
 @section styles{
@@ -178,7 +178,93 @@
 
         }
 
+        //Enviar a SAP
 
+        function EnviarAsiento(idCierre) {
+            Swal.fire({
+                title: '¿Desea crear asiento en SAP de esta liquidación?',
+                showDenyButton: true,
+                showCancelButton: false,
+                confirmButtonText: `Aceptar`,
+                denyButtonText: `Cancelar`,
+                customClass: {
+                    confirmButton: 'swalBtnColor',
+                    denyButton: 'swalDeny'
+                },
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'GET',
+
+                        url: '@Url.Page("Index", "Asiento")',
+                        dataType: 'json',
+                        data: { idB: idCierre },
+                        headers: {
+                            RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (json) {
+
+                            $("#divProcesando").hide();
+
+                            if ($('.modal-backdrop').is(':visible')) {
+
+                                $('body').removeClass('modal-open');
+                                $('.modal-backdrop').hide();
+                            }
+                            console.log("resultado " + json);
+                            if (json.status == 1) {
+                                Swal.fire({
+                                    title: "Ha sido enviado con éxito",
+
+                                    icon: 'success',
+                                    showCancelButton: false,
+
+                                    confirmButtonText: 'OK',
+                                    customClass: {
+                                        confirmButton: 'swalBtnColor',
+
+                                    },
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        location.reload();
+                                    }
+                                })
+
+                            } else {
+                                if (typeof (json) == "string") {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: json
+
+                                    })
+                                } else {
+
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: json.message
+
+                                    })
+                                }
+                            }
+                        },
+
+                        beforeSend: function (xhr) {
+
+                            $("#divProcesando").modal("show");
+                        },
+                        complete: function () {
+
+                        },
+                        error: function (error) {
+
+                        }
+                    });
+                }
+            })
+
+        }
 
 
     </script>
@@ -344,18 +430,35 @@
 
                                 }
                                 &nbsp;
-                                @if (item.Estado == "E"){
-                               
-                                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
-                                            {
+                                @if (item.Estado == "E")
+                                {
 
-                                        <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
+                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
+                                    {
+
+                                <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
+                                    }
+
+                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "10").FirstOrDefault()))
+                                    {
+                                <a onclick="javascript: CambiarEstado('@item.idCierre');" title="Cambiar estaddo a abierta" class="fa fa-clock-o icono" style="padding-left: 10px;"></a>
+                                    }
+                                }
+                                &nbsp;
+                                @if (item.Estado == "A")
+                                {
+
+                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "21").FirstOrDefault()))
+                                    {
+                                         @if(!item.ProcesadaSAP)
+
+                                           {
+
+                                    <a title="Crear asiento en SAP" class="icono" onclick="javascript: EnviarAsiento('@item.idCierre')"><img src="~/img/sap.png" class="imgSAP" style="" /></a>
                                             }
-                                        
-                                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "10").FirstOrDefault()))
-                                            {
-                                        <a  onclick="javascript: CambiarEstado('@item.idCierre');" title="Cambiar estaddo a abierta" class="fa fa-clock-o icono" style="padding-left: 10px;"></a>
-                                            }
+                                }
+
+
                                 }
                             </td>
                         </tr>
@@ -365,6 +468,6 @@
             </table>
 
         </div>
-        <a asp-page="Nuevo" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Asignar</a>
+        <a asp-page="Nuevo" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Liquidar</a>
     </div>
 </div>

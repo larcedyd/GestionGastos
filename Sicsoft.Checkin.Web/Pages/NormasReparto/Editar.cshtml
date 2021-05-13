@@ -133,7 +133,7 @@
                                 <option value="NULL" selected>-Seleccione Dimensión-</option>
                                 @foreach (var item in Model.Dimensiones)
                                 {
-                                    <option value="@item.id">@item.id - @item.Nombre</option>
+                                    <option value="@item.id">@item.codigoSAP - @item.Nombre</option>
                                 }
                             </select>
                             <span asp-validation-for="Objeto.idDimension" class="text-danger"></span>

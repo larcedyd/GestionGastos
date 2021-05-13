@@ -22,5 +22,6 @@ namespace Sicsoft.CostaRica.Checkin.Web.Models
         public string Clave { get; set; }
         public bool Activo { get; set; }
         public int idLoginAceptacion { get; set; }
+        public string CardCode { get; set; }
     }
 }

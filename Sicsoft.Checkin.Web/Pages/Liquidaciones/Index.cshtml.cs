@@ -19,6 +19,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         private readonly ICrudApi<ListadoCierresViewModel, int> service;
         private readonly ICrudApi<UsuariosViewModel, int> users;
         private readonly ICrudApi<RolesViewModel, int> roles;
+        private readonly ICrudApi<DevolucionSAP, int> sap;
 
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
@@ -33,11 +34,12 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         [BindProperty]
         public RolesViewModel[] Rols { get; set; }
 
-        public IndexModel(ICrudApi<ListadoCierresViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<RolesViewModel, int> roles)
+        public IndexModel(ICrudApi<ListadoCierresViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<RolesViewModel, int> roles, ICrudApi<DevolucionSAP, int> sap)
         {
             this.service = service;
             this.users = users;
             this.roles = roles;
+            this.sap = sap;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -90,6 +92,24 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 await service.CambiaEstado(idB, "P", "");
 
                 return new JsonResult(true);
+            }
+            catch (Exception ex)
+            {
+
+
+
+                return new JsonResult(ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> OnGetAsiento(int idB)
+        {
+            try
+            {
+                var resp = await sap.InsertarAsiento(idB);
+
+
+                return new JsonResult(resp);
             }
             catch (Exception ex)
             {

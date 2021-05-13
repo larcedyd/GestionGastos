@@ -23,5 +23,6 @@ namespace InversionGloblalWeb.Models
         [StringLength(500)]
         public string Clave { get; set; }
         public int idLoginAceptacion { get; set; }
+        public string CardCode { get; set; }
     }
 }

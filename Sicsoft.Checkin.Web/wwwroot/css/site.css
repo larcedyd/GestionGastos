@@ -647,7 +647,18 @@ h2 {
         }
 
 
+.imgSAP {
+    width: 25% !important;
+    
+    margin-top: -15px !important;
+}
 @media (max-width: 768px) {
+
+    .imgSAP {
+        width: 60% !important;
+       
+        margin-top: -15px !important;
+    }
 
    .botonAbajo
     {

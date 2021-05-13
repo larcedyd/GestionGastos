@@ -237,6 +237,12 @@
             $("#impuesto8").text(formatoDecimal(parseFloat(impuesto8).toFixed(2)));
                 $("#impuesto13").text(formatoDecimal(parseFloat(impuesto13).toFixed(2)));
             }
+
+            if (ProdCadena.length > 0) {
+                $("#CodMoneda").select2({ disabled: true });
+            } else {
+                $("#CodMoneda").select2({ disabled: false });
+            }
             LimpiarDatos();
 
             RellenaTabla();
@@ -306,7 +312,7 @@
                         Impuesto13: $("#imp13").val(),
                         TotalOtrosCargos: $("#otrosCargos").val()
                     };
-
+                    $("#monedaFactura").val(result.codMoneda);
                     console.log("Ya esta asignada: " + result.idCierre);
                     if (ProdCadena.find(a => a.id == parseInt(detalle.id)) != undefined) {
                         var str = "Ya esta asignada";
@@ -350,77 +356,102 @@
                 return true;
             }
         }
+
+        function validarMoneda() {
+            if ($("#CodMoneda").val() != $("#monedaFactura").val()) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
        function InsertarProductoTabla() {
 
 
 
            if (ValidarAntesTabla()) {
+               if (validarMoneda()) {
 
 
-                    var detalle = {
-                        id: $("#id").val(),
-                        Proveedor: $("#Proveedor").text(),
-                        CHacienda: $("#CHacienda").text(),
-                    //    idTipoGasto: $("#idTipoGasto").val(),
-                        Fecha: $("#FechaFac").text(),
-                        SubTotal: $("#sub").val(),
-                        Descuento: $("#desc").val(),
-                        Impuesto: $("#imp").val(),
-                        Total: 0,
-                        Impuesto1: $("#imp1").val(),
-                        Impuesto2: $("#imp2").val(),
-                        Impuesto4: $("#imp4").val(),
-                        Impuesto8: $("#imp8").val(),
-                        Impuesto13: $("#imp13").val(),
-                        idTipoGasto: $("#idTipoGastoEditar").val(),
-                        TotalOtrosCargos: $("#otrosCargos").val()
-                    };
+
+                   var detalle = {
+                       id: $("#id").val(),
+                       Proveedor: $("#Proveedor").text(),
+                       CHacienda: $("#CHacienda").text(),
+                       //    idTipoGasto: $("#idTipoGasto").val(),
+                       Fecha: $("#FechaFac").text(),
+                       SubTotal: $("#sub").val(),
+                       Descuento: $("#desc").val(),
+                       Impuesto: $("#imp").val(),
+                       Total: 0,
+                       Impuesto1: $("#imp1").val(),
+                       Impuesto2: $("#imp2").val(),
+                       Impuesto4: $("#imp4").val(),
+                       Impuesto8: $("#imp8").val(),
+                       Impuesto13: $("#imp13").val(),
+                       idTipoGasto: $("#idTipoGastoEditar").val(),
+                       TotalOtrosCargos: $("#otrosCargos").val()
+                   };
 
 
-                    var subtotalT = 0;
-                    var descuentoT = 0;
-                    var impuestoT = 0;
-                    var totalT = 0;
-               var oCargosT = 0;
-                    subtotalT = parseFloat(detalle.SubTotal);
-                    descuentoT = parseFloat(detalle.Descuento);
-               impuestoT = parseFloat(detalle.Impuesto);
-               oCargosT = parseFloat(detalle.TotalOtrosCargos);
-               detalle.Total = (subtotalT - descuentoT) + impuestoT + oCargosT;
-                     ProdCadena.push(detalle);
-                    totalT = parseFloat(detalle.Total);
-                    var impuesto1T = parseFloat(detalle.Impuesto1);
-                    var impuesto2T = parseFloat(detalle.Impuesto2);
-                    var impuesto4T = parseFloat(detalle.Impuesto4);
-                    var impuesto8T = parseFloat(detalle.Impuesto8);
-                    var impuesto13T = parseFloat(detalle.Impuesto13);
+                   var subtotalT = 0;
+                   var descuentoT = 0;
+                   var impuestoT = 0;
+                   var totalT = 0;
+                   var oCargosT = 0;
+                   subtotalT = parseFloat(detalle.SubTotal);
+                   descuentoT = parseFloat(detalle.Descuento);
+                   impuestoT = parseFloat(detalle.Impuesto);
+                   oCargosT = parseFloat(detalle.TotalOtrosCargos);
+                   detalle.Total = (subtotalT - descuentoT) + impuestoT + oCargosT;
+                   ProdCadena.push(detalle);
+                   totalT = parseFloat(detalle.Total);
+                   var impuesto1T = parseFloat(detalle.Impuesto1);
+                   var impuesto2T = parseFloat(detalle.Impuesto2);
+                   var impuesto4T = parseFloat(detalle.Impuesto4);
+                   var impuesto8T = parseFloat(detalle.Impuesto8);
+                   var impuesto13T = parseFloat(detalle.Impuesto13);
 
 
-                    subtotal += subtotalT;
-                    descuentos += descuentoT;
-                    impuestos += impuestoT;
+                   subtotal += subtotalT;
+                   descuentos += descuentoT;
+                   impuestos += impuestoT;
 
-                    totalComprobante += totalT;
-                    impuesto1 += impuesto1T;
-                    impuesto2 += impuesto2T;
-                    impuesto4 += impuesto4T;
-                    impuesto8 += impuesto8T;
-                    impuesto13 += impuesto13T;
-               oCargos += oCargosT;
-                    $("#subtotal").text(formatoDecimal(parseFloat(subtotal).toFixed(2)));
-                    $("#descuento").text(formatoDecimal(parseFloat(descuentos).toFixed(2)));
-                    $("#impuesto").text(formatoDecimal(parseFloat(impuestos).toFixed(2)));
-                    $("#total").text(formatoDecimal(parseFloat(totalComprobante).toFixed(2)));
-               $("#tOCargos").text(formatoDecimal(parseFloat(oCargos).toFixed(2)));
-                    $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
-                    $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
-                    $("#impuesto4").text(formatoDecimal(parseFloat(impuesto4).toFixed(2)));
-                    $("#impuesto8").text(formatoDecimal(parseFloat(impuesto8).toFixed(2)));
-                    $("#impuesto13").text(formatoDecimal(parseFloat(impuesto13).toFixed(2)));
-                    LimpiarDatos();
+                   totalComprobante += totalT;
+                   impuesto1 += impuesto1T;
+                   impuesto2 += impuesto2T;
+                   impuesto4 += impuesto4T;
+                   impuesto8 += impuesto8T;
+                   impuesto13 += impuesto13T;
+                   oCargos += oCargosT;
+                   $("#subtotal").text(formatoDecimal(parseFloat(subtotal).toFixed(2)));
+                   $("#descuento").text(formatoDecimal(parseFloat(descuentos).toFixed(2)));
+                   $("#impuesto").text(formatoDecimal(parseFloat(impuestos).toFixed(2)));
+                   $("#total").text(formatoDecimal(parseFloat(totalComprobante).toFixed(2)));
+                   $("#tOCargos").text(formatoDecimal(parseFloat(oCargos).toFixed(2)));
+                   $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
+                   $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
+                   $("#impuesto4").text(formatoDecimal(parseFloat(impuesto4).toFixed(2)));
+                   $("#impuesto8").text(formatoDecimal(parseFloat(impuesto8).toFixed(2)));
+                   $("#impuesto13").text(formatoDecimal(parseFloat(impuesto13).toFixed(2)));
+
+                   if (ProdCadena.length > 0) {
+                       $("#CodMoneda").select2({ disabled: true });
+                   } else {
+                       $("#CodMoneda").select2({ disabled: false });
+                   }
+                   LimpiarDatos();
 
                    RellenaTabla();
-                }
+               } else {
+                   Swal.fire({
+                       icon: 'error',
+                       title: 'Oops...',
+                       text: 'Pareciera que la moneda especificada no es la misma que la factura.'
+
+                   });
+               }
+           }
            else {
                Swal.fire({
                    icon: 'error',
@@ -432,7 +463,7 @@
         }
         function LimpiarDatos() {
             $("#Proveedor").text("");
-
+            $("#monedaFactura").val("");
 
             $("#CHacienda").text("");
             $("#FechaFac").text("");
@@ -535,6 +566,11 @@
                     $("#impuesto13").text(formatoDecimal(parseFloat(impuesto13).toFixed(2)));
 
                     ProdCadena.splice(campo, 1);
+                    if (ProdCadena.length > 0) {
+                        $("#CodMoneda").select2({ disabled: true });
+                    } else {
+                        $("#CodMoneda").select2({ disabled: false });
+                    }
                     RellenaTabla();
 
                 }
@@ -997,7 +1033,7 @@
                             <div class="col-sm-12">
 
                                 <select id="CodMoneda" class="form-control  mi-selector">
-                                    <option value="NULL" selected>-Moneda-</option>
+                                    @*<option value="NULL" selected>-Moneda-</option>*@
 
 
                                     <option value="CRC">Colones</option>
@@ -1057,7 +1093,7 @@
                         <input hidden id="sub" type="number" />
                         <input hidden id="desc" type="number" />
                         <input hidden id="imp" type="number" />
-
+                        <input hidden id="monedaFactura" />
                         <input hidden id="imp1" type="number" />
                         <input hidden id="imp2" type="number" />
                         <input hidden id="imp4" type="number" />
