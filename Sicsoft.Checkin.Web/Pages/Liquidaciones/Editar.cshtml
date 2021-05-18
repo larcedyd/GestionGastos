@@ -1513,6 +1513,13 @@
                                             <span class="check"></span>
                                         </label>
                                     </div>
+                                    <div class="col-sm-12">
+                                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                            Factura No Recibida
+                                            <input type="checkbox" id="nrec" onchange="javascript: check('4');">
+                                            <span class="check"></span>
+                                        </label>
+                                    </div>
                                 </div>
 
 
@@ -1863,6 +1870,7 @@
         var checkbox1 = document.getElementById("simp");
         var checkbox2 = document.getElementById("ext");
         var checkbox3 = document.getElementById("var");
+        var checkbox4 = document.getElementById("nrec");
         if (i == "1") {
 
             checkbox2.checked = false;
@@ -1881,10 +1889,16 @@
 
             $("#CHacienda").val("");
             $("#ConsHacienda").val("");
-        } else {
+        } else if (i == "3") {
             checkbox3.checked = true;
             checkbox2.checked = false;
             checkbox1.checked = false;
+            checkbox4.checked = false;
+        } else {
+            checkbox3.checked = false;
+            checkbox2.checked = false;
+            checkbox1.checked = false;
+            checkbox4.checked = true;
         }
     }
     function AbrirModal() {
@@ -2142,6 +2156,7 @@
                  var checkbox1 = document.getElementById("simp");
                   var checkbox2 = document.getElementById("ext");
                   var checkbox3 = document.getElementById("var");
+                  var checkbox4 = document.getElementById("nrec");
                  var EncCompras =
                     {
                         ClaveHacienda: $("#NumFactura").val(),
@@ -2167,7 +2182,8 @@
                         ImagenBase64: (ImageBae64 === '' ? '' : ImageBae64.toString().replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '')),
                         RegimenSimplificado: checkbox1.checked,
                      FacturaExterior: checkbox2.checked,
-                     GastosVarios: checkbox3.checked
+                     GastosVarios: checkbox3.checked,
+                     FacturaNoRecibida: checkbox4.checked
                     };
 
                     var DetCompras = Productos;

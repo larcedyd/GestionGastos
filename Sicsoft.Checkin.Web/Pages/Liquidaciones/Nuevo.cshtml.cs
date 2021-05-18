@@ -364,6 +364,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Objeto1.EncCompras.RegimenSimplificado = recibido.EncCompras.RegimenSimplificado;
                 Objeto1.EncCompras.FacturaExterior = recibido.EncCompras.FacturaExterior;
                 Objeto1.EncCompras.GastosVarios = recibido.EncCompras.GastosVarios;
+                Objeto1.EncCompras.FacturaNoRecibida = recibido.EncCompras.FacturaNoRecibida;
+
 
                 short cantidad = 1;
 

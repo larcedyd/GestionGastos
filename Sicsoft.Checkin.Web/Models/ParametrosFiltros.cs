@@ -20,5 +20,6 @@ namespace InversionGloblalWeb.Models
         public string CodMoneda { get; set; }
         public bool RegimeSimplificado { get; set; }
         public bool FacturaExterior { get; set; }
+        public bool FacturaNoRecibida { get; set; }
     }
 }

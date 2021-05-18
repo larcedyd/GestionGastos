@@ -234,56 +234,64 @@
                             </div>
                         </div>
                     </div>
-                            <div class="col-sm-12">
-                                <br />
-                            </div>
-                            <div class="col-sm-6">
-                                <input class="form-control" id="FecInicial" type="date" asp-for="filtro.FechaInicio" />
-                            </div>
-                            <div class="col-sm-6">
-                                <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal" />
-                            </div>
-                            <div class="col-sm-12">
-                                <br />
-                            </div>
-                            <div class="col-md-4">
-                                <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                                    Regimen Simplificado
-                                    <input type="checkbox" id="anulada" asp-for="filtro.RegimeSimplificado" />
-                                    <span class="check"></span>
-                                </label>
+                    <div class="col-sm-12">
+                        <br />
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control" id="FecInicial" type="date" asp-for="filtro.FechaInicio" />
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal" />
+                    </div>
+                    <div class="col-sm-12">
+                        <br />
+                    </div>
+                    <div class="col-md-3">
+                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                            Regimen Simplificado
+                            <input type="checkbox" id="anulada" asp-for="filtro.RegimeSimplificado" />
+                            <span class="check"></span>
+                        </label>
 
-                            </div>
+                    </div>
 
-                            <div class="col-md-4">
-                                <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                                    Factura Exterior
-                                    <input type="checkbox" id="cnTarjeta" asp-for="filtro.FacturaExterior" />
-                                    <span class="check"></span>
-                                </label>
+                    <div class="col-md-3">
+                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                            Factura Exterior
+                            <input type="checkbox" id="cnTarjeta" asp-for="filtro.FacturaExterior" />
+                            <span class="check"></span>
+                        </label>
 
-                            </div>
-                            <div class="col-md-4">
-                                <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                                    Facturas Sin Asignar
-                                    <input type="checkbox" id="exentas" asp-for="filtro.Asignados" />
-                                    <span class="check"></span>
-                                </label>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                            Factura No Recibidas
+                            <input type="checkbox" id="norec" asp-for="filtro.FacturaNoRecibida" />
+                            <span class="check"></span>
+                        </label>
 
-                            </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                            Facturas Sin Asignar
+                            <input type="checkbox" id="exentas" asp-for="filtro.Asignados" />
+                            <span class="check"></span>
+                        </label>
 
-
-
-                            <div class="col-sm-12">
-                                <br />
-                            </div>
-
-
-
-
+                    </div>
 
 
-                        </div>
+
+                    <div class="col-sm-12">
+                        <br />
+                    </div>
+
+
+
+
+
+
+                </div>
                         <div class="row">
                             <div class="col-sm-6">
 

@@ -390,13 +390,23 @@
                                     case "P":
                                         {
                                             <p><span class="label label-info">Abierta</span></p>
-                                          
+
                                             break;
                                         }
 
                                     case "A":
                                         {
-                                             <p><span class="label label-success">Aprobada</span></p>
+                                            if (item.ProcesadaSAP)
+                                            {
+
+
+                                                <p><span class="label label-primary">En SAP</span></p>
+                                            }
+                                            else
+                                            {
+                                                <p><span class="label label-success">Aprobada</span></p>
+                                            }
+
                                             break;
                                         }
                                     case "R":
@@ -406,12 +416,12 @@
                                         }
                                     case "E":
                                         {
-                                             <p><span class="label label-warning">Espera</span></p>
+                                            <p><span class="label label-warning">Espera</span></p>
                                             break;
                                         }
                                     default:
                                         {
-                                          <p><span class="label label-info">Abierta</span></p>
+                                            <p><span class="label label-info">Abierta</span></p>
                                             break;
                                         }
 

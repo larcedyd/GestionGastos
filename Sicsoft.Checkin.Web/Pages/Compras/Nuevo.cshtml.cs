@@ -96,6 +96,8 @@ namespace InversionGloblalWeb.Pages.Compras
                 Objeto.EncCompras.TotalVenta = recibido.EncCompras.TotalVenta;
                 Objeto.EncCompras.RegimenSimplificado = recibido.EncCompras.RegimenSimplificado;
                 Objeto.EncCompras.FacturaExterior = recibido.EncCompras.FacturaExterior;
+                Objeto.EncCompras.GastosVarios = recibido.EncCompras.GastosVarios;
+                Objeto.EncCompras.FacturaNoRecibida = recibido.EncCompras.FacturaNoRecibida;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)

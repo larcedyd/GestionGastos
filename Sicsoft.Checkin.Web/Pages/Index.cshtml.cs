@@ -68,6 +68,10 @@ namespace Sicsoft.Checkin.Web.Pages
                     filtro.Codigo1 = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                     
                 }
+                if(filtro.CodMoneda == null)
+                {
+                    filtro.CodMoneda = "CRC";
+                }
                 DateTime time = DateTime.Now;
                 if (time.Day < 27)
                 {

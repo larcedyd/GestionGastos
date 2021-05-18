@@ -440,6 +440,8 @@
              {
                  var checkbox1 = document.getElementById("simp");
                  var checkbox2 = document.getElementById("ext");
+                 var checkbox3 = document.getElementById("var");
+                 var checkbox4 = document.getElementById("nrec");
                  var EncCompras =
                     {
                         ClaveHacienda: $("#NumFactura").val(),
@@ -463,8 +465,10 @@
                         Impuesto13: $("#impuesto13").text(),
                         TotalComprobante: $("#total").text(),
                         ImagenBase64: (ImageBae64 === '' ? '' : ImageBae64.toString().replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '')),
-                        RegimenSimplificado: checkbox1.checked,
-                        FacturaExterior: checkbox2.checked
+                     RegimenSimplificado: checkbox1.checked,
+                     FacturaExterior: checkbox2.checked,
+                     GastosVarios: checkbox3.checked,
+                     FacturaNoRecibida: checkbox4.checked
                     };
 
                  var DetCompras = Productos;
@@ -566,22 +570,38 @@
              
             var checkbox1 = document.getElementById("simp");
             var checkbox2 = document.getElementById("ext");
+            var checkbox3 = document.getElementById("var");
+            var checkbox4 = document.getElementById("nrec");
             if (i == "1") {
-                console.log("aca 1");
+
                 checkbox2.checked = false;
+                checkbox3.checked = false;
+                checkbox4.checked = false;
                 checkbox1.checked = true;
                 $("#CHacienda").removeAttr("readonly");
                 $("#ConsHacienda").removeAttr("readonly");
-                
-            } else {
-                console.log("aca 2");
+
+            }
+            else if (i == "2") {
+                checkbox3.checked = false;
                 checkbox2.checked = true;
                 checkbox1.checked = false;
+                checkbox4.checked = false;
                 $("#CHacienda").attr("readonly", "readonly");
                 $("#ConsHacienda").attr("readonly", "readonly");
 
                 $("#CHacienda").val("");
                 $("#ConsHacienda").val("");
+            } else if (i == "3") {
+                checkbox3.checked = true;
+                checkbox2.checked = false;
+                checkbox1.checked = false;
+                checkbox4.checked = false;
+            } else {
+                checkbox3.checked = false;
+                checkbox2.checked = false;
+                checkbox1.checked = false;
+                checkbox4.checked = true;
             }
         }
     </script>
@@ -685,17 +705,31 @@
 
                 <label class="col-form-label">Tipo Factura:</label>
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         <label class="checkbox" style="text-decoration: none; font-size: 13px;">
                             Regimen Simplificado
                             <input type="checkbox" id="simp" onchange="javascript: check('1');">
                             <span class="check"></span>
                         </label>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         <label class="checkbox" style="text-decoration: none; font-size: 13px;">
                             Factura Exterior
                             <input type="checkbox" id="ext" onchange="javascript: check('2');">
+                            <span class="check"></span>
+                        </label>
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                            Gastos Varios
+                            <input type="checkbox" id="var" onchange="javascript: check('3');">
+                            <span class="check"></span>
+                        </label>
+                    </div>
+                    <div class="col-sm-12">
+                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                            Factura No Recibida
+                            <input type="checkbox" id="nrec" onchange="javascript: check('4');">
                             <span class="check"></span>
                         </label>
                     </div>

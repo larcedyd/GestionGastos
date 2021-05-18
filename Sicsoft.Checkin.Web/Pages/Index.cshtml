@@ -159,8 +159,7 @@
 @using Newtonsoft.Json;
 @inject IHttpContextAccessor httpContextAccessor
 
-@if (!string.IsNullOrEmpty(Roles.Where(a => a == "20").FirstOrDefault()))
-{
+
     <div class="ibox">
         <div class="ibox-content">
             <form method="get">
@@ -172,23 +171,39 @@
 
 
                         <div class="col-sm-6">
+                            <div class="form-group row">
 
+                                <div class="col-sm-6">
+                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "20").FirstOrDefault()))
+                                    {
+                                        <select asp-for="filtro.Codigo1" id="user" class="form-control  mi-selector">
+                                            @{var iD = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()); }
+                                            <option value="0" selected>@(Model.Usuarios.Where(a => a.id == iD).FirstOrDefault() == null ? "Propio" : Model.Usuarios.Where(a => a.id == iD).FirstOrDefault().Nombre)</option>
+
+                                            @foreach (var item in Model.Usuarios.Where(a => a.id != iD).ToArray())
+                                            {
+                                                <option value="@item.id">@item.id -  @item.Nombre</option>
+                                            }
+                                            <option value="-1">Acumulado</option>
+
+
+                                        </select>
+                                    }
+                                </div>
+                            </div>
                         </div>
                         <div class="col-sm-6">
 
                             <div class="form-group row">
 
-                                <div class="col-sm-10">
+                                <div class="col-sm-6">
 
-                                    <select asp-for="filtro.Codigo1" id="user" class="form-control  mi-selector">
-                                        @{var iD = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()); }
-                                        <option value="0" selected>@(Model.Usuarios.Where(a => a.id == iD).FirstOrDefault() == null ? "Propio" : Model.Usuarios.Where(a => a.id == iD).FirstOrDefault().Nombre)</option>
+                                    <select asp-for="filtro.CodMoneda" id="codMoneda" class="form-control  mi-selector">
 
-                                        @foreach (var item in Model.Usuarios.Where(a => a.id != iD).ToArray())
-                                        {
-                                            <option value="@item.id">@item.id -  @item.Nombre</option>
-                                        }
-                                        <option value="-1">Acumulado</option>
+                                        <option value="CRC" selected>Colones</option>
+                                        <option value="USD" >Dólares</option>
+                                        <option value="EUR" >Euros</option>
+
 
 
                                     </select>
@@ -221,7 +236,7 @@
             </form>
         </div>
     </div>
-}
+ 
 
 <div class="ibox">
     <input hidden id="Compras" value="@JsonConvert.SerializeObject(Model.Compras)" />
