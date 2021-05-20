@@ -406,7 +406,12 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
                 ModelState.AddModelError(string.Empty, errores.Message);
 
-                return new JsonResult(error);
+                var obj = new
+                {
+                    success = true,
+                    resp = errores.Message
+                };
+                return new JsonResult(obj);
                 //return new JsonResult(false);
             }
             catch (Exception ex)

@@ -67,6 +67,10 @@ namespace Sicsoft.Checkin.Web.Servicios
         [Delete("/Eliminar")]
         Task Eliminar(int id);
 
+
+        [Delete("/Eliminar")]
+        Task EliminarUsuario(int id, string CedulaJuridica);
+
         [Delete("/Eliminar")]
         Task EliminarEjecutivo (int idEjecutivo);
 

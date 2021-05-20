@@ -10,7 +10,7 @@ namespace Sicsoft.CostaRica.Checkin.Web.Models
     {
         public int idLogin { get; set; }
 
-
+        public int id { get; set; }
 
         public string CedulaJuridica { get; set; }
 

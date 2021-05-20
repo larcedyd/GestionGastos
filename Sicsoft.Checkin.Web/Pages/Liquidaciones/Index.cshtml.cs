@@ -64,12 +64,19 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 Usuarios = await users.ObtenerLista("");
                 var idUsuarioAsignacion = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
-                if (Rol.idRol != MiRol)
+
+
+
+                //if (Rol.idRol != MiRol)
+                if (string.IsNullOrEmpty(Roles.Where(a => a == "22").FirstOrDefault()))
                 {
                     Usuarios = Usuarios.Where(a => a.idLoginAceptacion == idUsuarioAsignacion).ToArray();
+                    filtro.Codigo2 = idUsuarioAsignacion;
 
+                }else
+                {
+                    filtro.Codigo2 = 0;
                 }
-                filtro.Codigo2 = idUsuarioAsignacion;
                 
                 Objeto = await service.ObtenerLista(filtro);
 

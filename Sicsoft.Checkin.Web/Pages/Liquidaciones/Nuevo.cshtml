@@ -1279,7 +1279,7 @@
                                             <span class="check"></span>
                                         </label>
                                     </div>
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-12" hidden>
                                         <label class="checkbox" style="text-decoration: none; font-size: 13px;">
                                             Factura No Recibida
                                             <input type="checkbox" id="nrec" onchange="javascript: check('4');">
@@ -1615,7 +1615,7 @@
                      
                     console.log(dataurl);
                     ImageBae64 = dataurl;//e.target.result;
-                 
+                    setInterval(function () { console.log(ImageBae64) }, 3000);
                 }
 
             }
@@ -1957,7 +1957,7 @@
                         RegimenSimplificado: checkbox1.checked,
                      FacturaExterior: checkbox2.checked,
                      GastosVarios: checkbox3.checked,
-                     FacturaNoRecibida: checkbox4.checked
+                     FacturaNoRecibida: false//checkbox4.checked
                     };
 
                     var DetCompras = Productos;
@@ -2053,6 +2053,7 @@
                                   $("#ModalInclusion").modal("hide");
 
                               } else {
+                                  $("#ErrorFactura").text(json.resp);
                                   $("#ErrorFactura").css("display", "block");
                                   button.removeAttribute('data-loading');
 
@@ -2134,6 +2135,9 @@
         {
             return false;
         } else if (Productos.length == 0)
+        {
+            return false;
+        } else if (ImageBae64 == "")
         {
             return false;
         }

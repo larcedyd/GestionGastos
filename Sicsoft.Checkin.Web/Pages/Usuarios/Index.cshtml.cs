@@ -52,12 +52,15 @@ namespace InversionGloblalWeb.Pages.Usuarios
                 return Page();
             }
         }
-        public async Task<IActionResult> OnGetEliminar(string id)
+        public async Task<IActionResult> OnGetEliminar(int id)
         {
             try
             {
-                var ids = Convert.ToInt32(id);
-                await service.Eliminar(ids);
+                // var ids = Convert.ToInt32(id);
+
+               var ced =  ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.NameIdentifier).Select(s1 => s1.Value).FirstOrDefault();
+
+                await service.EliminarUsuario(id,ced);
 
                 return new JsonResult(true);
             }

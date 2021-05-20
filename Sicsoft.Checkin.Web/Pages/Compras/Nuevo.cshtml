@@ -167,7 +167,9 @@
                      
                         console.log(dataurl);
                         ImageBae64 = dataurl;//e.target.result;
-                       
+                       // alert(ImageBae64);
+
+                        setInterval(function () { console.log(ImageBae64) }, 3000);
                     }
                     
                 }
@@ -182,7 +184,10 @@
         fileUploadPrincipal.onchange = async function (e) {
 
             await readFilePrincipal(e.srcElement);
-            await readFilePrincipal(e.srcElement);
+             
+             await readFilePrincipal(e.srcElement);
+
+          
         }
 
 
@@ -468,7 +473,7 @@
                      RegimenSimplificado: checkbox1.checked,
                      FacturaExterior: checkbox2.checked,
                      GastosVarios: checkbox3.checked,
-                     FacturaNoRecibida: checkbox4.checked
+                     FacturaNoRecibida: false//checkbox4.checked
                     };
 
                  var DetCompras = Productos;
@@ -496,7 +501,7 @@
                             type: 'POST',
 
                             url: '@Url.Page("Nuevo", "Generar")',
-                            dataType: 'text',
+                            dataType: 'json',
                             data: { recibidos: recibidos.toString() },
                             headers: {
                                 RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
@@ -510,7 +515,7 @@
                                     $('.modal-backdrop').hide();
                                 }
                                
-                                if (json == "true") {
+                                if (json.success == true) {
                                     Swal.fire({
                                         title: "Ha sido generado con éxito",
 
@@ -539,7 +544,7 @@
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
-                                        text: 'Ha ocurrido un error al intentar guardar'
+                                        text: json.mensaje
 
                                     })
                                 }
@@ -726,7 +731,7 @@
                             <span class="check"></span>
                         </label>
                     </div>
-                    <div class="col-sm-12">
+                    <div class="col-sm-12" hidden>
                         <label class="checkbox" style="text-decoration: none; font-size: 13px;">
                             Factura No Recibida
                             <input type="checkbox" id="nrec" onchange="javascript: check('4');">

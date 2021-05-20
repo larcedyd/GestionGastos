@@ -52,7 +52,8 @@ namespace InversionGloblalWeb.Pages.Usuarios
         {
             try
             {
-                
+                var ced = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.NameIdentifier).Select(s1 => s1.Value).FirstOrDefault();
+                Input.CedulaJuridica = ced;
                if(Input.idLoginAceptacion == 0)
                 {
                     throw new Exception("Debe seleccionar un usuario aprobador");

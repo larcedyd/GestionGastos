@@ -32,10 +32,10 @@ namespace InversionGloblalWeb.Pages.Account
         {
             try
             {
-                
+                var ced = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.NameIdentifier).Select(s1 => s1.Value).FirstOrDefault();
                 Input.Email = User.Identity.Name;
-
-               
+                Input.CedulaJuridica = ced;
+               Input.id = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 Input.idRol = 0;
                 Input.Nombre = "";
                 if(string.IsNullOrEmpty(Input.Clave))

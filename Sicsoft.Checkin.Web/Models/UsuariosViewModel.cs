@@ -15,6 +15,8 @@ namespace InversionGloblalWeb.Models
         [StringLength(200)]
         public string Email { get; set; }
 
+        public string CedulaJuridica { get; set; }
+
         [StringLength(100)]
         public string Nombre { get; set; }
 

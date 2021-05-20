@@ -124,14 +124,25 @@ namespace InversionGloblalWeb.Pages.Compras
          
                 await service.Agregar(Objeto);
 
-                 
-                return new JsonResult(true);
+                var resp = new
+                {
+                    success = true,
+                    mensaje = ""
+                };
+                return new JsonResult(resp);
             }
             catch (ApiException ex)
             {
                 Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
                 ModelState.AddModelError(string.Empty, errores.Message);
-                return new JsonResult(error);
+                var resp = new
+                {
+                    success = false,
+                    mensaje = errores.Message
+                };
+
+                return new JsonResult(resp);
+                //return new JsonResult(error);
                 //return new JsonResult(false);
             }
             catch (Exception ex)
@@ -139,7 +150,13 @@ namespace InversionGloblalWeb.Pages.Compras
 
                 ModelState.AddModelError(string.Empty, ex.Message);
 
-                return new JsonResult(false);
+                var resp = new
+                {
+                    success = false,
+                    mensaje = ex.Message
+                };
+
+                return new JsonResult(resp);
             }
         }
     }

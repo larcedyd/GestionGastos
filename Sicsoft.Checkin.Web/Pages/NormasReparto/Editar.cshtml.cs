@@ -63,7 +63,7 @@ namespace InversionGloblalWeb.Pages.NormasReparto
         {
             try
             {
-                Objeto.idLogin = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
+               // Objeto.idLogin = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 await service.Editar(Objeto);
                 return RedirectToPage("./Index");
             }
