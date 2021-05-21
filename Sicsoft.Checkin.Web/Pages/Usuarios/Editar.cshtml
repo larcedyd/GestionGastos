@@ -66,7 +66,56 @@
 
 
         });
+        function esMayuscula(letra) {
+            return letra === letra.toUpperCase();
+        }
 
+        function esMinuscula(letra) {
+            return letra === letra.toLowerCase();
+        }
+
+        function verificaMayusculas(palabra) {
+            var i = 0;
+            for (var index = 0; index < palabra.length; index++) {
+                var letraActual = palabra.charAt(index);
+                if (isNaN(letraActual)) {
+                    if (tiene_caracteres(letraActual) == 0) {
+
+                        if (esMayuscula(letraActual)) {
+                            i++;
+                        }
+                    }
+                }
+
+
+
+            }
+
+            return i;
+
+        }
+
+
+        function verificaMinisculas(palabra) {
+            var i = 0;
+            for (var index = 0; index < palabra.length; index++) {
+                var letraActual = palabra.charAt(index);
+                if (isNaN(letraActual)) {
+                    if (tiene_caracteres(letraActual) == 0) {
+
+                        if (esMinuscula(letraActual)) {
+                            i++;
+                        }
+                    }
+
+                }
+
+
+            }
+
+            return i;
+
+        }
         function tiene_caracteres(texto) {
             var regularExpression = "@@/^(?=.*[])(?=.*[!#$%^&*])[-!#$%^&*]{,}$/";
             for (i = 0; i < texto.length; i++) {
@@ -125,7 +174,26 @@
                 $("#ErrorClave").text("La contraseña debe contener letras y numeros");
                 btn.disabled = true;
 
-            } else {
+            } else if ($("#clave").val().length < 8) {
+                var x = document.getElementById("ErrorClave");
+                x.style.display = "block";
+                $("#ErrorClave").text("La contraseña debe tener una longitud mayor a 8 caracteres");
+                btn.disabled = true;
+            } else if (verificaMayusculas($("#clave").val()) == 0) {
+
+                var x = document.getElementById("ErrorClave");
+                x.style.display = "block";
+                $("#ErrorClave").text("La contraseña debe tener mayúsculas");
+                btn.disabled = true;
+            }
+            else if (verificaMinisculas($("#clave").val()) == 0) {
+                var x = document.getElementById("ErrorClave");
+                x.style.display = "block";
+                $("#ErrorClave").text("La contraseña debe tener minúsculas");
+                btn.disabled = true;
+            }
+
+            else {
                 var x = document.getElementById("ErrorClave");
                 x.style.display = "none";
 

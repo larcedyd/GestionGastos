@@ -70,10 +70,12 @@
 
                         @if (!string.IsNullOrEmpty(Roles.Where(a => a == "7").FirstOrDefault()))
                         {
-                            <li>
-                                <a asp-page="/Account/RegistroUsuario" class="nav-link btn btn-link text-dark"><i class="fa fa-address-card"></i> Registrar Usuario</a>
-                            </li>
-
+                            @if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CambiarClave").Select(s1 => s1.Value).FirstOrDefault() != "True")
+                            {
+                                <li>
+                                    <a asp-page="/Account/RegistroUsuario" class="nav-link btn btn-link text-dark"><i class="fa fa-address-card"></i> Registrar Usuario</a>
+                                </li>
+                            }
                         }
                         @if (User.Identity.IsAuthenticated)
                         {

@@ -41,7 +41,8 @@ namespace Sicsoft.CostaRica.Checkin.Web.Pages.Account
                 Usuarios = await users.ObtenerLista("");
 
                 var Rol = Roles.Where(a => a.NombreRol.ToUpper().Contains("Aprobador".ToUpper())).FirstOrDefault();
-                Usuarios = Usuarios.Where(a => a.idRol == Rol.idRol).ToArray();
+                var RolA = Roles.Where(a => a.NombreRol.ToUpper().Contains("Administrador".ToUpper())).FirstOrDefault(); 
+                Usuarios = Usuarios.Where(a => a.idRol == Rol.idRol || a.idRol == RolA.idRol).ToArray();
             }
             catch (Exception)
             {

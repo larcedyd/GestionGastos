@@ -60,9 +60,15 @@ namespace Sicsoft.Checkin.Web
                 identity.AddClaim(new Claim(ClaimTypes.Role, resultado.idRol.ToString()));
                 identity.AddClaim(new Claim("Roles",str));
                 identity.AddClaim(new Claim("Logo", resultado.UrlLogo));
-
+                identity.AddClaim(new Claim("CambiarClave", resultado.CambiarClave.ToString()));
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                if(resultado.CambiarClave)
+                {
+                    return RedirectToPage("/Account/CambioContrasena");
+                }
+
                 return RedirectToPage("/Index");
 
             }

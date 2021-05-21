@@ -51,7 +51,13 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 {
                     return RedirectToPage("/NoPermiso");
                 }
+                DateTime time = new DateTime();
 
+                if (time == filtro.FechaInicio)
+                {
+                    filtro.FechaFinal = DateTime.Now;
+                    filtro.FechaInicio = filtro.FechaFinal.AddMonths(-1);
+                }
                 Rols = await roles.ObtenerLista("");
                 var MiRol = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault());
 

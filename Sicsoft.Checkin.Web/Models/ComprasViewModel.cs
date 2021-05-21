@@ -115,8 +115,8 @@ namespace InversionGloblalWeb.Models
         [StringLength(6)]
         public string CodigoActividadEconomica { get; set; }
 
-        
-
+ 
+        public string UsuarioAsignado { get; set; }
         public DateTime? FecAsignado { get; set; }
 
         public int? idLoginAceptacion { get; set; }

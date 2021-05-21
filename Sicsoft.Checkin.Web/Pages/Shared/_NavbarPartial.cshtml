@@ -29,28 +29,29 @@
                     <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         @if (User.Identity.Name.Length > 25)
                         {
-                        <span class="block m-t-xs font-bold" style="color: #fff; margin-left: -16px;">@User.Identity.Name <b class="caret"></b></span>
+                            <span class="block m-t-xs font-bold" style="color: #fff; margin-left: -16px;">@User.Identity.Name <b class="caret"></b></span>
                         }
                         else
                         {
 
-                        <span class="block m-t-xs font-bold" style="color: #fff">@User.Identity.Name <b class="caret"></b></span>
+                            <span class="block m-t-xs font-bold" style="color: #fff">@User.Identity.Name <b class="caret"></b></span>
                         }
 
 
                     </a>
                     <ul class="dropdown-menu animated fadeInRight m-t-xs" x-placement="bottom-start" style="position: absolute; top: 91px; left: 0px; will-change: top, left;">
-
-                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "6").FirstOrDefault()))
+                        @if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CambiarClave").Select(s1 => s1.Value).FirstOrDefault() != "True")
                         {
-                        <li><a class="dropdown-item" asp-page="/SeguridadRolesModulos/Index">Roles</a></li>
+                            @if (!string.IsNullOrEmpty(Roles.Where(a => a == "6").FirstOrDefault()))
+                            {
+                                <li><a class="dropdown-item" asp-page="/SeguridadRolesModulos/Index">Roles</a></li>
+                            }
+                            @if (!string.IsNullOrEmpty(Roles.Where(a => a == "7").FirstOrDefault()))
+                            {
+                                <li><a class="dropdown-item" asp-page="/Usuarios/Index">Usuarios</a></li>
+                            }
                         }
-                        @if (!string.IsNullOrEmpty(Roles.Where(a => a == "7").FirstOrDefault()))
-                        {
-                        <li><a class="dropdown-item" asp-page="/Usuarios/Index">Usuarios</a></li>
-                        }
-
-                    </ul>
+                        </ul>
 
                 </div>
                 <div class="logo-element">
@@ -64,115 +65,119 @@
 !string.IsNullOrEmpty(Roles.Where(a => a == "2").FirstOrDefault()) || !string.IsNullOrEmpty(Roles.Where(a => a == "3").FirstOrDefault()))
             {
 
+                @if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CambiarClave").Select(s1 => s1.Value).FirstOrDefault() != "True")
+                {
 
-            <li class="active" style="background-color: #57b846;">
-                <a href="#" style="color: #fff"><i class="fa fa-th-large"></i> <span class="nav-label"> Administrar</span><span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse in" aria-expanded="true">
 
-                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "6").FirstOrDefault()))
-                            {
-                        <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("SeguridadRolesModulos".ToLower()) ? "active" : null) navBar">
+                    <li class="active" style="background-color: #57b846;">
+                        <a href="#" style="color: #fff"><i class="fa fa-th-large"></i> <span class="nav-label"> Administrar</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse in" aria-expanded="true">
 
-                            <a asp-page="/SeguridadRolesModulos/Index" class="NAVA"> <img class="imgNav" src="/img/Roles.png"> &nbsp; Roles</a>
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "6").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("SeguridadRolesModulos".ToLower()) ? "active" : null) navBar">
 
-                        </li>
+                                        <a asp-page="/SeguridadRolesModulos/Index" class="NAVA"> <img class="imgNav" src="/img/Roles.png"> &nbsp; Roles</a>
+
+                                    </li>
+                                }
                             }
-                    }
 
-                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "7").FirstOrDefault()))
-                            {
-                        <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Usuarios".ToLower()) ? "active" : null) navBar">
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "7").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Usuarios".ToLower()) ? "active" : null) navBar">
 
-                            <a asp-page="/Usuarios/Index" class="NAVA"> <img class="imgNav" src="/img/Usuarios.png"> &nbsp; Usuarios</a>
+                                        <a asp-page="/Usuarios/Index" class="NAVA"> <img class="imgNav" src="/img/Usuarios.png"> &nbsp; Usuarios</a>
 
-                        </li>
+                                    </li>
+                                }
                             }
-                    }
 
 
-                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "11").FirstOrDefault()))
-                            {
-                        <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Dimensiones".ToLower()) ? "active" : null) navBar">
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "11").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Dimensiones".ToLower()) ? "active" : null) navBar">
 
-                            <a asp-page="/Dimensiones/Index" class="NAVA"> <img class="imgNav" src="/img/Dimensiones.png"> &nbsp; Dimensiones</a>
+                                        <a asp-page="/Dimensiones/Index" class="NAVA"> <img class="imgNav" src="/img/Dimensiones.png"> &nbsp; Dimensiones</a>
 
-                        </li>
+                                    </li>
+                                }
                             }
-                    }
-                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "1").FirstOrDefault()))
-                            {
-                        <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("NormasReparto".ToLower()) ? "active" : null) navBar">
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "1").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("NormasReparto".ToLower()) ? "active" : null) navBar">
 
-                            <a asp-page="/NormasReparto/Index" class="NAVA"> <img class="imgNav" src="/img/Normas de Reparto.png"> &nbsp; Normas Reparto</a>
+                                        <a asp-page="/NormasReparto/Index" class="NAVA"> <img class="imgNav" src="/img/Normas de Reparto.png"> &nbsp; Normas Reparto</a>
 
-                        </li>
+                                    </li>
+                                }
                             }
-                    }
 
 
-                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "2").FirstOrDefault()))
-                            {
-                        <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("CuentasContables".ToLower()) ? "active" : null) navBar">
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "2").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("CuentasContables".ToLower()) ? "active" : null) navBar">
 
-                            <a asp-page="/CuentasContables/Index" class="NAVA"> <img class="imgNav" src="/img/Cuentas Contables.png"> &nbsp; Cuentas Contables</a>
+                                        <a asp-page="/CuentasContables/Index" class="NAVA"> <img class="imgNav" src="/img/Cuentas Contables.png"> &nbsp; Cuentas Contables</a>
 
-                        </li>
+                                    </li>
+                                }
                             }
-                    }
 
-                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "3").FirstOrDefault()))
-                            {
-                        <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Gastos".ToLower()) ? "active" : null) navBar">
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "3").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Gastos".ToLower()) ? "active" : null) navBar">
 
-                            <a asp-page="/Gastos/Index" class="NAVA"> <img class="imgNav" src="/img/Compras o Gastos.png"> &nbsp; Tipos Gastos</a>
-                        </li>
+                                        <a asp-page="/Gastos/Index" class="NAVA"> <img class="imgNav" src="/img/Compras o Gastos.png"> &nbsp; Tipos Gastos</a>
+                                    </li>
+                                }
                             }
-                    }
 
-                </ul>
-            </li>
-
+                        </ul>
+                    </li>
+                }
             }
             @if (!string.IsNullOrEmpty(Roles.Where(a => a == "4").FirstOrDefault()) || !string.IsNullOrEmpty(Roles.Where(a => a == "5").FirstOrDefault()) ||
-          !string.IsNullOrEmpty(Roles.Where(a => a == "9").FirstOrDefault()))
+       !string.IsNullOrEmpty(Roles.Where(a => a == "9").FirstOrDefault()))
             {
+                @if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CambiarClave").Select(s1 => s1.Value).FirstOrDefault() != "True")
+                {
+                    <li class="active" style="background-color: #57b846;">
+                        <a href="#" style="color: #fff"><i class="fa fa-dollar"></i> <span class="nav-label"> Compras</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level collapse" aria-expanded="true">
 
-            <li class="active" style="background-color: #57b846;">
-                <a href="#" style="color: #fff"><i class="fa fa-dollar"></i> <span class="nav-label"> Compras</span><span class="fa arrow"></span></a>
-                <ul class="nav nav-second-level collapse" aria-expanded="true">
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "4").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Liquidaciones".ToLower()) ? "active" : null) navBar">
 
-                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "4").FirstOrDefault()))
-                            {
-                        <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Liquidaciones".ToLower()) ? "active" : null) navBar">
-
-                            <a asp-page="/Liquidaciones/Index" class="NAVA"> <img class="imgNav" src="/img/Liquidaciones.png"> &nbsp; Liquidaciones</a>
-                        </li>
+                                        <a asp-page="/Liquidaciones/Index" class="NAVA"> <img class="imgNav" src="/img/Liquidaciones.png"> &nbsp; Liquidaciones</a>
+                                    </li>
+                                }
                             }
-                    }
 
-                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "5").FirstOrDefault()))
-                            {
-                        <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Compras".ToLower()) ? "active" : null) navBar">
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "5").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Compras".ToLower()) ? "active" : null) navBar">
 
-                            <a asp-page="/Compras/Index" class="NAVA"> <img class="imgNav" src="/img/Compras o Gastos.png"> &nbsp; Compras</a>
+                                        <a asp-page="/Compras/Index" class="NAVA"> <img class="imgNav" src="/img/Compras o Gastos.png"> &nbsp; Compras</a>
 
-                        </li>
+                                    </li>
+                                }
                             }
-                    }
 
-                    @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "9").FirstOrDefault()))
-                            {
-                        <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Compras/Nuevo".ToLower()) ? "active" : null) navBar">
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "9").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Compras/Nuevo".ToLower()) ? "active" : null) navBar">
 
-                            <a asp-page="/Compras/Nuevo" class="NAVA"> <img class="imgNav" src="/img/Incluir Factura.png"> &nbsp; Factura Nueva</a>
-                        </li>
+                                        <a asp-page="/Compras/Nuevo" class="NAVA"> <img class="imgNav" src="/img/Incluir Factura.png"> &nbsp; Factura Nueva</a>
+                                    </li>
+                                }
                             }
-                    }
 
 
-                </ul>
-            </li>
-
+                        </ul>
+                    </li>
+                }
             }
 
 

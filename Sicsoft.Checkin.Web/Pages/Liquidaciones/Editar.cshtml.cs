@@ -135,8 +135,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 var cierres = await liquidaciones.ObtenerPorId(cierre); 
                 ParametrosFiltros filt = new ParametrosFiltros();
                 filt.Texto = idB.ToString();
-                filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 25);
-                filt.FechaFinal = filt.FechaInicio.AddMonths(1);
+                filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 26);
+                filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
 
                 filt.FechaInicio = cierres.EncCierre.FechaInicial;
                 filt.FechaFinal = cierres.EncCierre.FechaFinal;
@@ -214,6 +214,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Estado = "P";
                 Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
                 Liquidacion.EncCierre.TotalOtrosCargos = recibido.EncCompras.TotalOtrosCargos;
+                Liquidacion.EncCierre.Observacion = recibido.EncCompras.Observacion;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)
@@ -284,6 +285,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Estado = "E";
                 Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
                 Liquidacion.EncCierre.TotalOtrosCargos = recibido.EncCompras.TotalOtrosCargos;
+                Liquidacion.EncCierre.Observacion = recibido.EncCompras.Observacion;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)

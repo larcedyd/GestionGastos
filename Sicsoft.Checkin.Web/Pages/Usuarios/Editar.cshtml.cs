@@ -38,7 +38,8 @@ namespace InversionGloblalWeb.Pages.Usuarios
                 Usuarios = await service.ObtenerLista("");
                 Input = await service.ObtenerPorId(id);
                 var Rol = Roles.Where(a => a.NombreRol.ToUpper().Contains("Aprobador".ToUpper())).FirstOrDefault();
-                Usuarios = Usuarios.Where(a => a.idRol == Rol.idRol).ToArray();
+                var RolA = Roles.Where(a => a.NombreRol.ToUpper().Contains("Administrador".ToUpper())).FirstOrDefault();
+                Usuarios = Usuarios.Where(a => a.idRol == Rol.idRol || a.idRol == RolA.idRol).ToArray();
                 return Page();
             }
             catch (Exception ex)

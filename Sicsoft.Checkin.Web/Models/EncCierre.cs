@@ -24,6 +24,7 @@ namespace InversionGloblalWeb.Models
         public decimal TotalOtrosCargos { get; set; }
         public decimal Total { get; set; }
         public string CodMoneda { get; set; }
+        public string Observacion { get; set; }
     }
 
 }

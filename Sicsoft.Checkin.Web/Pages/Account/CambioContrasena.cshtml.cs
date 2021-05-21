@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using InversionGloblalWeb.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
@@ -43,7 +44,10 @@ namespace InversionGloblalWeb.Pages.Account
                     throw new Exception("La clave debe contener elementos");
                 }
                 await checkInService.Editar(Input);
-                return Redirect("../Index");
+                await HttpContext.SignOutAsync();
+                return Redirect("./Index");
+
+                //return Redirect("../Index");
             }
          
             catch (Exception ex)

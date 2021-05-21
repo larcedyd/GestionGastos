@@ -78,12 +78,12 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Periodos = new string[12] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre" };
 
                 
-                if(time.Day < 27)
+                if(time.Day < 26)
                 {
                     filtro.FechaInicio = DateTime.Now;
                     filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
-                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 25);
-                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(1);
+                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
+                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
 
                 }
                 else
@@ -91,8 +91,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                     filtro.FechaInicio = DateTime.Now;
  
-                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 25);
-                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(1);
+                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
+                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
 
 
                 }
@@ -138,15 +138,15 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 ParametrosFiltros filt = new ParametrosFiltros();
                 filt.Texto = id;
-                filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month -1, 25);
-                filt.FechaFinal = filt.FechaInicio.AddMonths(1);
+                filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month -1, 26);
+                filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
                 DateTime time = DateTime.Now;
-                if (time.Day < 27)
+                if (time.Day < 26)
                 {
                     filt.FechaInicio = DateTime.Now;
                     filt.FechaInicio = filt.FechaInicio.AddMonths(-1);
-                    filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 25);
-                    filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(1);
+                    filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 26);
+                    filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
 
                 }
                 else
@@ -154,8 +154,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                     filt.FechaInicio = DateTime.Now;
 
-                    filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 25);
-                    filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(1);
+                    filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 26);
+                    filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
 
 
                 }
@@ -216,6 +216,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Estado = "P";
                 Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
                 Liquidacion.EncCierre.TotalOtrosCargos = recibido.EncCompras.TotalOtrosCargos;
+                Liquidacion.EncCierre.Observacion = recibido.EncCompras.Observacion;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)
@@ -283,6 +284,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion.EncCierre.Estado = "E";
                 Liquidacion.EncCierre.CodMoneda = recibido.EncCompras.CodMoneda;
                 Liquidacion.EncCierre.TotalOtrosCargos = recibido.EncCompras.TotalOtrosCargos;
+                Liquidacion.EncCierre.Observacion = recibido.EncCompras.Observacion;
                 short cantidad = 1;
 
                 foreach (var item in recibido.DetCompras)

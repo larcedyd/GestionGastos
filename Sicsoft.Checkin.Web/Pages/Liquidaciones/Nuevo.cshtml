@@ -527,7 +527,8 @@
                 Impuesto8: $("#impuesto8").text(),
                 Impuesto13: $("#impuesto13").text(),
                 TotalOtrosCargos: $("#tOCargos").text(),
-                Total: $("#total").text()
+                Total: $("#total").text(),
+                Observacion: $("#Comentario").val()
             };
 
             var Cadena = [];
@@ -659,7 +660,8 @@
                 Impuesto8: $("#impuesto8").text(),
                 Impuesto13: $("#impuesto13").text(),
                 TotalOtrosCargos: $("#tOCargos").text(),
-                Total: $("#total").text()
+                Total: $("#total").text(),
+                Observacion: $("#Comentario").val()
             };
 
             var Cadena = [];
@@ -1005,6 +1007,22 @@
                 <a title="Agregar" id="Agregar" onclick="javascript: InsertarProductoTabla();" style=" color: #fff; width: 25%;" class="btn btn-primary">Asignar</a>&nbsp;
             </div>
         </div>
+
+        <div class="row">
+  
+
+                <div class="col-sm-12">
+                    <label class="col-form-label">Observación:</label>
+                </div>
+                <div class="col-sm-12">
+                    
+                            <textarea rows="5" class="form-control" id="Comentario" ></textarea>
+                       
+                  
+                </div>
+          
+
+        </div>
     </div>
     <div class="col-sm-6">
         <div class="ibox">
@@ -1040,133 +1058,133 @@
                 <div class="row">
                     <div class="col-sm-6">
                     </div>
-                    <div class="col-sm-6" style="text-align: right;">
-                        <div class="row">
+                
 
-                            <div class="col-sm-12">
+                        <div class="col-sm-6" style="text-align: right;">
+                            <div class="row">
 
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table; font-weight: 500 !important; font-style: normal;">SubTotal:</label>
+                                <div class="col-sm-12">
 
-                                            </td>
-                                            <td>
-                                                <label id="subtotal" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table; font-weight: 500 !important; font-style: normal;">SubTotal:</label>
 
-                                        </tr>
-                                        <tr>
+                                                </td>
+                                                <td>
+                                                    <label id="subtotal" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Descuento:</label>
+                                            </tr>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="descuento" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
-                                        <tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Descuento:</label>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Impuesto:</label>
+                                                </td>
+                                                <td>
+                                                    <label id="descuento" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
-                                        <tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Impuesto:</label>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 1:</label>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 1:</label>
 
-                                        <tr>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 2:</label>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 2:</label>
 
-                                        <tr>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 4:</label>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto4" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 4:</label>
 
-                                        <tr>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto4" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 8:</label>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto8" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 8:</label>
 
-                                        <tr>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto8" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 13:</label>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
-                                        <tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 13:</label>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Otros Cargos:</label>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="tOCargos" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
-                                        <tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Otros Cargos:</label>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Total:</label>
+                                                </td>
+                                                <td>
+                                                    <label id="tOCargos" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="total" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Total:</label>
+
+                                                </td>
+                                                <td>
+                                                    <label id="total" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
+
+
                         </div>
 
 
-                    </div>
-
 
                 </div>
-
-
-            </div>
         </div>
 
-
+            <br />
         <div class="d-flex justify-content-end">
             <button onclick="javascript: Generar();" class="btn btn-w-m btn-primary botonAbajo" title="Guardar">Guardar Cambios</button>
             &nbsp;
@@ -1174,7 +1192,7 @@
         </div>
     </div>
 </div>   
-
+    </div>
 
 <!--Programacion del modal-->
 
@@ -1683,7 +1701,7 @@
             CodPro: "1",
             NomPro: $("#NomPro").val(),
             idTipoGasto: $("#idTipoGasto").val() == "NULL" ? "0" : $("#idTipoGasto").val(),
-            Cantidad: "0",
+            Cantidad: "1",
             PrecioUnitario: $("#PrecUni").val(),
             MontoDescuento: $("#descI").val(),
             ImpuestoTarifa: $("#TipoImpuesto").val(),

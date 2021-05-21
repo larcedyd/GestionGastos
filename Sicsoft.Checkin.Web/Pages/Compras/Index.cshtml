@@ -2,6 +2,7 @@
 @model InversionGloblalWeb.Pages.Compras.IndexModel
 @{
     ViewData["Title"] = "Compras Realizadas";
+    var Roles = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Roles").Select(s1 => s1.Value).FirstOrDefault().Split("|");
 }
 
 @section Title{
@@ -202,25 +203,30 @@
 
 
                     <div class="col-sm-6">
-                        <div class="form-row">
-                            <div class="input-group input-group-sm  col-md-12">
-                                <input asp-for="filtro.Texto" class="form-control" placeholder="Buscar Compras">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Número Factura:</label>
+                                <div class="form-row">
+                                    <div class="input-group input-group-sm  col-md-12">
+                                        <input asp-for="filtro.Texto" class="form-control" placeholder="Buscar Compras">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <label class="col-form-label">Número de Liquidación:</label>
+                                <div class="form-row">
+                                    <div class="input-group input-group-sm  col-md-12">
+                                        <input asp-for="filtro.NumCierre" class="form-control" placeholder="# Liquidación">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
 
-                        <div class="">
 
-
-
-                            <p style="font-size:14px;">Se encontraron @Model.Objeto.Length registros de Compras.</p>
-
-
-
-                        </div>
                     </div>
                     <div class="col-sm-6">
-
+                        <label class="col-form-label">Moneda:</label>
                         <div class="form-group row">
 
                             <div class="col-sm-10">
@@ -238,9 +244,11 @@
                         <br />
                     </div>
                     <div class="col-sm-6">
+                        <label class="col-form-label">Fecha Inicial:</label>
                         <input class="form-control" id="FecInicial" type="date" asp-for="filtro.FechaInicio" />
                     </div>
                     <div class="col-sm-6">
+                        <label class="col-form-label">Fecha Final:</label>
                         <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal" />
                     </div>
                     <div class="col-sm-12">
@@ -288,6 +296,15 @@
 
 
 
+                    <div class="">
+
+
+
+                        <p style="font-size:14px;">Se encontraron @Model.Objeto.Length registros de Compras.</p>
+
+
+
+                    </div>
 
 
 
@@ -319,10 +336,11 @@
                         <td align="center" style="width: 5%;"><h3>Consecutivo Hacienda</h3></td>
                         <td align="center" style="width: 6%;"><h3>Fecha</h3></td>
                         <td align="center" style="width: 13%;"><h3>Céd. Proveedor</h3></td>
-                        <td align="center" style="width: 47%;"><h3>Proveedor</h3></td>
+                        <td align="center" style="width: 35%;"><h3>Proveedor</h3></td>
                         <td align="center" style="width: 6%;"><h3>Moneda</h3></td>
                         <td align="center" style="width: 11%;"><h3>Total</h3></td>
                         <td align="center" style="width: 12%;"><h3>Estado</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Acción</h3></td>
                     </tr>
 
                 </thead>
@@ -338,8 +356,8 @@
                         <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NomProveedor</a></td>
                         <td align="center" style="padding-top:15px;">
                             <a style="font-size:15px;  ">
-                            @item.CodMoneda
-                                </a>
+                                @item.CodMoneda
+                            </a>
                         </td>
 
                         <td align="right" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato)</a></td>
@@ -350,18 +368,28 @@
                             {
 
                                 <p><span class="badge badge-primary">Asignado</span></p>
-                               
+
                             }
                             else
                             {
                                 <p><span class="badge badge-danger">No Asignado</span></p>
-                                 
+
                             }
 
 
 
 
                         </td>
+                        <td align="center" style="padding-top:15px;">
+                            @if (!string.IsNullOrEmpty(Roles.Where(a => a == "23").FirstOrDefault()))
+                            {
+                                @if (item.idCierre != 0 && item.idCierre != null)
+                                {
+                                    <a asp-page="./Editar" asp-route-id="@item.id" title="Editar" class="fa fa-edit icono"> </a>
+                                }
+                            }
+                            </td>
+
                     </tr>
 
                     }

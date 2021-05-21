@@ -666,7 +666,8 @@
                 Impuesto8: $("#impuesto8").text(),
                 Impuesto13: $("#impuesto13").text(),
                 TotalOtrosCargos: $("#tOCargos").text(),
-                Total: $("#total").text()
+                Total: $("#total").text(),
+                Observacion: $("#Comentario").val()
             };
 
             var Cadena = [];
@@ -878,7 +879,8 @@
                 Impuesto8: $("#impuesto8").text(),
                 Impuesto13: $("#impuesto13").text(),
                 TotalOtrosCargos: $("#tOCargos").text(),
-                Total: $("#total").text()
+                Total: $("#total").text(),
+                Observacion: $("#Comentario").val()
             };
 
             var Cadena = [];
@@ -1235,7 +1237,7 @@
                     <label class="col-form-label">Observación:</label>
                 </div>
                 <div class="col-sm-12">
-                    <textarea rows="5" class="form-control" asp-for="Liquidacion.EncCierre.Observacion" readonly></textarea>
+                    <textarea rows="5" class="form-control" asp-for="Liquidacion.EncCierre.Observacion" id="Comentario"></textarea>
                 </div>
             </div>
         </div>
@@ -1912,7 +1914,7 @@
             CodPro: "1",
             NomPro: $("#NomPro").val(),
             idTipoGasto: $("#idTipoGasto").val() == "NULL" ? "0" : $("#idTipoGasto").val(),
-            Cantidad: "0",
+            Cantidad: "1",
             PrecioUnitario: $("#PrecUniI").val(),
             MontoDescuento: $("#descI").val(),
             ImpuestoTarifa: $("#TipoImpuesto").val(),
