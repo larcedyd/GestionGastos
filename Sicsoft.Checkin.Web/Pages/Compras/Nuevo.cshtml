@@ -165,11 +165,19 @@
                         var dataurl = canvas.toDataURL("image/jpg");
                         document.getElementById('imgPrincipalG').src = e.target.result;
                      
-                        console.log(dataurl);
+                         
                         ImageBae64 = dataurl;//e.target.result;
                        // alert(ImageBae64);
 
-                        setInterval(function () { console.log(ImageBae64) }, 3000);
+                        
+                        var idF = setInterval(cancelar, 3000);
+
+                        function cancelar() {
+                            console.log("cancelar -> " + ImageBae64);
+                            if (ImageBae64 != "data:,") {
+                                clearInterval(idF);
+                            }
+                        }
                     }
                     
                 }

@@ -293,7 +293,8 @@
                        Impuesto8: $("#imp8").val(),
                        Impuesto13: $("#imp13").val(),
                        idTipoGasto: $("#idTipoGastoEditar").val(),
-                       TotalOtrosCargos: $("#otrosCargos").val()
+                       TotalOtrosCargos: $("#otrosCargos").val(),
+                       Comentario: $("#ComenFac").val()
                    };
 
                   
@@ -392,7 +393,7 @@
             $("#adjunto").attr('href', '');
             $("#tipoGasto").text("");
             $("#idTipoGastoEditar").val("NULL").trigger('change.select2');
-
+            $("#Comentario").val("");
         }
 
         function RellenaTabla() {
@@ -536,7 +537,8 @@
             for (var i = 0; i < ProdCadena.length; i++) {
                 var det = {
                     idFactura: ProdCadena[i].id,
-                    idTipoGasto: ProdCadena[i].idTipoGasto
+                    idTipoGasto: ProdCadena[i].idTipoGasto,
+                    Comentario: ProdCadena[i].Comentario
                 };
                 Cadena.push(det);
             }
@@ -669,7 +671,8 @@
             for (var i = 0; i < ProdCadena.length; i++) {
                 var det = {
                     idFactura: ProdCadena[i].id,
-                    idTipoGasto: ProdCadena[i].idTipoGasto
+                    idTipoGasto: ProdCadena[i].idTipoGasto,
+                    Comentario: ProdCadena[i].Comentario
                 };
                 Cadena.push(det);
             }
@@ -986,6 +989,19 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="col-sm-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Comentario:</label>
+
+                                    </div>
+                                    <div class="col-sm-12" style="text-align: right;">
+                                       <input class="form-control" maxlength="100" id="ComenFac"/>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -1257,7 +1273,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <input type="number" asp-for="Objeto1.EncCompras.NumFactura" id="NumFactura" class="form-control">
+                                        <input type="number" asp-for="Objeto1.EncCompras.NumFactura" id="NumFactura" class="form-control" maxlength="5" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" placeholder="Si es electronica digite los últimos 5 dígitos del consecutivo">
                                     </div>
                                 </div>
 
@@ -1406,7 +1422,8 @@
                                 <div class="row">
                                     <div class="col-sm-8"></div>
                                     <div class="col-sm-4" style="text-align: right;">
-                                        <button onclick="javascript: AgregarProductosI();" class="btn btn-w-m btn-primary" title="Agregar a la lista">+ Agregar</button>
+                                        @*<button onclick="javascript: AgregarProductosI();" class="btn btn-w-m btn-primary" title="Agregar a la lista">+ Agregar</button>*@
+                                        <button id="buttonSpin" onclick="javascript: EnviarFC();" class="ladda-button green expand-left"><span class="label-submit">Guardar Cambios</span> <span class="spinner"></span></button>
                                     </div>
                                 </div>
                             </div>
@@ -1414,7 +1431,7 @@
                     </div>
                 </div>
 
-                <div class="ibox">
+                <div class="ibox" hidden>
                     <div class="ibox-content">
                         <div class="row">
                             <div class="col-sm-12">
@@ -1563,12 +1580,12 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end">
-                    <button id="buttonSpin"onclick="javascript: GenerarI();" class="ladda-button green expand-left"><span class="label-submit">Guardar Cambios</span> <span class="spinner"></span></button>
+                <!--<div class="d-flex justify-content-end" hidden>
+                    <button id="buttonSpin2"onclick="javascript: GenerarI();" class="ladda-button green expand-left"><span class="label-submit">Guardar Cambios</span> <span class="spinner"></span></button>-->
                      
                     @*<button onclick="javascript: GenerarI();" class="ladda-button ladda-button-demo btn btn-w-m btn-primary" data-style="zoom-in" title="Guardar">Guardar Cambios</button>*@
 
-                </div>
+                <!--</div>-->
 
             </div>
         </div>
@@ -1589,7 +1606,7 @@
     var impuestoI8 = 0;
     var impuestoI13 = 0;
 
-
+    var position = 0;
     async function readFilePrincipal(input) {
         if (input.files && input.files[0]) {
             /*const maxAllowSize = 512000;*/
@@ -1630,10 +1647,20 @@
                     ctx.drawImage(img, 0, 0, width, height);
                     var dataurl = canvas.toDataURL("image/jpg");
                     document.getElementById('imgPrincipalG').src = e.target.result;
-                     
-                    console.log(dataurl);
+
+                   // console.log(dataurl);
                     ImageBae64 = dataurl;//e.target.result;
-                    setInterval(function () { console.log(ImageBae64) }, 3000);
+                    //var idF = setInterval(cancelar, 3000);
+
+                    //function cancelar() {
+                    //    //alert("cancelar -> " + ImageBae64);
+
+                    //    if (ImageBae64 != "data:,") {
+                    //        alert("Imagen agregada con éxito");
+                    //        clearInterval(idF);
+                    //    }
+                    //}
+
                 }
 
             }
@@ -1644,19 +1671,43 @@
 
 
     }
-
+  //  var idF;
     var fileUploadPrincipal = document.getElementById('imgPrincipalUploadG');
     fileUploadPrincipal.onchange = async function (e) {
+
         await readFilePrincipal(e.srcElement);
-        await readFilePrincipal(e.srcElement);
+        // idF = setInterval(cancelar(e), 2000);
+
+       var idF = setInterval( async function () {
+
+            if (ImageBae64 != "data:,") {
+                //alert("Imagen agregada con éxito");
+                clearInterval(idF);
+            } else {
+                await readFilePrincipal(e.srcElement);
+            }
+        }, 1500);
+
+
+        //await readFilePrincipal(e.srcElement);
+        //sleep(3000);
+        //await readFilePrincipal(e.srcElement);
 
     }
-
+ 
+    function sleep(milliseconds) {
+        var start = new Date().getTime();
+        for (var i = 0; i < 1e7; i++) {
+            if ((new Date().getTime() - start) > milliseconds) {
+                break;
+            }
+        }
+    }
     function check(i) {
 
         var checkbox1 = document.getElementById("simp");
         var checkbox2 = document.getElementById("ext");
-        var checkbox3 = document.getElementById("var"); 
+        var checkbox3 = document.getElementById("var");
         var checkbox4 = document.getElementById("nrec");
         if (i == "1") {
 
@@ -1931,7 +1982,7 @@
                 }
         }
     }
-   
+
               function GenerarI()
               {
                   var button = document.getElementById('buttonSpin');
@@ -1944,7 +1995,7 @@
 
 
                   //
-                  
+
                  var checkbox1 = document.getElementById("simp");
                   var checkbox2 = document.getElementById("ext");
                   var checkbox3 = document.getElementById("var");
@@ -1983,7 +2034,7 @@
                             EncCompras,
                             DetCompras
                         };
-        
+
                   var recibidos = JSON.stringify(recibido);
                   if (ValidarFactura()) {
                       $("#FaltaDatos").css("display", "none");
@@ -1998,8 +2049,8 @@
                               RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
                           },
                           success: function (json) {
-                              
-                              console.log(json);
+
+                              console.log(json.resp + " -> " + json.success );
                               if (json.success == true) {
                                   button.removeAttribute('data-loading');
                                   $("#ErrorFactura").css("display", "none");
@@ -2020,7 +2071,8 @@
                                       Impuesto8: parseFloat(EncCompras.Impuesto8.replace(",", "")),
                                       Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "")),
                                       idTipoGasto: Productos[0].idTipoGasto,
-                                      TotalOtrosCargos: 0
+                                      TotalOtrosCargos: 0,
+                                      Comentario: ""
                                   };
 
                                   console.log(EncCompras);
@@ -2096,7 +2148,7 @@
                       $("#FaltaDatos").css("display", "block");
                       button.removeAttribute('data-loading');
                   }
-                 
+
     }
 
     function LimpiarDatosGenerales() {
@@ -2149,7 +2201,7 @@
             return false;
         } else if ($("#NomProveedor").val() == "") {
             return false;
-        } else if ($("#FecFactura").val() == "") 
+        } else if ($("#FecFactura").val() == "")
         {
             return false;
         } else if (Productos.length == 0)
@@ -2162,5 +2214,11 @@
         else {
             return true;
         }
+    }
+
+    async function EnviarFC() {
+        AgregarProductosI();
+        GenerarI();
+
     }
 </script>

@@ -164,6 +164,10 @@ namespace Sicsoft.Checkin.Web
       .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Cierre"))
       .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
 
+            services.AddRefitClient<ICrudApi<InfoLiquid, int>>()
+      .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Cierre/EnviarCorreo"))
+      .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
+
             services.AddRefitClient<ICrudApi<SeguridadModulosViewModel, int>>()
       .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/SeguridadModulos"))
       .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();

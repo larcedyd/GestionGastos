@@ -17,14 +17,27 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
     {
         private readonly ICrudApi<GastosR, int> liquidaciones;
         private readonly ICrudApi<ComprasViewModel, int> service;
+        private readonly ICrudApi<UsuariosViewModel, int> users;
+        private readonly ICrudApi<RolesViewModel, int> roles;
+        private readonly ICrudApi<InfoLiquid, int> info;
+
         [BindProperty(SupportsGet = true)]
         public GastosR Liquidacion { get; set; }
         [BindProperty(SupportsGet = true)]
         public ComprasViewModel[] Objeto { get; set; }
-        public ObservarModel(ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> service)
+
+        [BindProperty]
+        public UsuariosViewModel[] Usuarios { get; set; }
+
+        [BindProperty]
+        public RolesViewModel[] Rols { get; set; }
+        public ObservarModel(ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> service, ICrudApi<UsuariosViewModel, int> users, ICrudApi<RolesViewModel, int> roles, ICrudApi<InfoLiquid, int> info)
         {
             this.liquidaciones = liquidaciones;
             this.service = service;
+            this.users = users;
+            this.roles = roles;
+            this.info = info;
         }
 
         public async Task<IActionResult> OnGetAsync(string id)
@@ -38,14 +51,15 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 }
                 var ids = Convert.ToInt32(id);
                 Liquidacion = await liquidaciones.ObtenerPorId(ids);
+                Usuarios = await users.ObtenerLista("");
+                Rols = await roles.ObtenerLista("");
 
-
-                
 
                 ParametrosFiltros filt = new ParametrosFiltros();
                 filt.Codigo3 = Liquidacion.EncCierre.idCierre;
+                filt.NumCierre = Liquidacion.EncCierre.idCierre;
                 //filt.Asignados = true;
-                var objetos = await service.ObtenerLista(filt);
+                var objetos = await service.ObtenerListaCompras(filt);
 
 
                 Objeto = new ComprasViewModel[Liquidacion.DetCierre.Length];
@@ -81,6 +95,32 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
 
                 return new JsonResult(ex.Message);
+            }
+        }
+
+
+        public async Task<IActionResult> OnPostEnviarCorreo(string recibido)
+        {
+            try
+            {
+
+
+                InfoLiquid liq = JsonConvert.DeserializeObject<InfoLiquid>(recibido);
+                //liq.idCierre = idCierre;
+                //liq.emailDest = emailDest;
+                //liq.emailCC = emailCC;
+                //liq.body = body;
+
+                await info.EnviarCorreo(liq);
+                
+                return new JsonResult(true);
+            }
+            catch (Exception ex)
+            {
+
+
+
+                return new JsonResult(false);
             }
         }
 

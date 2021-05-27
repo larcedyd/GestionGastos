@@ -2,6 +2,12 @@
 @model InversionGloblalWeb.Pages.Liquidaciones.IndexModel
 @{
     ViewData["Title"] = "Liquidaciones";
+    var MiRol = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault());
+
+    var RolAdmin = Model.Rols.Where(a => a.NombreRol.ToUpper().Contains("Administrador".ToUpper())).FirstOrDefault();
+
+    var bandera = MiRol == RolAdmin.idRol;
+
 }
 
 @section Title{
@@ -490,9 +496,9 @@
                             <td align="center" style="padding-top:15px;">
                                 @if (item.Estado == "P" || item.Estado == "R")
                                 {
-                                @if (item.idLogin == int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()))
+                                    @if (item.idLogin == int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()))
                                     {
-                                <a asp-page="./Editar" asp-route-id="@item.idCierre" title="Editar" class="fa fa-edit icono"> </a>
+                                        <a asp-page="./Editar" asp-route-id="@item.idCierre" title="Editar" class="fa fa-edit icono"> </a>
                                     }
 
 
@@ -501,30 +507,33 @@
                                 @if (item.Estado == "E")
                                 {
 
-                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
+                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
                                     {
+                                        @if (item.idLogin != int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()) && !bandera)
+                                        {
 
-                                <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
+                                            <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
+                                        }
                                     }
 
-                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "10").FirstOrDefault()))
+                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "10").FirstOrDefault()))
                                     {
-                                <a onclick="javascript: CambiarEstado('@item.idCierre');" title="Cambiar estaddo a abierta" class="fa fa-clock-o icono" style="padding-left: 10px;"></a>
+                                        <a onclick="javascript: CambiarEstado('@item.idCierre');" title="Cambiar estaddo a abierta" class="fa fa-clock-o icono" style="padding-left: 10px;"></a>
                                     }
                                 }
                                 &nbsp;
                                 @if (item.Estado == "A")
                                 {
 
-                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "21").FirstOrDefault()))
+                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "21").FirstOrDefault()))
                                     {
-                                         @if(!item.ProcesadaSAP)
+                                        @if (!item.ProcesadaSAP)
 
-                                           {
+                                        {
 
-                                    <a title="Crear asiento en SAP" class="icono" onclick="javascript: EnviarAsiento('@item.idCierre')"><img src="~/img/sap.png" class="imgSAP" style="" /></a>
-                                            }
-                                }
+                                            <a title="Crear asiento en SAP" class="icono" onclick="javascript: EnviarAsiento('@item.idCierre')"><img src="~/img/sap.png" class="imgSAP" style="" /></a>
+                                        }
+                                    }
 
 
                                 }

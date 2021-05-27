@@ -78,12 +78,12 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Periodos = new string[12] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre" };
 
                 
-                if(time.Day < 26)
+                if(time.Day < 27)
                 {
                     filtro.FechaInicio = DateTime.Now;
                     filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
                     filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
-                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
+                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1);//.AddDays(-1); Agregar al final 
 
                 }
                 else
@@ -141,12 +141,12 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month -1, 26);
                 filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
                 DateTime time = DateTime.Now;
-                if (time.Day < 26)
+                if (time.Day < 27)
                 {
                     filt.FechaInicio = DateTime.Now;
                     filt.FechaInicio = filt.FechaInicio.AddMonths(-1);
                     filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 26);
-                    filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
+                    filt.FechaFinal = filt.FechaInicio.AddMonths(1);//.AddDays(-1);
 
                 }
                 else
@@ -224,6 +224,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                     Liquidacion.DetCierre[cantidad - 1] = new DetCierreViewModel();
                     Liquidacion.DetCierre[cantidad - 1].idFactura = item.idFactura;
                     Liquidacion.DetCierre[cantidad - 1].idTipoGasto = item.idTipoGasto;
+                    Liquidacion.DetCierre[cantidad - 1].Comentario = item.Comentario;
                     cantidad++;
                 }
 
@@ -292,6 +293,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                     Liquidacion.DetCierre[cantidad - 1] = new DetCierreViewModel();
                     Liquidacion.DetCierre[cantidad - 1].idFactura = item.idFactura;
                     Liquidacion.DetCierre[cantidad - 1].idTipoGasto = item.idTipoGasto;
+                    Liquidacion.DetCierre[cantidad - 1].Comentario = item.Comentario;
 
                     cantidad++;
                 }
@@ -403,19 +405,19 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 return new JsonResult(obj);
             }
-            catch (ApiException ex)
-            {
-                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
-                ModelState.AddModelError(string.Empty, errores.Message);
+            //catch (ApiException ex)
+            //{
+            //    Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+            //    ModelState.AddModelError(string.Empty, errores.Message);
 
-                var obj = new
-                {
-                    success = true,
-                    resp = errores.Message
-                };
-                return new JsonResult(obj);
-                //return new JsonResult(false);
-            }
+            //    var obj = new
+            //    {
+            //        success = false,
+            //        resp = errores.Message
+            //    };
+            //    return new JsonResult(obj);
+            //    //return new JsonResult(false);
+            //}
             catch (Exception ex)
             {
 

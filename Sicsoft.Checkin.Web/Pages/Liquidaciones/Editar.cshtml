@@ -110,24 +110,28 @@
 
         jQuery(document).ready(function ($) {
             $(document).ready(function () {
-                $(":input").inputmask();
-                $('.mi-selector').select2();
-            
-                $("#NomPro").val("");
 
-                $("#PrecUniI").val(0);
-                $("#descI").val(0);
-                $("#TipoImpuesto").val("0").trigger('change');
-                $("#idTipoGasto").val("NULL").trigger('change');
-                $("#ImpuestoMonto").val(0);
 
-                $("input:radio[name=idProveedor]:checked").val("01");
             });
         });
-        $(".js-example-responsive").select2({
-            width: 'resolve',// need to override the changed default
-            height: 'resolve'
-        });
+
+
+            $(":input").inputmask();
+            $('.mi-selector').select2();
+
+            $("#NomPro").val("");
+
+            $("#PrecUniI").val(0);
+            $("#descI").val(0);
+            $("#TipoImpuesto").val("0").trigger('change');
+            $("#idTipoGasto").val("NULL").trigger('change');
+            $("#ImpuestoMonto").val(0);
+
+            $("input:radio[name=idProveedor]:checked").val("01");
+            $(".js-example-responsive").select2({
+                width: 'resolve',// need to override the changed default
+                height: 'resolve'
+            });
 
             Recuperar();
 
@@ -135,7 +139,10 @@
 
 
 
-    });
+
+
+
+        });
         var ProdCadena = [];
         var bandera = false;
         var idP = 0;
@@ -153,8 +160,10 @@
 
 
         function Recuperar() {
-
-            var det = JSON.parse($("#Liquidacion").val());
+            try {
+                var det = JSON.parse($("#Liquidacion").val());
+               
+                  
             $("#idCierre").val(det[0].idCierre);
             console.log(det[0]);
 
@@ -168,7 +177,6 @@
             //if (Estado != "P" && Estado != "R") {
             //    document.getElementById('GuardarCambios').disabled = true;
             //}
-
 
 
             for (var i = 0; i < det.length; i++)
@@ -191,7 +199,8 @@
                     Impuesto4: det[i].Impuesto4,
                     Impuesto8: det[i].Impuesto8,
                     Impuesto13: det[i].Impuesto13,
-                    idTipoGasto: det[i].idTipoGasto
+                    idTipoGasto: det[i].idTipoGasto,
+                    Comentario: det[i].Comentario
             };
 
 
@@ -245,7 +254,12 @@
             }
             LimpiarDatos();
 
-            RellenaTabla();
+                RellenaTabla();
+
+            } catch (error) {
+                alert(error);
+            }
+
 
         }
 
@@ -390,7 +404,8 @@
                        Impuesto8: $("#imp8").val(),
                        Impuesto13: $("#imp13").val(),
                        idTipoGasto: $("#idTipoGastoEditar").val(),
-                       TotalOtrosCargos: $("#otrosCargos").val()
+                       TotalOtrosCargos: $("#otrosCargos").val(),
+                       Comentario: $("#ComenFac").val()
                    };
 
 
@@ -485,6 +500,7 @@
             $("#adjunto").attr('href', '');
             $("#tipoGasto").text("");
            // $("#Busqueda").val("NULL").trigger('change.select2');
+            $("#ComenFac").val("");
             $("#idTipoGastoEditar").val("NULL").trigger('change.select2');
         }
 
@@ -675,7 +691,8 @@
             for (var i = 0; i < ProdCadena.length; i++) {
                 var det = {
                     idFactura: ProdCadena[i].id,
-                    idTipoGasto: ProdCadena[i].idTipoGasto
+                    idTipoGasto: ProdCadena[i].idTipoGasto,
+                    Comentario: ProdCadena[i].Comentario
                 };
                 Cadena.push(det);
             }
@@ -712,7 +729,7 @@
                             type: 'POST',
 
                             url: '@Url.Page("Editar", "Generar")',
-                            dataType: 'text',
+                            dataType: 'json',
                             data: { recibidos: recibidos.toString() },
                             headers: {
                                 RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
@@ -726,8 +743,8 @@
                                     $('body').removeClass('modal-open');
                                     $('.modal-backdrop').hide();
                                 }
-                                console.log("resultado " + json);
-                                if (json == "true") {
+                                console.log("resultado " + json.mensaje);
+                                if (json.success == true) {
                                     Swal.fire({
                                         title: "Ha sido generado con éxito",
 
@@ -749,7 +766,7 @@
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
-                                        text: 'Ha ocurrido un error al intentar guardar'
+                                        text: 'Ha ocurrido un error al intentar guardar '
 
                                     })
                                 }
@@ -888,7 +905,8 @@
             for (var i = 0; i < ProdCadena.length; i++) {
                 var det = {
                     idFactura: ProdCadena[i].id,
-                    idTipoGasto: ProdCadena[i].idTipoGasto
+                    idTipoGasto: ProdCadena[i].idTipoGasto,
+                    Comentario: ProdCadena[i].Comentario
                 };
                 Cadena.push(det);
             }
@@ -925,7 +943,7 @@
                             type: 'POST',
 
                             url: '@Url.Page("Editar", "GeneraryEnviar")',
-                            dataType: 'text',
+                            dataType: 'json',
                             data: { recibidos: recibidos.toString() },
                             headers: {
                                 RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
@@ -940,7 +958,7 @@
                                     $('.modal-backdrop').hide();
                                 }
                                 console.log("resultado " + json);
-                                if (json == "true") {
+                                if (json.success == true) {
                                     Swal.fire({
                                         title: "Ha sido generado con éxito",
 
@@ -1206,6 +1224,19 @@
                                     </div>
                                     <div class="col-sm-6" style="text-align: right;">
                                         <a href="" target="_blank" id="adjunto" title="Mirar Adjunto de la Factura" class="fa fa-paperclip icono"></a>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Comentario:</label>
+
+                                    </div>
+                                    <div class="col-sm-12" style="text-align: right;">
+                                        <input class="form-control" maxlength="100" id="ComenFac" />
                                     </div>
                                 </div>
                             </div>
@@ -1475,7 +1506,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <input type="number" asp-for="Objeto1.EncCompras.NumFactura" id="NumFactura" class="form-control">
+                                        <input type="number" asp-for="Objeto1.EncCompras.NumFactura" id="NumFactura" class="form-control" maxlength="5" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" placeholder="Digite los últimos 5 dígitos del consecutivo en caso de ser electronica">
                                     </div>
                                 </div>
 
@@ -1621,7 +1652,8 @@
                                 <div class="row">
                                     <div class="col-sm-8"></div>
                                     <div class="col-sm-4" style="text-align: right;">
-                                        <button onclick="javascript: AgregarProductosI();" class="btn btn-w-m btn-primary" title="Agregar a la lista">+ Agregar</button>
+                                        @*<button onclick="javascript: AgregarProductosI();" class="btn btn-w-m btn-primary" title="Agregar a la lista">+ Agregar</button>*@
+                                        <button id="buttonSpin" onclick="javascript: EnviarFC();" class="ladda-button green expand-left"><span class="label-submit">Guardar Cambios</span> <span class="spinner"></span></button>
                                     </div>
                                 </div>
                             </div>
@@ -1629,7 +1661,7 @@
                     </div>
                 </div>
 
-                <div class="ibox">
+                <div class="ibox" hidden>
                     <div class="ibox-content">
                         <div class="row">
                             <div class="col-sm-12">
@@ -1780,10 +1812,10 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-end">
+                <!--<div class="d-flex justify-content-end">-->
                     @*<button onclick="javascript: GenerarI();" class="btn btn-w-m btn-primary" title="Guardar">Guardar Cambios</button>*@
-                    <button id="buttonSpin" onclick="javascript: GenerarI();" class="ladda-button green expand-left"><span class="label-submit">Guardar Cambios</span> <span class="spinner"></span></button>
-                </div>
+                    <!--<button id="buttonSpin" onclick="javascript: GenerarI();" class="ladda-button green expand-left"><span class="label-submit">Guardar Cambios</span> <span class="spinner"></span></button>
+                </div>-->
 
             </div>
         </div>
@@ -1846,9 +1878,17 @@
                     var dataurl = canvas.toDataURL("image/jpg");
                     document.getElementById('imgPrincipalG').src = e.target.result;
                    
-                    console.log(dataurl);
+                   // console.log(dataurl);
                     ImageBae64 = dataurl;//e.target.result;
-                    setInterval(function () { console.log(ImageBae64) }, 3000);
+                     
+                    //var idF = setInterval(cancelar, 3000);
+
+                    //function cancelar() {
+                    //    console.log("cancelar -> " +ImageBae64);
+                    //    if (ImageBae64 != "data:,") {
+                    //        clearInterval(idF);
+                    //    }
+                    //}
                 }
 
             }
@@ -1863,7 +1903,15 @@
     var fileUploadPrincipal = document.getElementById('imgPrincipalUploadG');
     fileUploadPrincipal.onchange = async function (e) {
         await readFilePrincipal(e.srcElement);
-        await readFilePrincipal(e.srcElement);
+        var idF = setInterval(async function () {
+
+            if (ImageBae64 != "data:,") {
+                //alert("Imagen agregada con éxito");
+                clearInterval(idF);
+            } else {
+                await readFilePrincipal(e.srcElement);
+            }
+        }, 1500);
         
     }
 
@@ -2229,7 +2277,8 @@
                                       Impuesto8: parseFloat(EncCompras.Impuesto8.replace(",", "")),
                                       Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "")),
                                       idTipoGasto: Productos[0].idTipoGasto,
-                                      TotalOtrosCargos: 0
+                                      TotalOtrosCargos: 0,
+                                      Comentario: ""
                                   };
 
                                   console.log(EncCompras);
@@ -2369,5 +2418,11 @@
         else {
             return true;
         }
+    }
+
+    async function EnviarFC() {
+        AgregarProductosI();
+        GenerarI();
+
     }
 </script>
