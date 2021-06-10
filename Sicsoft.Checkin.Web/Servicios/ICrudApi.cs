@@ -29,6 +29,10 @@ namespace Sicsoft.Checkin.Web.Servicios
         Task<TEntity> Login(string email, string clave, string CedulaJuridica);
 
 
+        [Get("")]
+        Task<bool> VCierre(int idLogin, string Periodo, DateTime fechaCierre, string CodMoneda);
+
+
         [Get("/Listado")]
         Task<TEntity[]> ObtenerListaCompras<TQuery>(TQuery q);
 

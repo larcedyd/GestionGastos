@@ -208,11 +208,14 @@
 
         function EnviarCorreo() {
 
-            var html = '<html> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">';
+            var html = '<html><head> <meta charset="utf-8" /> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">';
+            html += '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">';
+            html += '</scrip' + 't>';
+            html += '</head> ';
             html += '<body>'
             html += ' <div class="row"> <div class="col-sm-12" style="text-align: center;"> <h2> Liquidación por revisar </h2> </div> </div>';
             html += '<div class="row"> <div class="col-sm-12"> <br> </div> </div>';
-            html += $("#idHtml").html();
+            html += $("#idHtml2").html();
 
            html += "</body></html>"
 
@@ -236,7 +239,7 @@
                 },
             }).then((result) => {
                 if (result.isConfirmed) {
-
+                    console.log(html);
                     var recibidos = JSON.stringify(recibido);
                     $.ajax({
                         type: 'POST',
@@ -299,6 +302,33 @@
                 }
             })
 
+        }
+
+        function ReportePDF() {
+
+            var html = '<html> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">';
+            html += '<body>'
+            html += ' <div class="row"> <div class="col-sm-12" style="text-align: center;"> <h2> Liquidación por revisar </h2> </div> </div>';
+            html += '<div class="row"> <div class="col-sm-12"> <br> </div> </div>';
+            html += $("#idHtml2").html();
+
+            html += "</body></html>"
+            var item = html;
+
+            var opt = {
+                margin: [10, 5, 15, 5],
+                pagebreak: { before: '.cuidado' },
+
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { format: 'letter', orientation: 'portrait' }
+            };
+
+
+
+            html2pdf().set(opt)
+                .from(item)
+                .save("Liquidacion.pdf");
         }
 
 
@@ -443,13 +473,13 @@
                                     <thead>
                                         <tr>
 
-                                            <th align="center" style=" text-align: center;"><h3>Cons. Hacienda</h3></th>
+                                            <th align="center" style=" text-align: center;"><h4>Cons. Hacienda</h4></th>
 
-                                            <th align="center" style=" text-align: center;"><h3>Fecha</h3></th>
-                                            <th align="center" style=" text-align: center;"><h3>Proveedor</h3></th>
-                                            <th align="center" style=" text-align: center;"><h3>Tipo de Gasto</h3></th>
-                                            <th align="center" style=" text-align: center;"><h3>Comentario</h3></th>
-                                            <th align="center" style=" text-align: center;"><h3>Total</h3></th>
+                                            <th align="center" style=" text-align: center;"><h4>Fecha</h4></th>
+                                            <th align="center" style=" text-align: center;"><h4>Proveedor</h4></th>
+                                            <th align="center" style=" text-align: center;"><h4>Tipo de Gasto</h4></th>
+                                            <th align="center" style=" text-align: center;"><h4>Comentario</h4></th>
+                                            <th align="center" style=" text-align: center;"><h4>Total</h4></th>
 
 
                                         </tr>
@@ -460,19 +490,19 @@
                                         {
                                             <tr>
 
-                                                <td align="center" style="padding-top:15px;">  <a style="font-size:15px;" href="@item.PdfFactura" target="_blank">@item.ConsecutivoHacienda </a></td>
+                                                <td align="center" style="padding-top:15px;">  <a style="font-size:13px;" href="@item.PdfFactura" target="_blank">@item.ConsecutivoHacienda </a></td>
 
-                                                <td align="center" style="padding-top:15px;">  <p style="font-size:15px;">@item.FecFactura.Value.ToString("dd/MM/yyyy") </p></td>
+                                                <td align="center" style="padding-top:15px;">  <p style="font-size:13px;">@item.FecFactura.Value.ToString("dd/MM/yyyy") </p></td>
                                                 <td align="left" style="padding-top:15px;">
-                                                    <p style="font-size:15px;">
+                                                    <p style="font-size:13px;">
                                                         @item.NomProveedor
 
 
                                                     </p>
                                                 </td>
-                                                <td align="left" style="padding-top:15px;"> <p style="font-size:15px;">@item.TipoGasto </p></td>
-                                                <td align="left" style="padding-top:15px;"> <p style="font-size:15px;">@(item.Comentario == null ? "" : item.Comentario) </p></td>
-                                                <td align="right" style="padding-top:13px;"> <p style="font-size:15px;">@decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato) </p></td>
+                                                <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@item.TipoGasto </p></td>
+                                                <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@(item.Comentario == null ? "" : item.Comentario) </p></td>
+                                                <td align="right" style="padding-top:13px;"> <p style="font-size:13px;">@decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato) </p></td>
                                             </tr>
                                         }
                                     </tbody>
@@ -670,9 +700,7 @@
         }
     </div>
 </div>
-@if (Model.Liquidacion.EncCierre.Estado == "E")
-{
-
+ 
 
     <div class="ibox">
         <div class="ibox-content">
@@ -701,13 +729,339 @@
                     <div class="d-flex justify-content-end">
 
                         <button onclick="javascript: EnviarCorreo();" class="btn btn-w-m btn-primary" id="btnAceptar" title="Enviar Correo">Enviar</button>
+                        &nbsp;
+                        <button title="PDF" type="button" class="btn btn-danger" onclick="javascript: ReportePDF()">PDF</button>
                     </div>
 
                 </div>
                 <div class="col-sm-6">
-
+                    
                 </div>
             </div>
         </div>
     </div>
-}
+
+
+<!--Reporte PDF-->
+    <div id="idHtml2" hidden>
+
+
+        <div class="row" style="text-align: center;">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
+                <div class="ibox ">
+
+                    <div class="ibox-content">
+                    
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">ID.:</label>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label id="idCierre" style="line-height: 32px;">
+                                            @Model.Liquidacion.EncCierre.idCierre
+                                        </label>
+
+                                    </div>
+                                </div>
+
+
+
+
+
+
+
+                            </div>
+
+                            <div class="col-sm-3">
+
+
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Periodo:</label>
+                                    </div>
+                                    <div class="col-sm-12" style="text-align: center;">
+                                        <label id="PrecioVenta" style="line-height: 32px;">
+                                            @Model.Liquidacion.EncCierre.Periodo
+                                        </label>
+
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+
+                            <div class="col-sm-3">
+
+
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Usuario:</label>
+                                    </div>
+                                    <div class="col-sm-12" style="text-align: center;">
+                                        <label id="PrecioVenta" style="line-height: 32px;">
+                                            @(Model.Usuarios.Where(a => a.id == Model.Liquidacion.EncCierre.idLogin).FirstOrDefault() == null? "": Model.Usuarios.Where(a => a.id == Model.Liquidacion.EncCierre.idLogin).FirstOrDefault().Nombre )
+                                        </label>
+
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+
+
+                            <div class="col-sm-3">
+
+
+
+
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Fecha:</label>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label id="PrecioVenta" style="line-height: 32px;">
+                                            @Model.Liquidacion.EncCierre.FechaCierre.Value.ToString("dd/MM/yyyy")
+                                        </label>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-sm-1"></div>
+
+        </div>
+
+        <div class="row" id="tableHtml">
+            <div class="col-sm-12">
+                <div class="ibox">
+
+                    <div class="ibox-content lista">
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-responsive ">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+
+                                                <th align="center" style=" text-align: center;"><p style="font-weight: bold; font-size: 14px;">Cons. Hacienda</p></th>
+
+                                                <th align="center" style=" text-align: center;"><p style="font-weight: bold; font-size: 14px;">Fecha</p></th>
+                                                <th align="center" style=" text-align: center;"><p style="font-weight: bold; font-size: 14px;">Proveedor</p></th>
+                                                <th align="center" style=" text-align: center;"><p style="font-weight: bold; font-size: 14px;">Tipo de Gasto</p></th>
+                                                <th align="center" style=" text-align: center;"><p style="font-weight: bold; font-size: 14px;">Comentario</p></th>
+                                                <th align="center" style=" text-align: center;"><p style="font-weight: bold; font-size: 14px;">Total</p></th>
+
+
+                                            </tr>
+
+                                        </thead>
+                                        <tbody id="tbody">
+                                            @foreach (var item in Model.Objeto)
+                                        {
+                                            <tr>
+
+                                                <td align="center" style="padding-top:15px;">  <p style="font-size:13px;"> @item.ConsecutivoHacienda  </p></td>
+
+                                                <td align="center" style="padding-top:15px;">  <p style="font-size:13px;">@item.FecFactura.Value.ToString("dd/MM/yyyy") </p></td>
+                                                <td align="left" style="padding-top:15px;">
+                                                    <p style="font-size:13px;">
+                                                        @item.NomProveedor
+
+
+                                                    </p>
+                                                </td>
+                                                <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@item.TipoGasto </p></td>
+                                                <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@(item.Comentario == null ? "" : item.Comentario) </p></td>
+                                                <td align="right" style="padding-top:13px;"> <p style="font-size:13px;">@decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato) </p></td>
+                                            </tr>
+                                        }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="cuidado"></div>
+                        <div class="html2pdf__page-break"></div>
+                        <hr />
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Observación:</label>
+                                    </div>
+                                    <div class="col-sm-8">
+
+                                        <label style="font-size: 13px;">@Model.Liquidacion.EncCierre.Observacion</label>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3" style="text-align: right;">
+                                <div class="row">
+
+                                    <div class="col-sm-12">
+
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table; font-weight: 500 !important; font-style: normal;">SubTotal:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="subtotal" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.SubTotal.Value, 2).ToString("N", formato)</label>
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Descuento:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="descuento" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Descuento.Value, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Impuesto:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuestos.Value, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 1:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto1, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 2:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto2, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 4:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto4" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto4, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 8:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto8" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto8, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 13:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto13, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Otros Cargos:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.TotalOtrosCargos, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Total:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="total" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Total.Value, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

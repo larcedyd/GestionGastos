@@ -73,12 +73,12 @@ namespace Sicsoft.Checkin.Web.Pages
                     filtro.CodMoneda = "CRC";
                 }
                 DateTime time = DateTime.Now;
-                if (time.Day < 27)
+                if (time.Day < 28)
                 {
                     filtro.FechaInicio = DateTime.Now;
                     filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
-                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 25);
-                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(1);
+                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 27);
+                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
 
                 }
                 else
@@ -86,8 +86,8 @@ namespace Sicsoft.Checkin.Web.Pages
 
                     filtro.FechaInicio = DateTime.Now;
 
-                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 25);
-                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(1);
+                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 27);
+                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
 
 
                 }
@@ -107,7 +107,7 @@ namespace Sicsoft.Checkin.Web.Pages
                 filtro.FechaFinal = new DateTime(DateTime.Now.Year, 12, 31);
 
                 CompraAnual = await compras.ObtenerLista(filtro);
-                ComprasAnuales = Compra.GroupBy(a => a.TipoGasto).ToList();
+                ComprasAnuales = CompraAnual.GroupBy(a => a.TipoGasto).ToList();
                 Año = await service.ObtenerHeader(filtro);
 
                 return Page();

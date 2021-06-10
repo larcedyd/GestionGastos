@@ -24,6 +24,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         private readonly ICrudApi<GastosR, int> liquidaciones;
         private readonly ICrudApi<ComprasViewModel, int> compras;
         private readonly ICrudApi<ComprasInsercionViewModel, int> insercionCompras;
+        private readonly ICrudApi<MonedasViewModel, bool> mon;
 
         [BindProperty(SupportsGet = true)]
         public ComprasViewModel[] Objeto { get; set; }
@@ -34,6 +35,10 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
         [BindProperty]
         public string[] Periodos { get; set; }
+
+
+        [BindProperty]
+        public List<MonedasViewModel> Monedas { get; set; }
 
 
         [BindProperty]
@@ -54,7 +59,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         //Termina
 
         public NuevoModel(ICrudApi<ComprasViewModel, int> service, ICrudApi<LoginUsuarioViewModel, int> usuario, ICrudApi<GastosViewModel, int> gastos,
-            ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> compras, ICrudApi<ComprasInsercionViewModel, int> insercionCompras)
+            ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> compras, ICrudApi<ComprasInsercionViewModel, int> insercionCompras,
+            ICrudApi<MonedasViewModel, bool> mon)
         {
             this.gastos = gastos;
             this.service = service;
@@ -62,6 +68,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
             this.liquidaciones = liquidaciones;
             this.compras = compras;
             this.insercionCompras = insercionCompras;
+            this.mon = mon;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -73,17 +80,27 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 {
                     return RedirectToPage("/NoPermiso");
                 }
+                var idLogin = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 DateTime time = DateTime.Now;
 
                 Periodos = new string[12] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre" };
 
-                
-                if(time.Day < 27)
+                Monedas = new List<MonedasViewModel>();
+
+
+                if (time.Day < 27)
                 {
                     filtro.FechaInicio = DateTime.Now;
                     filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
                     filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
+
                     filtro.FechaFinal = filtro.FechaInicio.AddMonths(1);//.AddDays(-1); Agregar al final 
+                    DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
+
+
+                    DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+
+                    filtro.FechaFinal = ultimoDia;
 
                 }
                 else
@@ -94,7 +111,12 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                     filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
                     filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
 
+                    DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
 
+
+                    DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+
+                    filtro.FechaFinal = ultimoDia;
                 }
 
                 
@@ -104,9 +126,45 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
 
                 Periodo = Periodos[filtro.FechaFinal.Month - 1];
-                var idLogin = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
 
-              
+
+                MonedasViewModel moneda = new MonedasViewModel();
+                
+                moneda.identificador = "CRC";
+                moneda.Moneda = "Colones";
+
+                var resp = await mon.VCierre(idLogin,Periodo,DateTime.Now,moneda.identificador);
+                if(resp)
+                {
+                    Monedas.Add(moneda);
+
+                }
+
+
+
+
+                MonedasViewModel moneda2 = new MonedasViewModel();
+                moneda2.identificador = "USD";
+                moneda2.Moneda = "Dolares";
+                 resp = await mon.VCierre(idLogin, Periodo, DateTime.Now, moneda2.identificador);
+                if (resp)
+                {
+                    Monedas.Add(moneda2);
+
+                }
+
+            
+
+                MonedasViewModel moneda3 = new MonedasViewModel();
+                moneda3.identificador = "EUR";
+                moneda3.Moneda = "Euros";
+                resp = await mon.VCierre(idLogin, Periodo, DateTime.Now, moneda3.identificador);
+                if (resp)
+                {
+                    Monedas.Add(moneda3);
+
+                }
+                
 
                 Usuarios = await usuario.ObtenerLista("");
 
@@ -128,6 +186,13 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
             }
         }
 
+
+        //Revisar Liquidacion
+
+        //public async Task<IActionResult> OnGetRevisar(string id)
+        ///
+
+
         public async Task<IActionResult> OnGetBuscar(string id)
         {
             try
@@ -147,6 +212,12 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                     filt.FechaInicio = filt.FechaInicio.AddMonths(-1);
                     filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 26);
                     filt.FechaFinal = filt.FechaInicio.AddMonths(1);//.AddDays(-1);
+                    DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
+
+
+                    DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+
+                    filtro.FechaFinal = ultimoDia;
 
                 }
                 else
@@ -156,7 +227,12 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                     filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 26);
                     filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
+                    DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
 
+
+                    DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+
+                    filtro.FechaFinal = ultimoDia;
 
                 }
 

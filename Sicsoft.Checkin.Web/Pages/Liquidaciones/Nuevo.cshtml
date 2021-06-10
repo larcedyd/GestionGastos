@@ -223,7 +223,7 @@
 
                 } else {
 
-                    var str = "No existe, no es de este periodo o ya esta asignada. Puedes intentar colocando más dígitos del consecutivo de hacienda.";
+                    var str = "La Factura: No ha llegado al correo, No existe, No es de este periodo o Ya está asignada. Puedes intentar colocando más dígitos del consecutivo de hacienda o esperar unos minutos mientras llega.";
                     $("#Existencia").text(str);
                     LimpiarDatos();
 
@@ -250,10 +250,11 @@
         } else if ($("#idTipoGastoEditar").val() == "0" || $("#idTipoGastoEditar").val() == null)
         {
             return false;
-        } else if ($("#CodMoneda").val() != $("#monedaFactura").val())
-        {
-            return false;
         }
+        //} else if ($("#CodMoneda").val() != $("#monedaFactura").val())
+        //{
+        //    return false;
+        //}
         else {
             return true;
         }
@@ -814,13 +815,26 @@
                         <div class="form-group row">
                             <div class="col-sm-12">
 
-                                <select  id="CodMoneda" class="form-control  mi-selector">
+                                <select id="CodMoneda" class="form-control  mi-selector">
                                     @*<option value="NULL" selected>-Moneda-</option>*@
 
+                                    @{int i = 0;}
+                                    @foreach (var item in Model.Monedas)
+                                    {
+                                        @if (i == 0)
+                                        {
+                                            <option value="@item.identificador" selected>@item.Moneda</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@item.identificador">@item.Moneda</option>
+                                        }
+                                    i++;
+                                    }
 
-                                    <option value="CRC" selected>Colones</option>
-                                    <option value="USD">Dólares</option>
-                                    <option value="EUR">Euros</option>
+                                    @*<option value="CRC" selected>Colones</option>
+        <option value="USD">Dólares</option>
+        <option value="EUR">Euros</option>*@
 
 
                                 </select>
@@ -1345,6 +1359,7 @@
                                         <input type="text" maxlength="200" id="NomPro" class="form-control">
                                     </div>
                                 </div>
+                                <div hidden>
 
                                 <label class="col-form-label">Monto Descuento:</label>
                                 <div class="form-group row">
@@ -1352,6 +1367,7 @@
 
                                         <input type="number" id="descI" class="form-control">
                                     </div>
+                                </div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -1374,6 +1390,23 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div hidden>
+
+                                <label class="col-form-label">Monto Impuesto:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+
+                                        <input type="number" id="ImpuestoMonto" class="form-control">
+                                    </div>
+                                </div>
+
+                                </div>
+
+                              
+
+                            </div>
+                            <div class="col-sm-3">
                                 <label class="col-form-label">Tipo Gasto:</label>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
@@ -1394,17 +1427,7 @@
 
                             </div>
                             <div class="col-sm-3">
-
-                                <label class="col-form-label">Monto Impuesto:</label>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-
-                                        <input type="number" id="ImpuestoMonto" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <label class="col-form-label">Precio Unitario:</label>
+                                <label class="col-form-label">Monto:</label>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 

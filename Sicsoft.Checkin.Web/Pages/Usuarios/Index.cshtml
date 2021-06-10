@@ -78,7 +78,7 @@
         function onClickModal(id) {
 
         ids = id;
-            console.log("id que viene del eliminar: " + ids);
+    
 
             Swal.fire({
                 title: '¿Desea activar/inactivar ese usuario?',
@@ -215,9 +215,10 @@
                     <tr>
 
                         <td align="center" style="width: 20%;"><h3>Nombre</h3></td>
-                        <td align="center" style="width: 30%;"><h3>Email</h3></td>
+                        <td align="center" style="width: 20%;"><h3>Email</h3></td>
                         <td align="center" style="width: 15%;"><h3>Rol</h3></td>
-                        <td align="center" style="width: 15%;"><h3>Estado</h3></td>
+                        <td align="center" style="width: 15%;"><h3>Aprobador</h3></td>
+                        <td align="center" style="width: 10%;"><h3>Estado</h3></td>
                         <td align="center" style="width: 20%;"><h3>Acción</h3></td>
                     </tr>
 
@@ -234,7 +235,9 @@
                             </a>
                         </td>
                         <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Email</a></td>
-                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @((Model.Roles.Where(a => a.idRol == item.idRol).FirstOrDefault() == null ? "" : Model.Roles.Where(a => a.idRol == item.idRol).FirstOrDefault().NombreRol)) </a></td>
+                        <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @((Model.Roles.Where(a => a.idRol == item.idRol).FirstOrDefault() == null ? "" : Model.Roles.Where(a => a.idRol == item.idRol).FirstOrDefault().NombreRol)) </a></td>
+                        <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @((Model.Objeto2.Where(a => a.id == item.idLoginAceptacion).FirstOrDefault() == null ? "" : Model.Objeto2.Where(a => a.id == item.idLoginAceptacion).FirstOrDefault().Nombre))</a></td>
+
                         @if (item.Activo.Value)
                         {
 

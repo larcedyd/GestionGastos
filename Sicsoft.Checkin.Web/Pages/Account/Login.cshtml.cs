@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System;
+using System.Runtime.InteropServices;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using InversionGloblalWeb.Models;
@@ -89,6 +90,11 @@ namespace Sicsoft.Checkin.Web
                     return Page();
                 }
                
+            }
+            catch(Exception ex)
+            {
+                ModelState.AddModelError("Email", ex.Message);
+                return Page();
             }
            
             return response;

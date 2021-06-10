@@ -162,22 +162,15 @@
         function Recuperar() {
             try {
                 var det = JSON.parse($("#Liquidacion").val());
-               
-                  
-            $("#idCierre").val(det[0].idCierre);
-            console.log(det[0]);
+
+                var idDelCierre = "@Model.Liquidacion.EncCierre.idCierre";
+                $("#idCierre").val(idDelCierre);
+            
 
             var Estado = "@Model.Liquidacion.EncCierre.Estado";
             $("#CodMoneda").val("@Model.Liquidacion.EncCierre.CodMoneda");
             console.log("Estado " + Estado);
-            //if (Estado != "P") {
-            //    document.getElementById('btnEnviarRevision').disabled = true;
-            //}
-
-            //if (Estado != "P" && Estado != "R") {
-            //    document.getElementById('GuardarCambios').disabled = true;
-            //}
-
+         
 
             for (var i = 0; i < det.length; i++)
             {
@@ -257,7 +250,13 @@
                 RellenaTabla();
 
             } catch (error) {
-                alert(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error
+
+                });
+                
             }
 
 
@@ -333,14 +332,14 @@
                         $("#Existencia").text(str);
                         LimpiarDatos();
                     } else if ((result.idCierre != 0 && result.idCierre != parseInt($("#idCierre").val()))) {
-                        var str = "No existe, no es de este periodo o ya esta asignada. Puedes intentar colocando más dígitos del consecutivo de hacienda.";
+                        var str = "La Factura: No ha llegado al correo, No existe, No es de este periodo o Ya está asignada. Puedes intentar colocando más dígitos del consecutivo de hacienda o esperar unos minutos mientras llega.";
                         $("#Existencia").text(str);
                         LimpiarDatos();
                     }
 
                 } else {
 
-                    var str = "No existe, no es de este periodo o ya esta asignada. Puedes intentar colocando más dígitos del consecutivo de hacienda.";
+                    var str = "La Factura: No ha llegado al correo, No existe, No es de este periodo o Ya está asignada. Puedes intentar colocando más dígitos del consecutivo de hacienda o esperar unos minutos mientras llega.";
                     $("#Existencia").text(str);
                     LimpiarDatos();
 
@@ -1575,6 +1574,7 @@
                                         <input type="text" maxlength="200" id="NomPro" class="form-control">
                                     </div>
                                 </div>
+                                <div hidden>
 
                                 <label class="col-form-label">Monto Descuento:</label>
                                 <div class="form-group row">
@@ -1582,6 +1582,7 @@
 
                                         <input type="number" id="descI" class="form-control">
                                     </div>
+                                </div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -1604,6 +1605,21 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div hidden>
+
+                                <label class="col-form-label">Monto Impuesto:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+
+                                        <input type="number" id="ImpuestoMonto" class="form-control">
+                                    </div>
+                                </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-sm-3">
+
                                 <label class="col-form-label">Tipo Gasto:</label>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
@@ -1622,16 +1638,6 @@
                                     </div>
                                 </div>
 
-                            </div>
-                            <div class="col-sm-3">
-
-                                <label class="col-form-label">Monto Impuesto:</label>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-
-                                        <input type="number" id="ImpuestoMonto" class="form-control">
-                                    </div>
-                                </div>
                             </div>
                             <div class="col-sm-3">
                                 <label class="col-form-label">Precio Unitario:</label>

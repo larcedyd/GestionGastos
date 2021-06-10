@@ -1,0 +1,123 @@
+﻿@page
+@model InversionGloblalWeb.Pages.BitacoraErrores.IndexModel
+@{
+    ViewData["Title"] = "Bitacora de Errores";
+
+}
+
+@section Title{
+    <h2><i></i> @ViewData["Title"]</h2>
+}
+ 
+@section breadcrumb{
+    <li class="breadcrumb-item">
+        <a>Bitacora de Errores</a>
+    </li>
+
+    <li class="breadcrumb-item active">
+        <strong>Resumen </strong>
+    </li>
+}
+
+@section styles{
+    <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
+    <link rel="stylesheet" href="~/lib/select2/css/select2-bootstrap4.min.css" />
+    <link href="~/lib/dropzone/basic.css" rel="stylesheet" />
+    <link href="~/lib/dropzone/dropzone.css" rel="stylesheet" />
+    <link href="~/lib/iCheck/skins/square/green.css" rel="stylesheet" />
+    <link href="~/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css" rel="stylesheet" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css">
+    <style>
+        .tableFixHead th {
+            position: sticky;
+            top: 0;
+            background: white;
+        }
+    </style>
+
+}
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+    <script src="~/lib/select2/js/select2.min.js"></script>
+    <script src="~/lib/dropzone/dropzone.js"></script>
+    <script src="~/lib/iCheck/icheck.js"></script>
+    <script src="~/js/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        jQuery(document).ready(function ($) {
+            $(document).ready(function () {
+                $('.mi-selector').select2();
+            });
+        });
+        $(".js-example-responsive").select2({
+            width: 'resolve',// need to override the changed default
+            height: 'resolve'
+        });
+
+        $('.dataTables-example').DataTable({
+            pageLength: 15,
+            responsive: true,
+            order: [[0, "desc"]]
+
+        });
+
+
+
+    });
+
+ 
+
+
+    </script>
+
+}
+
+<div class="ibox ">
+
+
+    <div class="ibox-content lista">
+        
+        <div class="table-responsive" style="padding:inherit;">
+            <table class="table table-striped dataTables-example" style="width: 100%;">
+                <thead>
+                    <tr>
+
+                        <td align="center" style="width: 25%;"><h3>ID</h3></td>
+                        <td align="center" style="width: 25%;"><h3>Descripción</h3></td>
+                        <td align="center" style="width: 25%;"><h3>Metodo</h3></td>
+
+                        <td align="center" style="width: 25%;"><h3>Fecha</h3></td>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Objeto)
+                    {
+                    <tr>
+
+                        <td align="center" style="padding-top:15px;">
+                            <a style="font-size:15px;  ">
+                                @item.id
+                            </a>
+                        </td>
+                        <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Descripcion </a></td>
+                        <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Metodo </a></td>
+                        <td align="center" style="padding-top:15px;">
+                            @item.Fecha.ToString("dd/MM/yyyy")
+
+                        </td>
+                    </tr>
+
+                    }
+                </tbody>
+            </table>
+
+        </div>
+      
+    </div>
+</div>

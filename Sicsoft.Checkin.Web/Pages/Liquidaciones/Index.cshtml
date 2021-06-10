@@ -74,6 +74,13 @@
         .ibox .label {
             font-size: 12px !important;
         }
+
+        .container-fluid
+        {
+            padding-right: 0px !important;
+            padding-left: 0px !important;
+        }
+
     </style>
 
 }
@@ -91,6 +98,7 @@
                 $(document).ready(function () {
                     $('.mi-selector').select2();
                 });
+                onChangePeriodo()
             });
             $(".js-example-responsive").select2({
                 width: 'resolve',// need to override the changed default
@@ -107,6 +115,27 @@
 
 
         });
+
+
+        function ReportePDF() {
+
+            var item = $("#idHtml").html();
+
+            var opt = {
+                margin: [10, 5, 15, 5],
+                pagebreak: { before: '.cuidado' },
+
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { format: 'letter', orientation: 'portrait' }
+            };
+
+
+
+            html2pdf().set(opt)
+                .from(item)
+                .save("ReporteLiquidaciones.pdf");
+        }
 
          function CambiarEstado(idCierre) {
             Swal.fire({
@@ -272,7 +301,126 @@
 
         }
 
+        function onChangePeriodo() {
 
+
+
+
+            if ($("#Periodo").val() != '') {
+                var FechaInicial = '@Model.filtro.FechaInicio.Year' + '-';
+                var MesI = '0';
+
+
+                if (parseInt('@Model.filtro.FechaInicio.Day') > 1) {
+
+                    var Periodos = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
+
+                    var position = 0;
+                    var i = 0;
+
+                    for (i = 0; i < Periodos.length; i++) {
+                        if ($("#Periodo").val() == Periodos[i]) {
+                            position = i;
+                        }
+
+
+
+                    }
+
+
+                    MesI = position + 1;
+                     if (parseInt(MesI) < 10) {
+                    FechaInicial += '0' + MesI;
+
+                } else {
+                    FechaInicial +=  MesI;
+                }
+                } else {
+                    MesI = '@Model.filtro.FechaInicio.Month';
+                     if (parseInt(MesI) < 10) {
+                    FechaInicial += '0' + '@Model.filtro.FechaInicio.Month';
+
+                } else {
+                    FechaInicial +=  '@Model.filtro.FechaInicio.Month';
+                }
+                }
+
+
+
+                if (parseInt('@Model.filtro.FechaInicio.Day') > 1) {
+
+                        FechaInicial += '-'+'0' + '1';
+
+
+                }
+                else {
+                          MesI = '@Model.filtro.FechaInicio.Day'
+
+                    if (parseInt(MesI) < 10) {
+                        FechaInicial += '-'+'0' + '@Model.filtro.FechaInicio.Day';
+
+                    } else {
+                        FechaInicial += '-'+ '@Model.filtro.FechaInicio.Day';
+                    }
+                }
+
+
+
+
+
+
+                var FechaFinal = '@Model.filtro.FechaFinal.Year' + '-';
+                var MesF = '@Model.filtro.FechaFinal.Month';
+
+                var Periodos = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
+
+                var position = 0;
+                var i = 0;
+
+                for (i = 0; i < Periodos.length; i++) {
+                    if ($("#Periodo").val() == Periodos[i]) {
+                        position = i;
+                    }
+
+
+
+                }
+
+
+                MesF = position + 1;
+
+
+
+                if (parseInt(MesF) < 10) {
+                    FechaFinal += '0' + MesF;
+
+                } else {
+                    FechaFinal +=  MesF;
+                }
+
+                var d = new Date(parseInt('@Model.filtro.FechaFinal.Year'), position + 1, 0);
+                MesF = '@Model.filtro.FechaFinal.Day'
+
+                @*if (parseInt(MesF) < 10) {
+                    FechaFinal += '-'+'0' + '@Model.filtro.FechaFinal.Day';
+
+                } else {
+                    FechaFinal += '-'+'@Model.filtro.FechaFinal.Day';
+                }*@
+
+                FechaFinal += '-' + d.getDate();
+
+                $("#FecInicial").val(FechaInicial);
+                $("#FecFinal").val(FechaFinal);
+
+                $("#FecInicial").attr("readonly", "readonly");
+                $("#FecFinal").attr("readonly", "readonly");
+            } else {
+                console.log("Lo va a quitar");
+                $("#FecInicial").removeAttr("readOnly");
+                $("#FecFinal").removeAttr("readOnly");
+            }
+        }
     </script>
 
 }
@@ -282,7 +430,7 @@
         <h2>Filtros:</h2>
     </div>
             <form method="get">
-    <div class="ibox-content">
+    <div class="ibox-content" >
         <div class="row">
 
 
@@ -292,7 +440,7 @@
                 <div class="m-b-lg">
                     <div class="form-row">
                         <div class="col-sm-10">
-                            <select asp-for="filtro.Texto" class="form-control  mi-selector">
+                            <select asp-for="filtro.Texto" id="Periodo" onchange="javascript: onChangePeriodo();" class="form-control  mi-selector">
                                 <option value="" selected>-Periodo-</option>
 
 
@@ -400,7 +548,7 @@
             </div>
             <div class="col-sm-6" style="text-align: right;">
                 <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>&nbsp;
-
+                <button title="PDF" type="button" class="btn btn-danger" onclick="javascript: ReportePDF()">PDF</button>
             </div>
 
 
@@ -410,7 +558,7 @@
 </div>
 
 
-<div class="ibox ">
+<div class="ibox " >
 
 
     <div class="ibox-content lista">
@@ -421,6 +569,157 @@
                 <thead>
                     <tr>
 
+                        <td align="center" style="width: 12%;"><h3>Acción</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Estado</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Periodo</h3></td>
+                        <td align="center" style="width: 20%;"><h3>Usuario</h3></td>
+                        <td align="center" style="width: 10%;"><h3>No. Liquidación</h3></td>
+                        <td align="center" style="width: 10%;"><h3>Fecha Asignación</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Moneda</h3></td>
+                        <td align="center" style="width: 12%;"><h3>Total</h3></td>
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Objeto)
+                    {
+                    <tr>
+                        <td align="center" style="padding-top:15px;">
+                            @if (item.Estado == "P" || item.Estado == "R")
+                            {
+                                @if (item.idLogin == int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()))
+                                {
+                                    <a asp-page="./Editar" asp-route-id="@item.idCierre" title="Editar" class="fa fa-edit icono"> </a>
+                                }
+
+
+                            }
+                            &nbsp;
+                            @if (item.Estado == "E")
+                            {
+
+                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
+                                {
+                                    @if (item.idLogin != int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()) && !bandera)
+                                    {
+
+                                        <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
+                                    }
+                                }
+
+                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "10").FirstOrDefault()))
+                                {
+                                    <a onclick="javascript: CambiarEstado('@item.idCierre');" title="Cambiar estaddo a abierta" class="fa fa-clock-o icono" style="padding-left: 10px;"></a>
+                                }
+                            }
+                            &nbsp;
+                            @if (item.Estado == "A")
+                            {
+
+                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "21").FirstOrDefault()))
+                                {
+                                    @if (!item.ProcesadaSAP)
+
+                                    {
+
+                                        <a title="Crear asiento en SAP" class="icono" onclick="javascript: EnviarAsiento('@item.idCierre')"><img src="~/img/sap.png" class="imgSAP" style="" /></a>
+                                    }
+                                }
+
+
+                            }
+                        </td>
+                        <td align="center" style="padding-top:15px;">
+                            @switch (item.Estado)
+                            {
+                                case "P":
+                                    {
+                                        <p><span class="label label-info">Abierta</span></p>
+
+                                        break;
+                                    }
+
+                                case "A":
+                                    {
+                                        if (item.ProcesadaSAP)
+                                        {
+
+
+                                            <p><span class="label label-primary">En SAP</span></p>
+                                        }
+                                        else
+                                        {
+                                            <p><span class="label label-success">Aprobada</span></p>
+                                        }
+
+                                        break;
+                                    }
+                                case "R":
+                                    {
+                                        <p><span class="label label-danger">Rechazada</span></p>
+                                        break;
+                                    }
+                                case "E":
+                                    {
+                                        <p><span class="label label-warning">Espera</span></p>
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        <p><span class="label label-info">Abierta</span></p>
+                                        break;
+                                    }
+
+                            }
+
+
+                        </td>
+
+                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.Periodo</a></td>
+                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NombreUsuario</a></td>
+                        <td align="center" style="padding-top:15px;">
+                            <a style="font-size:15px;  " asp-page="./Observar" asp-route-id="@item.idCierre">
+                                @item.idCierre
+                            </a>
+                        </td>
+                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.FechaCierre.ToString("dd/MM/yyyy")</a></td>
+                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.CodMoneda</a></td>
+                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.Total, 2).ToString("N", formato)</a></td>
+
+
+                    </tr>
+
+                    }
+                </tbody>
+            </table>
+
+        </div>
+        <a asp-page="Nuevo" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Liquidar</a>
+    </div>
+</div>
+
+
+
+
+
+
+
+<!--El que se imprime en el reporte-->
+
+<div class="ibox " id="idHtml" hidden>
+    <div class="ibox-title">
+        <h2>Liquidaciones:</h2>
+    </div>
+
+    <div class="ibox-content lista">
+
+
+        <div class="table-responsive" style="padding:inherit;">
+            <table class="table table-striped " style="width: 100%;">
+                <thead>
+                    <tr>
+
                         <td align="center" style="width: 10%;"><h3>No. Liquidación</h3></td>
                         <td align="center" style="width: 12%;"><h3>Periodo</h3></td>
                         <td align="center" style="width: 10%;"><h3>Fecha Asignación</h3></td>
@@ -428,7 +727,7 @@
                         <td align="center" style="width: 12%;"><h3>Moneda</h3></td>
                         <td align="center" style="width: 12%;"><h3>Total</h3></td>
                         <td align="center" style="width: 12%;"><h3>Estado</h3></td>
-                        <td align="center" style="width: 12%;"><h3>Acción</h3></td>
+ 
                     </tr>
 
                 </thead>
@@ -493,51 +792,7 @@
 
 
                             </td>
-                            <td align="center" style="padding-top:15px;">
-                                @if (item.Estado == "P" || item.Estado == "R")
-                                {
-                                    @if (item.idLogin == int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()))
-                                    {
-                                        <a asp-page="./Editar" asp-route-id="@item.idCierre" title="Editar" class="fa fa-edit icono"> </a>
-                                    }
-
-
-                                }
-                                &nbsp;
-                                @if (item.Estado == "E")
-                                {
-
-                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "8").FirstOrDefault()))
-                                    {
-                                        @if (item.idLogin != int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()) && !bandera)
-                                        {
-
-                                            <a asp-page="./Observar" asp-route-id="@item.idCierre" title="Aceptar/Rechazar" class="fa fa-exchange icono"></a>
-                                        }
-                                    }
-
-                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "10").FirstOrDefault()))
-                                    {
-                                        <a onclick="javascript: CambiarEstado('@item.idCierre');" title="Cambiar estaddo a abierta" class="fa fa-clock-o icono" style="padding-left: 10px;"></a>
-                                    }
-                                }
-                                &nbsp;
-                                @if (item.Estado == "A")
-                                {
-
-                                    @if (!string.IsNullOrEmpty(Roles.Where(a => a == "21").FirstOrDefault()))
-                                    {
-                                        @if (!item.ProcesadaSAP)
-
-                                        {
-
-                                            <a title="Crear asiento en SAP" class="icono" onclick="javascript: EnviarAsiento('@item.idCierre')"><img src="~/img/sap.png" class="imgSAP" style="" /></a>
-                                        }
-                                    }
-
-
-                                }
-                            </td>
+                          
                         </tr>
 
                     }
@@ -545,6 +800,6 @@
             </table>
 
         </div>
-        <a asp-page="Nuevo" style="color: #57b846;" title="Agregar"><i class="fa fa-plus"></i> Liquidar</a>
+        
     </div>
 </div>

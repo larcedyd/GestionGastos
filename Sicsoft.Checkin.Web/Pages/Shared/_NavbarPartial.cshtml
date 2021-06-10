@@ -62,7 +62,7 @@
             </li>
 
             @if (!string.IsNullOrEmpty(Roles.Where(a => a == "11").FirstOrDefault()) || !string.IsNullOrEmpty(Roles.Where(a => a == "1").FirstOrDefault()) ||
-!string.IsNullOrEmpty(Roles.Where(a => a == "2").FirstOrDefault()) || !string.IsNullOrEmpty(Roles.Where(a => a == "3").FirstOrDefault()))
+!string.IsNullOrEmpty(Roles.Where(a => a == "2").FirstOrDefault()) || !string.IsNullOrEmpty(Roles.Where(a => a == "3").FirstOrDefault()) || !string.IsNullOrEmpty(Roles.Where(a => a == "24").FirstOrDefault()))
             {
 
                 @if (((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "CambiarClave").Select(s1 => s1.Value).FirstOrDefault() != "True")
@@ -129,6 +129,16 @@
                                     <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Gastos".ToLower()) ? "active" : null) navBar">
 
                                         <a asp-page="/Gastos/Index" class="NAVA"> <img class="imgNav" src="/img/Compras o Gastos.png"> &nbsp; Tipos Gastos</a>
+                                    </li>
+                                }
+                            }
+
+
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "24").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Errores".ToLower()) ? "active" : null) navBar">
+
+                                        <a asp-page="/BitacoraErrores/Index" class="NAVA"> <img class="imgNav" src="/img/descarga.png"> &nbsp; Errores</a>
                                     </li>
                                 }
                             }

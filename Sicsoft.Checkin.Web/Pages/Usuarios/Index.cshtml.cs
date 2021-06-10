@@ -26,6 +26,9 @@ namespace InversionGloblalWeb.Pages.Usuarios
         public UsuariosViewModel[] Objeto { get; set; }
 
         [BindProperty]
+        public UsuariosViewModel[] Objeto2 { get; set; }
+
+        [BindProperty]
         public RolesViewModel[] Roles { get; set; }
 
         public IndexModel(ICrudApi<UsuariosViewModel, int> service, ICrudApi<RolesViewModel, int> roles)
@@ -40,6 +43,7 @@ namespace InversionGloblalWeb.Pages.Usuarios
             {
                 // filtro.Codigo1 = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 Objeto = await service.ObtenerLista(filtro);
+                Objeto2 = Objeto;
                 Roles = await roles.ObtenerLista("");
 
                 return Page();
