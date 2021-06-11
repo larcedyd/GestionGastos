@@ -305,6 +305,7 @@
                     $("#otrosCargos").val(result.totalOtrosCargos);
                     $("#idTipoGastoEditar").val(result.idTipoGasto).trigger('change.select2');
                     $("#tipoGasto").text(result.tipoGasto);
+                    $("#TotalComp").text(formatoDecimal(result.totalComprobante));
                     console.log(result.pdfFactura);
 
                     $("#adjunto").attr('href', result.pdfFactura);
@@ -488,7 +489,7 @@
             $("#Impuesto").text("");
             $("#Descuento").text("");
             //$("#idTipoGasto").val("");
-
+            $("#TotalComp").text("");
             $("#imp1").val(0);
             $("#imp2").val(0);
             $("#imp4").val(0);
@@ -1149,6 +1150,16 @@
                                     </div>
                                     <div class="col-sm-6" style="text-align: right;">
                                         <label id="Descuento" style="line-height: 32px;">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Total:</label>
+
+                                    </div>
+                                    <div class="col-sm-6" style="text-align: right;">
+                                        <label id="TotalComp" style="line-height: 32px;">
                                         </label>
                                     </div>
                                 </div>
