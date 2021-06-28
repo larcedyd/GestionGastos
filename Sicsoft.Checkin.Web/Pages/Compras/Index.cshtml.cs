@@ -21,6 +21,7 @@ namespace InversionGloblalWeb.Pages.Compras
     public class IndexModel : PageModel
     {
         private readonly IConfiguration configuration;
+        private readonly ICrudApi<UsuariosViewModel, int> users;
         private readonly ICrudApi<ComprasViewModel, int> service;
         private readonly ICrudApi<AsignacionViewModel, int> asignacion;
 
@@ -30,10 +31,14 @@ namespace InversionGloblalWeb.Pages.Compras
         [BindProperty]
         public ComprasViewModel[] Objeto { get; set; }
 
-        public IndexModel(ICrudApi<ComprasViewModel, int> service, ICrudApi<AsignacionViewModel, int> asignacion)
+        [BindProperty]
+        public UsuariosViewModel[] Usuarios { get; set; }
+
+        public IndexModel(ICrudApi<ComprasViewModel, int> service, ICrudApi<AsignacionViewModel, int> asignacion, ICrudApi<UsuariosViewModel, int> users)
         {
             this.service = service;
             this.asignacion = asignacion;
+            this.users = users;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -60,6 +65,7 @@ namespace InversionGloblalWeb.Pages.Compras
                     filtro.FechaInicio = filtro.FechaFinal.AddMonths(-1);
                 }
 
+                Usuarios = await users.ObtenerLista("");
                 Objeto = await service.ObtenerListaCompras(filtro);
 
 

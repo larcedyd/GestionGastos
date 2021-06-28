@@ -96,7 +96,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                         {
 
                             DateTime time2 = DateTime.Now;
-                            if (time2.Day < 27)
+                            if (time2.Day < 30)
                             {
                                 filtro.FechaInicio = DateTime.Now;
                                 filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
@@ -137,7 +137,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                     {
 
                         DateTime time2 = DateTime.Now;
-                        if (time2.Day < 27)
+                        if (time2.Day < 30)
                         {
                             filtro.FechaInicio = DateTime.Now;
                             filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
@@ -208,10 +208,10 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 return Page();
             }
-            catch (ApiException ex)
+            catch (Exception ex)
             {
-                Errores error = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
-                ModelState.AddModelError(string.Empty, error.Message);
+               // Errores error = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+                ModelState.AddModelError(string.Empty, ex.Message);
 
                 return Page();
             }

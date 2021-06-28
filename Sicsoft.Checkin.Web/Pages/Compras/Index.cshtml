@@ -72,7 +72,7 @@
         $('.dataTables-example').DataTable({
             pageLength: 10,
             responsive: true,
-            order: [[0, "desc"]]
+            order: [[1, "desc"]]
 
         });
 
@@ -204,7 +204,7 @@
 
                     <div class="col-sm-6">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Número Factura:</label>
                                 <div class="form-row">
                                     <div class="input-group input-group-sm  col-md-12">
@@ -212,7 +212,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-sm-4">
+                                <label class="col-form-label">Proveedor:</label>
+                                <div class="form-row">
+                                    <div class="input-group input-group-sm  col-md-12">
+                                        <input asp-for="filtro.Texto2" class="form-control" placeholder="Buscar Proveedor">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
                                 <label class="col-form-label">Número de Liquidación:</label>
                                 <div class="form-row">
                                     <div class="input-group input-group-sm  col-md-12">
@@ -325,7 +333,13 @@
 
 
 <div class="ibox ">
-
+    <div class="ibox-title">
+        <div class="ibox-tools">
+            <button type="button" class="btn" data-toggle="popover" data-html="true" data-placement="top" data-content="Para ordenar la lista por cabecera, se debe dar click en la misma.">
+                <i class="fa fa-question-circle"></i>
+            </button>
+        </div>
+    </div>
 
     <div class="ibox-content lista">
         <div class="table-responsive" style="padding:inherit;">
@@ -333,14 +347,15 @@
                 <thead>
                     <tr>
 
-                        <td align="center" style="width: 5%;"><h3>Consecutivo Hacienda</h3></td>
-                        <td align="center" style="width: 6%;"><h3>Fecha</h3></td>
+                        <td align="center" style="width: 3%;"><h3>Consecutivo Hacienda</h3></td>
+                        <td align="center" style="width: 5%;"><h3>Fecha</h3></td>
                         <td align="center" style="width: 13%;"><h3>Céd. Proveedor</h3></td>
-                        <td align="center" style="width: 35%;"><h3>Proveedor</h3></td>
+                        <td align="center" style="width: 25%;"><h3>Proveedor</h3></td>
                         <td align="center" style="width: 6%;"><h3>Moneda</h3></td>
                         <td align="center" style="width: 11%;"><h3>Total</h3></td>
                         <td align="center" style="width: 12%;"><h3>Estado</h3></td>
-                        <td align="center" style="width: 12%;"><h3>Acción</h3></td>
+                        <td align="center" style="width: 15%;"><h3>Usuario</h3></td>
+                        <td align="center" style="width: 10%;"><h3>Acción</h3></td>
                     </tr>
 
                 </thead>
@@ -380,6 +395,12 @@
 
 
                         </td>
+
+                        <td align="left" style="padding-top:15px;">
+                            <a style="font-size:15px;  ">
+                                @(item.Usuario == 0 ? "N/A" : Model.Usuarios.Where(a => a.id == item.Usuario).FirstOrDefault() == null ? "N/A" : Model.Usuarios.Where(a => a.id == item.Usuario).FirstOrDefault().Nombre)
+                            </a>
+                        </td>
                         <td align="center" style="padding-top:15px;">
                             @if (!string.IsNullOrEmpty(Roles.Where(a => a == "23").FirstOrDefault()))
                             {
@@ -388,7 +409,7 @@
                                     <a asp-page="./Editar" asp-route-id="@item.id" title="Editar" class="fa fa-edit icono"> </a>
                                 }
                             }
-                            </td>
+                        </td>
 
                     </tr>
 

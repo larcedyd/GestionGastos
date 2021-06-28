@@ -22,5 +22,6 @@ namespace InversionGloblalWeb.Models
         public bool FacturaExterior { get; set; }
         public bool FacturaNoRecibida { get; set; }
         public int NumCierre { get; set; }
+        public string Texto2 { get; set; }
     }
 }

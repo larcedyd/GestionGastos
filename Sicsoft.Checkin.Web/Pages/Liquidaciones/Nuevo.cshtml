@@ -121,6 +121,17 @@
                 $("#idTipoGasto").val("NULL").trigger('change');
                 $("#ImpuestoMonto").val(0);
                 $("input:radio[name=idProveedor]:checked").val("01").trigger('change');
+                $("#FecFactura").val($("#FechaI").val());
+                $("#FecFactura").attr({
+                    "max": $("#FechaFinal").val(),
+                    "min": $("#FechaI").val()
+                });  
+
+                Date.prototype.addDays = function (days) {
+                    var date = new Date(this.valueOf());
+                    date.setDate(date.getDate() + days);
+                    return date;
+                }
             });
         });
         $(".js-example-responsive").select2({
@@ -146,6 +157,15 @@
     var oCargos = 0;
 
 
+
+
+    function onChangeFecFactura() {
+        if (new Date($("#FechaFinal").val()).addDays(1) < new Date($("#FecFactura").val()).addDays(1) || new Date($("#FechaI").val()).addDays(1) > new Date($("#FecFactura").val()).addDays(1)) {
+            $("#FecFactura").val($("#FechaI").val());
+
+            alert("La fecha de la factura manual no puede ser menor o mayor que la del periodo");
+        }  
+    }
 
     function onChangeProducto() {
 
@@ -1307,7 +1327,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <input type="date" asp-for="Objeto1.EncCompras.FecFactura" id="FecFactura" class="form-control">
+                                        <input type="date" asp-for="Objeto1.EncCompras.FecFactura" onchange="javascript: onChangeFecFactura();" id="FecFactura" class="form-control">
                                     </div>
                                 </div>
 

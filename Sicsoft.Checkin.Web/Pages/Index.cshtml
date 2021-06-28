@@ -87,7 +87,7 @@
                 for (var j = 0; j < det[i].length; j++) {
                     sum += det[i][j].TotalComprobante;
                 }
-                datas.push(Math.round(sum));
+                datas.push(formatoDecimalAleman(Math.round(sum)));
 
             }
             console.log("Datos: " + Leyendas1);
@@ -121,7 +121,7 @@
                 for (var j = 0; j < detA[i].length; j++) {
                     sum += detA[i][j].TotalComprobante;
                 }
-                datasA.push(Math.round(sum));
+                datasA.push(formatoDecimalAleman(Math.round(sum)));
 
             }
 
@@ -246,6 +246,7 @@
             <div class="col-sm-4">
                 <div class="ibox ">
                     <div class="ibox-title">
+                       
                         <span class="label label-info float-right">Mensual</span>
                         <h5>Mes Actual</h5>
                     </div>
@@ -298,6 +299,13 @@
     </div>
 
     <div class="ibox">
+        <div class="ibox-title">
+            <div class="ibox-tools">
+                <button type="button" class="btn" data-toggle="popover" data-html="true" data-placement="top" data-content="Los separadores de miles acá será con un '.', ya que el componente así lo exige">
+                    <i class="fa fa-question-circle"></i>
+                </button>
+            </div>
+        </div>
         <div class=" ibox-content">
             <div class="row">
                 <div class="col-sm-6">

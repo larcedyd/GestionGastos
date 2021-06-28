@@ -73,7 +73,7 @@ namespace Sicsoft.Checkin.Web.Pages
                     filtro.CodMoneda = "CRC";
                 }
                 DateTime time = DateTime.Now;
-                if (time.Day < 28)
+                if (time.Day < 30)
                 {
                     filtro.FechaInicio = DateTime.Now;
                     filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
