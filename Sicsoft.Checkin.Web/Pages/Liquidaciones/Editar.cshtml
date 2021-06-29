@@ -172,6 +172,9 @@
 
         function Recuperar() {
             try {
+
+ 
+                
                 var det = JSON.parse($("#Liquidacion").val());
 
                 var idDelCierre = "@Model.Liquidacion.EncCierre.idCierre";
@@ -613,55 +616,7 @@
 
         }
 
-        @*   function escogeCodigo(i) {
-
-                $("#CodPro").val(ProdCadena[i].codPro).trigger('change');
-
-                $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: '@Url.Page("Nuevo", "Producto")',
-                    data: { id: ProdCadena[i].codPro },
-            success: function (result) {
-
-                console.log(result);
-
-                if (result.codPro != "") {
-                    $("#Nombre").val(result.nomPro);
-                    $("#PrecioVenta").text( result.costoPro.toFixed(2)) ;
-                    $("#Costo").val(ProdCadena[i].PreVta);
-                    $("#UnidadMedida").text(result.uniMed);
-                    $("#Cantidad").val(ProdCadena[i].cantidad);
-                    $("#Descuento").val(ProdCadena[i].descuento),
-                        $("#Impuesto").val(ProdCadena[i].impuesto)
-                    bandera = true;
-                    idP = i;
-                    //EliminaProducto(i,i);
-
-
-
-                    //$("#Cantidad").val(result.existencia);
-                }
-
-            },
-            beforeSend: function () {
-
-            },
-            complete: function () {
-
-            }
-        });
-        }
-
-
-
-
-
-
-
-
-
-       *@
+    
 
         function validar(enc) {
             console.log(enc);

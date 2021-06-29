@@ -91,7 +91,7 @@ namespace InversionGloblalWeb.Models
 
         public decimal? TotalComprobante { get; set; }
 
-        public string XmlFacturaRecibida { get; set; }
+        //public string XmlFacturaRecibida { get; set; }
 
         
 
