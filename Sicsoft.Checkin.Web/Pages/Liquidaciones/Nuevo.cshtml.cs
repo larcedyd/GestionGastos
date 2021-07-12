@@ -81,48 +81,29 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                     return RedirectToPage("/NoPermiso");
                 }
                 var idLogin = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
-                DateTime time = DateTime.Now;
+               // DateTime time = DateTime.Now;
 
                 Periodos = new string[12] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre" };
 
                 Monedas = new List<MonedasViewModel>();
 
 
-                if (time.Day < 30)
-                {
-                    filtro.FechaInicio = DateTime.Now;
-                    filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
-                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
-
-                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1);//.AddDays(-1); Agregar al final 
-                    DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
+     
 
 
-                    DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
-
-                    filtro.FechaFinal = ultimoDia;
-
-                }
-                else
-                {
-
-                    filtro.FechaInicio = DateTime.Now;
- 
-                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
-                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
-
-                    DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
 
 
-                    DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+                filtro.FechaInicio = DateTime.Now;
 
-                    filtro.FechaFinal = ultimoDia;
-                }
+                filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 1);
+             //   filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
 
-                
+                DateTime primerDia = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 1);
 
-               
-                
+
+                DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+
+                filtro.FechaFinal = ultimoDia;
 
 
                 Periodo = Periodos[filtro.FechaFinal.Month - 1];
@@ -205,36 +186,16 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 filt.Texto = id;
                 filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month -1, 26);
                 filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
-                DateTime time = DateTime.Now;
-                if (time.Day < 30)
-                {
-                    filt.FechaInicio = DateTime.Now;
-                    filt.FechaInicio = filt.FechaInicio.AddMonths(-1);
-                    filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 26);
-                    filt.FechaFinal = filt.FechaInicio.AddMonths(1);//.AddDays(-1);
-                    DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
+                //DateTime time = DateTime.Now;
 
+                filt.FechaInicio = DateTime.Now;
+                filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 1);
 
-                    DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+                DateTime primerDia = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 1);
+                DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
 
-                    filtro.FechaFinal = ultimoDia;
+                filt.FechaFinal = ultimoDia;
 
-                }
-                else
-                {
-
-                    filt.FechaInicio = DateTime.Now;
-
-                    filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 26);
-                    filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
-                    DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
-
-
-                    DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
-
-                    filtro.FechaFinal = ultimoDia;
-
-                }
 
 
                 filt.Asignados = true;
@@ -273,9 +234,11 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion = new GastosR();
                 Liquidacion.EncCierre = new EncCierreViewModel();
                 Liquidacion.DetCierre = new DetCierreViewModel[recibido.DetCompras.Length];
+                Periodos = new string[12] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre" };
+                Periodo = Periodos[recibido.EncCompras.FechaFinal.Month - 1];
 
 
-                Liquidacion.EncCierre.Periodo = recibido.EncCompras.Periodo;
+                Liquidacion.EncCierre.Periodo = Periodo;//recibido.EncCompras.Periodo;
                 Liquidacion.EncCierre.idLogin = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 Liquidacion.EncCierre.Descuento = recibido.EncCompras.Descuento;
                 
@@ -342,9 +305,10 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Liquidacion = new GastosR();
                 Liquidacion.EncCierre = new EncCierreViewModel();
                 Liquidacion.DetCierre = new DetCierreViewModel[recibido.DetCompras.Length];
+                Periodos = new string[12] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre" };
+                Periodo = Periodos[recibido.EncCompras.FechaFinal.Month - 1];
 
-
-                Liquidacion.EncCierre.Periodo = recibido.EncCompras.Periodo;
+                Liquidacion.EncCierre.Periodo = Periodo;//recibido.EncCompras.Periodo;
                 Liquidacion.EncCierre.idLogin = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault());
                 Liquidacion.EncCierre.Descuento = recibido.EncCompras.Descuento;
 

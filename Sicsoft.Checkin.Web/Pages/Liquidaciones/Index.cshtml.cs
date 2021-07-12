@@ -55,32 +55,17 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
               var  Periodos = new string[12] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre" };
                 DateTime time = new DateTime();
-                if (!string.IsNullOrEmpty(filtro.Texto))
-                {
-                    var Mes = Periodos.Where(a => a.ToUpper().Contains(filtro.Texto.ToUpper())).FirstOrDefault();
-                   
-
-                    if(Mes != null)
+      
+                    if (time == filtro.FechaInicio)
                     {
-                        var position = 0;
-                        var i = 0;
 
-                        for(i = 0; i < Periodos.Length; i++)
-                        {
-                            if(Mes == Periodos[i])
-                            {
-                                position = i;
-                            }
-
-
-
-                        }
 
                         filtro.FechaInicio = DateTime.Now;
-                        filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, position + 1, 1);
 
-                        filtro.FechaFinal = filtro.FechaInicio;//.AddMonths(1);//.AddDays(-1);
-                        DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
+                        filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 1);
+                       
+
+                        DateTime primerDia = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 1);
 
 
                         DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
@@ -89,94 +74,15 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
 
 
-                    }
-                    else
-                    {
-                        if (time == filtro.FechaInicio)
-                        {
-
-                            DateTime time2 = DateTime.Now;
-                            if (time2.Day < 30)
-                            {
-                                filtro.FechaInicio = DateTime.Now;
-                                filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
-                                filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
-                                filtro.FechaFinal = filtro.FechaInicio.AddMonths(1);//.AddDays(-1);
-                                DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
-
-
-                                DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
-
-                                filtro.FechaFinal = ultimoDia;
-
-                            }
-                            else
-                            {
-
-                                filtro.FechaInicio = DateTime.Now;
-
-                                filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
-                                filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
-                                DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
-
-
-                                DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
-
-                                filtro.FechaFinal = ultimoDia;
-
-                            }
-
-
-                        }
-                    }
-
-                }
-                else
-                {
-                    if (time == filtro.FechaInicio)
-                    {
-
-                        DateTime time2 = DateTime.Now;
-                        if (time2.Day < 30)
-                        {
-                            filtro.FechaInicio = DateTime.Now;
-                            filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
-                            filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
-                            filtro.FechaFinal = filtro.FechaInicio.AddMonths(1);//.AddDays(-1);
-                            DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
-
-
-                            DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
-
-                            filtro.FechaFinal = ultimoDia;
-
-                        }
-                        else
-                        {
-
-                            filtro.FechaInicio = DateTime.Now;
-
-                            filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 26);
-                            filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
-                            DateTime primerDia = new DateTime(filtro.FechaFinal.Year, filtro.FechaFinal.Month, 1);
-
-
-                            DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
-
-                            filtro.FechaFinal = ultimoDia;
-
-                        }
-
-
-                    }
-                }
+                     }
 
 
 
 
-              
 
-               
+
+
+
                 Rols = await roles.ObtenerLista("");
                 var MiRol = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Role).Select(s1 => s1.Value).FirstOrDefault());
 

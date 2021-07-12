@@ -73,24 +73,20 @@ namespace Sicsoft.Checkin.Web.Pages
                     filtro.CodMoneda = "CRC";
                 }
                 DateTime time = DateTime.Now;
-                if (time.Day < 30)
-                {
-                    filtro.FechaInicio = DateTime.Now;
-                    filtro.FechaInicio = filtro.FechaInicio.AddMonths(-1);
-                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 27);
-                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
+           
 
-                }
-                else
-                {
+                filtro.FechaInicio = DateTime.Now;
 
-                    filtro.FechaInicio = DateTime.Now;
+                filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 1);
+                
 
-                    filtro.FechaInicio = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 27);
-                    filtro.FechaFinal = filtro.FechaInicio.AddMonths(1).AddDays(-1);
+                DateTime primerDia = new DateTime(filtro.FechaInicio.Year, filtro.FechaInicio.Month, 1);
 
 
-                }
+                DateTime ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+
+                filtro.FechaFinal = ultimoDia;
+
 
 
                 Compra = await compras.ObtenerLista(filtro);

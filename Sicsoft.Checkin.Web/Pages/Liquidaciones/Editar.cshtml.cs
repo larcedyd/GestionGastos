@@ -110,7 +110,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                     Objeto[i].PdfFac = new byte[0];
                 }
                 //Liquidacion.EncCierre.
-
+                Objeto = Objeto.OrderBy(a => a.FecFactura).ToArray();
                 await compras.RealizarLecturaEmails();
                 await compras.LecturaBandejaEntrada();
 

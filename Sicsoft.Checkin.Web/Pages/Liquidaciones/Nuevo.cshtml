@@ -973,7 +973,7 @@
 
                                         <select id="idTipoGastoEditar" class="form-control  mi-selector">
                                             <option value="0" selected>-Sin Asignar-</option>
-                                            @foreach (var item in Model.Gastos)
+                                            @foreach (var item in Model.Gastos.OrderBy(a => a.Nombre))
                                             {
                                             <option value="@item.idTipoGasto">@item.Nombre</option>
                                             }
@@ -1381,6 +1381,8 @@
                 </div>
                  
                 <div class="ibox">
+                    <label class="text-danger" id="ErrorFactura" style="display: none;"> Ha ocurrido un error al intentar insertar la factura, por favor volver a intentar</label>
+                    <label class="text-danger" id="FaltaDatos" style="display: none;"> Parecen que faltan datos por rellenar</label>
                     <div class="ibox-content">
                         <div class="row">
                             <div class="col-sm-3">
@@ -1393,13 +1395,13 @@
                                 </div>
                                 <div hidden>
 
-                                <label class="col-form-label">Monto Descuento:</label>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
+                                    <label class="col-form-label">Monto Descuento:</label>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
 
-                                        <input type="number" id="descI" class="form-control">
+                                            <input type="number" id="descI" class="form-control">
+                                        </div>
                                     </div>
-                                </div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
@@ -1425,17 +1427,17 @@
 
                                 <div hidden>
 
-                                <label class="col-form-label">Monto Impuesto:</label>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
+                                    <label class="col-form-label">Monto Impuesto:</label>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
 
-                                        <input type="number" id="ImpuestoMonto" class="form-control">
+                                            <input type="number" id="ImpuestoMonto" class="form-control">
+                                        </div>
                                     </div>
-                                </div>
 
                                 </div>
 
-                              
+
 
                             </div>
                             <div class="col-sm-3">
@@ -1445,7 +1447,7 @@
 
                                         <select id="idTipoGasto" class="form-control ">
                                             <option value="NULL" selected>-Tipo Gasto-</option>
-                                            @foreach (var item in Model.Gastos)
+                                            @foreach (var item in Model.Gastos.OrderBy(a => a.Nombre))
                                             {
                                                 <option value="@item.idTipoGasto">@item.Nombre</option>
                                             }
@@ -1515,8 +1517,7 @@
                                 <hr />
                                 <div class="row">
                                     <div class="col-sm-8">
-                                        <label class="text-danger" id="ErrorFactura" style="display: none;"> Ha ocurrido un error al intentar insertar la factura, por favor volver a intentar</label>
-                                        <label class="text-danger" id="FaltaDatos" style="display: none;"> Parecen que faltan datos por rellenar</label>
+                                     
                                     </div>
                                     <div class="col-sm-4" style="text-align: right;">
                                         <div class="row">
@@ -1805,7 +1806,7 @@
         var detalle = {
 
             CodPro: "1",
-            NomPro: $("#NomPro").val(),
+            NomPro: ($("#NomPro").val() == "" ? "Detalle factura" : $("#NomPro").val() ),
             idTipoGasto: $("#idTipoGasto").val() == "NULL" ? "0" : $("#idTipoGasto").val(),
             Cantidad: "1",
             PrecioUnitario: $("#PrecUni").val(),
@@ -1893,8 +1894,8 @@
 
 
         Productos.push(detalle);
-        LimpiarDatosI();
-        RellenaTablaI();
+       // LimpiarDatosI();
+     //   RellenaTablaI();
     }
     function LimpiarDatosI() {
 
@@ -1925,6 +1926,8 @@
             texto += '<td align="center" style="padding-top:13px;">    <a style="margin-left: -1%; position: inherit !important;" onclick = "javascript: EliminaProductoI(' + i + ')" title="Eliminar" class="fa fa-trash icono"></a> ';
             texto += '</tr>'
         }
+
+
         $("#tbodyI").html(texto);
     }
 
