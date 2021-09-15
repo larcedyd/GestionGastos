@@ -70,7 +70,7 @@ namespace Sicsoft.Checkin.Web
                     return RedirectToPage("/Account/CambioContrasena");
                 }
 
-                return RedirectToPage("/Index");
+                return RedirectToPage("/Liquidaciones/Index");
 
             }
             catch (ValidationApiException)

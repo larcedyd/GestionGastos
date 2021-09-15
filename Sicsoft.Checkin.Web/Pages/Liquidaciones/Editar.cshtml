@@ -2347,6 +2347,7 @@
                   } else {
                       $("#FaltaDatos").css("display", "block");
                       button.removeAttribute('data-loading');
+                      Productos = [];
                   }
     }
 
@@ -2405,6 +2406,8 @@
         } else if (Productos.length == 0) {
             return false;
         } else if (ImageBae64 == "") {
+            return false;
+        } else if ($("#idTipoGasto").val() == "NULL") {
             return false;
         }
         else {

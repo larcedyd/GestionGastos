@@ -180,11 +180,29 @@
                                             @{var iD = int.Parse(((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == ClaimTypes.Actor).Select(s1 => s1.Value).FirstOrDefault()); }
                                             <option value="0" selected>@(Model.Usuarios.Where(a => a.id == iD).FirstOrDefault() == null ? "Propio" : Model.Usuarios.Where(a => a.id == iD).FirstOrDefault().Nombre)</option>
 
-                                            @foreach (var item in Model.Usuarios.Where(a => a.id != iD).ToArray())
+                                            @if (!string.IsNullOrEmpty(Roles.Where(a => a == "25").FirstOrDefault()))
+
                                             {
-                                                <option value="@item.id">@item.id -  @item.Nombre</option>
+                                                @foreach (var item in Model.Usuarios.Where(a => a.idLoginAceptacion == iD).ToArray())
+                                                {
+                                                    <option value="@item.id">@item.id -  @item.Nombre</option>
+                                                }
                                             }
-                                            <option value="-1">Acumulado</option>
+                                            else
+                                            {
+                                                @foreach (var item in Model.Usuarios.Where(a => a.id != iD).ToArray())
+                                                {
+                                                    <option value="@item.id">@item.id -  @item.Nombre</option>
+                                                }
+                                                <option value="-1">Acumulado</option>
+                                            }
+
+
+
+
+
+
+
 
 
                                         </select>
@@ -312,7 +330,7 @@
                     <center>
 
                         <canvas id="myChart"></canvas>
-                        <h5>Gastos Mensuales</h5>
+                        <h5>Gastos Mes Actual</h5>
                     </center>
                 </div>
 
@@ -320,7 +338,7 @@
                     <center>
 
                         <canvas id="myChart2"></canvas>
-                        <h5>Gastos Anuales</h5>
+                        <h5>Gastos Mes Anterior</h5>
                     </center>
                 </div>
 

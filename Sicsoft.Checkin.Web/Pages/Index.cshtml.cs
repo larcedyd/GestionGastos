@@ -98,13 +98,15 @@ namespace Sicsoft.Checkin.Web.Pages
 
                 MesAnterior = await service.ObtenerHeader(filtro);
 
-
                 filtro.FechaInicio = new DateTime(DateTime.Now.Year, 1, 1);
                 filtro.FechaFinal = new DateTime(DateTime.Now.Year, 12, 31);
+                Año = await service.ObtenerHeader(filtro);
+
+                filtro.FechaInicio = primerDia.AddMonths(-1);
+                filtro.FechaFinal = primerDia.AddMonths(1).AddDays(-1);
 
                 CompraAnual = await compras.ObtenerLista(filtro);
                 ComprasAnuales = CompraAnual.GroupBy(a => a.TipoGasto).ToList();
-                Año = await service.ObtenerHeader(filtro);
 
                 return Page();
 

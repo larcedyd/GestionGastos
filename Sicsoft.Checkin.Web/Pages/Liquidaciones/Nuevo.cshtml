@@ -534,6 +534,7 @@
 
         function Generar() {
 
+            let button = document.getElementById("GuardarCambios");
             var EncCompras =
             {
                 idCierre: 0,
@@ -591,6 +592,7 @@
                     },
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        button.disabled = true;
                         var recibidos = JSON.stringify(recibido);
 
                         $.ajax({
@@ -631,6 +633,7 @@
                                     })
 
                                 } else {
+                                    button.disabled = false;
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
@@ -645,15 +648,17 @@
                                 $("#divProcesando").modal("show");
                             },
                             complete: function () {
-
+                                $("#divProcesando").hide();
                             },
                             error: function (error) {
-
+                                button.disabled = false;
+                                $("#divProcesando").hide();
                             }
                         });
                     }
                 })
             } else {
+                button.disabled = false;
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -667,7 +672,7 @@
 
         //GeneraryEnviar
     function GeneraryEnviar() {
-
+        let button = document.getElementById("GuardarAprobar");
             var EncCompras =
             {
                 idCierre: 0,
@@ -726,7 +731,7 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         var recibidos = JSON.stringify(recibido);
-
+                        button.disabled = true;
                         $.ajax({
                             type: 'POST',
 
@@ -765,6 +770,7 @@
                                     })
 
                                 } else {
+                                    button.disabled = false;
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
@@ -779,15 +785,17 @@
                                 $("#divProcesando").modal("show");
                             },
                             complete: function () {
-
+                                $("#divProcesando").hide();
                             },
                             error: function (error) {
-
+                                button.disabled = false;
+                                $("#divProcesando").hide();
                             }
                         });
                     }
                 })
             } else {
+                button.disabled = false;
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -1248,9 +1256,9 @@
 
             <br />
         <div class="d-flex justify-content-end">
-            <button onclick="javascript: Generar();" class="btn btn-w-m btn-primary botonAbajo" title="Guardar">Guardar Cambios</button>
+            <button onclick="javascript: Generar();" class="btn btn-w-m btn-primary botonAbajo" id="GuardarCambios"  title="Guardar">Guardar Cambios</button>
             &nbsp;
-            <button onclick="javascript: GeneraryEnviar();" class="btn btn-w-m btn-success botonAbajo" title="Guardar y enviar a revisión">Guardar y Aprobar</button>
+            <button onclick="javascript: GeneraryEnviar();" class="btn btn-w-m btn-success botonAbajo" id="GuardarAprobar" title="Guardar y enviar a revisión">Guardar y Aprobar</button>
         </div>
     </div>
 </div>   
@@ -2205,6 +2213,7 @@
                   } else {
                       $("#FaltaDatos").css("display", "block");
                       button.removeAttribute('data-loading');
+                      Productos = [];
                   }
 
     }
@@ -2267,6 +2276,8 @@
             return false;
         } else if (ImageBae64 == "")
         {
+            return false;
+        } else if ($("#idTipoGasto").val() == "NULL") {
             return false;
         }
         else {
