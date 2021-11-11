@@ -69,6 +69,9 @@ namespace Sicsoft.Checkin.Web.Servicios
         [Put("/Actualizar")]
         Task Editar( [Body]TEntity payload);
 
+        [Put("/ActualizarFacturaManual")]
+        Task<TEntity> EditarFacturaManual([Body] TEntity payload);
+
         [Delete("/Eliminar")]
         Task EliminarInversion(string id);
 

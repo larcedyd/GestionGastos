@@ -137,6 +137,10 @@ namespace InversionGloblalWeb.Models
         public byte[] PdfFac { get; set; }
         public string Comentario { get; set; }
         public int Usuario { get; set; }
+      
+        public bool RegimenSimplificado { get; set; }
+        public bool FacturaExterior { get; set; }
+        public bool GastosVarios { get; set; }
         public DetComprasViewModel[] DetCompras { get; set; }
     }
 }

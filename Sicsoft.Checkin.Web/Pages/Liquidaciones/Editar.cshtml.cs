@@ -126,7 +126,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 return Page();
             }
         }
-
+        //Este metodo busca las facturas para ponerlas en la liquidacion 
         public async Task<IActionResult> OnGetBuscar(string idB, int cierre)
         {
             try
@@ -422,6 +422,130 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
 
                 var resp = await insercionCompras.Agregar(Objeto1);
+
+                var obj = new
+                {
+                    success = true,
+                    resp = resp.EncCompras.id
+                };
+
+                return new JsonResult(obj);
+            }
+            catch (ApiException ex)
+            {
+                Errores errores = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+                ModelState.AddModelError(string.Empty, errores.Message);
+
+                var obj = new
+                {
+                    success = true,
+                    resp = errores.Message
+                };
+                return new JsonResult(obj);
+                //return new JsonResult(false);
+            }
+            catch (Exception ex)
+            {
+
+                ModelState.AddModelError(string.Empty, ex.Message);
+                var obj = new
+                {
+                    success = false,
+                    resp = ex.Message
+                };
+                return new JsonResult(obj);
+            }
+        }
+
+        //Programacion para encontrar una factura manual
+
+        public async Task<IActionResult> OnGetBuscarFM(string idB)
+        {
+            try
+            {
+                var FM = await service.ObtenerPorId(Convert.ToInt32(idB));
+
+                return new JsonResult(FM);
+            }
+            catch (ApiException ex)
+            {
+                Errores error = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+
+
+                return new JsonResult(error);
+            }
+        }
+
+
+        //Programacion para editar una factura Manual
+        public async Task<IActionResult> OnPostEditarCompra(string recibidos)
+        {
+            string error = "";
+
+
+            try
+            {
+
+                ComprasRecibidoViewModel recibido = JsonConvert.DeserializeObject<ComprasRecibidoViewModel>(recibidos);
+
+
+
+                Objeto1 = new ComprasInsercionViewModel();
+                Objeto1.EncCompras = new EncComprasViewModel();
+                Objeto1.DetCompras = new DetComprasViewModel[recibido.DetCompras.Length];
+
+                Objeto1.EncCompras.id = recibido.EncCompras.id;
+                Objeto1.EncCompras.ConsecutivoHacienda = recibido.EncCompras.ConsecutivoHacienda;
+                Objeto1.EncCompras.ClaveHacienda = recibido.EncCompras.ClaveHacienda;
+                Objeto1.EncCompras.NumFactura = recibido.EncCompras.NumFactura;
+
+                Objeto1.EncCompras.TipoIdentificacionCliente = recibido.EncCompras.TipoIdentificacionCliente;
+                Objeto1.EncCompras.CodProveedor = recibido.EncCompras.CodProveedor;
+                Objeto1.EncCompras.NomProveedor = recibido.EncCompras.NomProveedor;
+                Objeto1.EncCompras.FecFactura = recibido.EncCompras.FecFactura;
+                Objeto1.EncCompras.CodigoActividadEconomica = recibido.EncCompras.CodActividadEconomica;
+                Objeto1.EncCompras.CodMoneda = recibido.EncCompras.CodMoneda == "NULL" ? "CRC" : recibido.EncCompras.CodMoneda;
+                Objeto1.EncCompras.CodCliente = recibido.EncCompras.CodCliente;
+                Objeto1.EncCompras.NomCliente = recibido.EncCompras.NomCliente;
+                Objeto1.EncCompras.TotalImpuesto = recibido.EncCompras.TotalImpuesto;
+                Objeto1.EncCompras.TotalDescuentos = recibido.EncCompras.Impuesto1;
+                Objeto1.EncCompras.Impuesto1 = recibido.EncCompras.Impuesto1;
+                Objeto1.EncCompras.Impuesto2 = recibido.EncCompras.Impuesto2;
+                Objeto1.EncCompras.Impuesto4 = recibido.EncCompras.Impuesto4;
+                Objeto1.EncCompras.Impuesto8 = recibido.EncCompras.Impuesto8;
+                Objeto1.EncCompras.Impuesto13 = recibido.EncCompras.Impuesto13;
+                Objeto1.EncCompras.TotalComprobante = recibido.EncCompras.TotalComprobante;
+                Objeto1.EncCompras.ImagenBase64 = recibido.EncCompras.ImagenBase64;
+                Objeto1.EncCompras.TotalVenta = recibido.EncCompras.TotalVenta;
+                Objeto1.EncCompras.RegimenSimplificado = recibido.EncCompras.RegimenSimplificado;
+                Objeto1.EncCompras.GastosVarios = recibido.EncCompras.GastosVarios;
+                Objeto1.EncCompras.FacturaExterior = recibido.EncCompras.FacturaExterior;
+                Objeto1.EncCompras.FacturaNoRecibida = recibido.EncCompras.FacturaNoRecibida;
+                short cantidad = 1;
+
+                foreach (var item in recibido.DetCompras)
+                {
+                    Objeto1.DetCompras[cantidad - 1] = new DetComprasViewModel();
+                    Objeto1.DetCompras[cantidad - 1].CodPro = item.CodPro;
+                    Objeto1.DetCompras[cantidad - 1].NomPro = item.NomPro;
+                    Objeto1.DetCompras[cantidad - 1].Cantidad = item.Cantidad;
+                    Objeto1.DetCompras[cantidad - 1].PrecioUnitario = item.PrecioUnitario;
+                    Objeto1.DetCompras[cantidad - 1].MontoDescuento = item.MontoDescuento;
+                    Objeto1.DetCompras[cantidad - 1].ImpuestoTarifa = item.ImpuestoTarifa;
+                    Objeto1.DetCompras[cantidad - 1].ImpuestoMonto = item.ImpuestoMonto;
+                    Objeto1.DetCompras[cantidad - 1].MontoTotalLinea = item.MontoTotalLinea;
+                    Objeto1.DetCompras[cantidad - 1].MontoTotal = item.MontoTotalLinea;
+                    Objeto1.DetCompras[cantidad - 1].SubTotal = item.PrecioUnitario - item.MontoDescuento;
+                    Objeto1.DetCompras[cantidad - 1].idTipoGasto = item.idTipoGasto;
+
+                    Objeto1.DetCompras[cantidad - 1].UnidadMedida = "";
+
+                    cantidad++;
+                }
+
+
+
+                var resp = await insercionCompras.EditarFacturaManual(Objeto1);
 
                 var obj = new
                 {

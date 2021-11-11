@@ -7,6 +7,7 @@ namespace InversionGloblalWeb.Models
 {
     public class EncComprasTemp
     {
+        public int id { get; set; }
         public string ClaveHacienda { get; set; }
         public string ConsecutivoHacienda { get; set; }
         public string TipoIdentificacionCliente { get; set; }
