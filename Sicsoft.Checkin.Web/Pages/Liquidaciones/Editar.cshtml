@@ -125,6 +125,8 @@
                     date.setDate(date.getDate() + days);
                     return date;
                 }
+
+
             });
         });
 
@@ -165,7 +167,7 @@
         var impuestos = 0;
         var descuentos = 0;
         var totalComprobante = 0;
-
+        var Pais = '@Model.Pais';
         var impuesto1 = 0;
         var impuesto2 = 0;
         var impuesto4 = 0;
@@ -197,6 +199,7 @@
                 var detalle = {
                     id: det[i].id,
                     Proveedor: (det[i].NomProveedor.length > 40 ? det[i].NomProveedor.substr(0, 40) : det[i].NomProveedor),
+                    CodProveedor: det[i].CodProveedor,
                     CHacienda: det[i].ConsecutivoHacienda,
                 //    idTipoGasto: $("#idTipoGasto").val(),
                     Fecha: det[i].FecFactura.substr(8, 2) + "/" + det[i].FecFactura.substr(5, 2) + "/" + det[i].FecFactura.substr(0, 4),
@@ -219,12 +222,19 @@
             var descuentoT = 0;
             var impuestoT = 0;
             var totalT = 0;
-            var oCargosT = 0;
+                var oCargosT = 0;
+                if (Pais == "P") {
+                    detalle.SubTotal = parseFloat(det[i].TotalComprobante) - parseFloat(detalle.Impuesto);
+                }
+
             subtotalT = parseFloat(detalle.SubTotal);
             descuentoT = parseFloat(detalle.Descuento);
             impuestoT = parseFloat(detalle.Impuesto);
-            oCargosT = parseFloat(detalle.TotalOtrosCargos);
-            detalle.Total = (subtotalT - descuentoT) + impuestoT + oCargosT;
+                oCargosT = parseFloat(detalle.TotalOtrosCargos);
+             
+                    detalle.Total = (subtotalT - descuentoT) + impuestoT + oCargosT;
+             
+           
             ProdCadena.push(detalle);
             totalT = parseFloat(detalle.Total);
             var impuesto1T = parseFloat(detalle.Impuesto1);
@@ -284,6 +294,13 @@
         function onChangeFecFactura() {
             if (new Date($("#FechaFinal").val()).addDays(1) < new Date($("#FecFactura").val()).addDays(1) || new Date($("#FechaI").val()).addDays(1) > new Date($("#FecFactura").val()).addDays(1)) {
                 $("#FecFactura").val($("#FechaI").val());
+
+                alert("La fecha de la factura manual no puede ser menor o mayor que la del periodo");
+            }
+        }
+        function onChangeFecFacturaP() {
+            if (new Date($("#FechaFinal").val()).addDays(1) < new Date($("#FecFacturaP").val()).addDays(1) || new Date($("#FechaI").val()).addDays(1) > new Date($("#FecFacturaP").val()).addDays(1)) {
+                $("#FecFacturaP").val($("#FechaI").val());
 
                 alert("La fecha de la factura manual no puede ser menor o mayor que la del periodo");
             }
@@ -418,6 +435,7 @@
                        id: $("#id").val(),
                        Proveedor: $("#Proveedor").text(),
                        CHacienda: $("#CHacienda").text(),
+                       CodProveedor: $("#Proveedor").text(),
                        //    idTipoGasto: $("#idTipoGasto").val(),
                        Fecha: $("#FechaFac").text(),
                        SubTotal: $("#sub").val(),
@@ -668,7 +686,23 @@
                 Observacion: $("#Comentario").val()
             };
 
+
+
             var Cadena = [];
+
+            if (EncCompras.Impuesto4 == "") {
+                EncCompras.Impuesto4 = "0";
+            }
+            if (EncCompras.Impuesto8 == "") {
+                EncCompras.Impuesto8 = "0";
+            }
+            if (EncCompras.Impuesto13 == "") {
+                EncCompras.Impuesto13 = "0";
+            }
+
+            if (EncCompras.TotalOtrosCargos == "") {
+                EncCompras.TotalOtrosCargos = "0";
+            }
 
             for (var i = 0; i < ProdCadena.length; i++) {
                 var det = {
@@ -884,6 +918,20 @@
 
             var Cadena = [];
 
+             if (EncCompras.Impuesto4 == "") {
+                 EncCompras.Impuesto4 = "0";
+             }
+             if (EncCompras.Impuesto8 == "") {
+                 EncCompras.Impuesto8 = "0";
+             }
+             if (EncCompras.Impuesto13 == "") {
+                 EncCompras.Impuesto13 = "0";
+             }
+
+             if (EncCompras.TotalOtrosCargos == "") {
+                 EncCompras.TotalOtrosCargos = "0";
+             }
+
             for (var i = 0; i < ProdCadena.length; i++) {
                 var det = {
                     idFactura: ProdCadena[i].id,
@@ -1072,89 +1120,366 @@
             </div>
         </div>
         <div class="ibox">
+            @if (Model.Pais != "P")
+            {
+                <div class="ibox-content">
 
-            <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12" style="text-align: right;">
+                            <a title="Agregar Factura Manual" id="FacManual" onclick="javascript: AbrirModal();" style="color: #57b846;">+ Agregar Factura Manual</a>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="col-form-label">Factura:</label>
+                            <div class="form-group row">
+                                <div class="col-sm-6">
+                                    <input id="Busqueda" class="form-control" type="number" />
 
-                <div class="row">
-                    <div class="col-sm-12" style="text-align: right;">
-                        <a title="Agregar Factura Manual" id="FacManual" onclick="javascript: AbrirModal();" style="color: #57b846;">+ Agregar Factura Manual</a>
+                                </div>
+                                <div class="col-sm-3">
+
+                                    <button title="Buscar" type="submit" class="btn btn btn-primary" onclick="javascript: onChangeProducto();"> <i class="fa fa-search"></i></button>
+                                </div>
+                            </div>
+
+                            <input hidden id="sub" type="number" />
+                            <input hidden id="desc" type="number" />
+                            <input hidden id="imp" type="number" />
+                            <input hidden id="monedaFactura" />
+                            <input hidden id="imp1" type="number" />
+                            <input hidden id="imp2" type="number" />
+                            <input hidden id="imp4" type="number" />
+                            <input hidden id="imp8" type="number" />
+                            <input hidden id="imp13" type="number" />
+                            <input hidden id="otrosCargos" type="number" />
+                            <label id="Existencia" style="color: red;"> </label>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label">Proveedor:</label>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label id="Proveedor" style="line-height: 32px;">
+                                            </label>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label">Consecutivo:</label>
+
+                                        </div>
+                                        <div class="col-sm-12" style="text-align: left;">
+                                            <label id="CHacienda" style="line-height: 32px;">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label">Descuento:</label>
+
+                                        </div>
+                                        <div class="col-sm-6" style="text-align: right;">
+                                            <label id="Descuento" style="line-height: 32px;">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label">Total:</label>
+
+                                        </div>
+                                        <div class="col-sm-6" style="text-align: right;">
+                                            <label id="TotalComp" style="line-height: 32px;">
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label">Tipo Gasto:</label>
+
+                                        </div>
+                                        <div class="col-sm-8">
+
+
+                                            <select id="idTipoGastoEditar" class="form-control  mi-selector">
+                                                <option value="0" selected>-Sin Asignar-</option>
+                                                @foreach (var item in Model.Gastos.OrderBy(a => a.Nombre))
+                                                {
+                                                    <option value="@item.idTipoGasto">@item.Nombre</option>
+                                                }
+
+
+
+
+                                            </select>
+
+                                        </div>
+
+
+
+                                    </div>
+
+                                </div>
+                                <div class="col-sm-6">
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+
+                                            <label class="col-form-label">Fecha:</label>
+                                            <input readonly hidden id="id" />
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label id="FechaFac" style="line-height: 32px;">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+
+                                            <label class="col-form-label">SubTotal:</label>
+                                        </div>
+                                        <div class="col-sm-6" style="text-align: right;">
+                                            <label id="SubTotal" style="line-height: 32px;">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label">Impuesto:</label>
+
+                                        </div>
+                                        <div class="col-sm-6" style="text-align: right;">
+                                            <label id="Impuesto" style="line-height: 32px;">
+                                            </label>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label"></label>
+
+                                        </div>
+                                        <div class="col-sm-6" style="text-align: right;">
+                                            <a href="" target="_blank" id="adjunto" title="Mirar Adjunto de la Factura" class="fa fa-paperclip icono"></a>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <label class="col-form-label">Comentario:</label>
+
+                                        </div>
+                                        <div class="col-sm-12" style="text-align: right;">
+                                            <input class="form-control" maxlength="100" id="ComenFac" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-sm-6">
+
+
+
+
+                        </div>
                     </div>
-                    <div class="col-sm-12">
-                        <label class="col-form-label">Factura:</label>
-                        <div class="form-group row">
-                            <div class="col-sm-6">
-                                <input id="Busqueda" class="form-control" type="number" />
 
+                </div>
+
+
+            }
+            else
+            {
+                <div class="ibox">
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <center>
+                                    <img id="imgPrincipalGP" src="/img/cm.jpg" alt="image" style="width:250px; height:250px;border-radius: 15px;" class="img-fluid" />
+                                    <br />
+                                    <br />
+
+                                    <label style="font-size: 13px;" class="label" for="imgPrincipalUploadGP">Subir Imagen</label><input id="imgPrincipalUploadGP" accept=".jpg, .png" style="opacity:0; display:none;" type="file" name="imgPrincipalUploadGP" />
+
+                                </center>
+                            </div>
+                            <div class="col-sm-6">
+
+
+
+                                <label class="col-form-label">Tipo Identificación:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-12" style="text-align: center;">
+                                        <input type="radio" name="idProveedorP" id="idProveedor1P" onclick="javascript: mask2P();" value="01"> Natural &nbsp;
+                                        <input type="radio" name="idProveedorP" id="idProveedor2P" onclick="javascript: mask2P();" value="02"> Jurídica &nbsp;
+                                        <input type="radio" name="idProveedorP" id="idProveedor3P" onclick="javascript: mask2P();" value="03"> Extranjero
+                                    </div>
+                                </div>
+
+
+                                <label class="col-form-label">RUC Proveedor:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-8">
+
+                                        <input type="text" id="CodProveedorP" readonly class="form-control">
+                                    </div>
+                                    <div class="col-sm-4">
+
+                                        <input type="text" id="DVP" readonly placeholder="D.V" class="form-control">
+                                    </div>
+                                </div>
+
+                                <label class="col-form-label">Nombre Proveedor:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+
+                                        <input type="text" maxlength="200" asp-for="Objeto1.EncCompras.NomProveedor" id="NomProveedorP" class="form-control">
+                                    </div>
+                                </div>
+
+
+                                <label class="col-form-label">Número Factura:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+
+                                        <input type="number" asp-for="Objeto1.EncCompras.NumFactura" id="NumFacturaP" class="form-control" maxlength="5" oninput="if(this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" placeholder="Digite los últimos 5 dígitos">
+                                    </div>
+                                </div>
+
+                                <label class="col-form-label">Fecha Factura:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+
+                                        <input type="date" asp-for="Objeto1.EncCompras.FecFactura" onchange="javascript: onChangeFecFacturaP();" id="FecFacturaP" class="form-control">
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                                <label class="col-form-label">Tipo Documento:</label>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                            Factura Fiscal
+                                            <input type="checkbox" id="simpP" onchange="javascript: checkP('1');">
+                                            <span class="check"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                            Factura Exterior
+                                            <input type="checkbox" id="extP" onchange="javascript: checkP('2');">
+                                            <span class="check"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                            Gastos Varios
+                                            <input type="checkbox" id="varP" onchange="javascript: checkP('3');">
+                                            <span class="check"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                            Factura Electrónica
+                                            <input type="checkbox" id="nrecP" onchange="javascript: checkP('4');">
+                                            <span class="check"></span>
+                                        </label>
+                                    </div>
+                                </div>
+
+
+
+
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+                <div class="ibox">
+                    <label class="text-danger" id="ErrorFacturaP" style="display: none;"> Ha ocurrido un error al intentar insertar la factura, por favor volver a intentar</label>
+                    <label class="text-danger" id="FaltaDatosP" style="display: none;"> Parecen que faltan datos por rellenar</label>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Detalle:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+
+                                        <input type="text" maxlength="200" id="NomProP" class="form-control">
+                                    </div>
+                                </div>
+                                <div hidden>
+
+                                    <label class="col-form-label">Monto Descuento:</label>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+
+                                            <input type="number" id="descIP" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-sm-3">
 
-                                <button title="Buscar" type="submit" class="btn btn btn-primary" onclick="javascript: onChangeProducto();"> <i class="fa fa-search"></i></button>
+                                <label class="col-form-label">Tipo Impuesto:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+
+                                        <select id="TipoImpuestoP" class="form-control  ">
+                                            <option value="NULL">-IVA-</option>
+
+                                            <option value="0">Exento</option>
+                                            <option value="7" selected>
+                                                ITBMS(7%)
+                                            </option>
+                                            <option value="10">
+                                                ITBMS(10%)
+                                            </option>
+
+
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div hidden>
+
+                                    <label class="col-form-label">Monto Impuesto:</label>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+
+                                            <input type="number" id="ImpuestoMontoP" class="form-control">
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
                             </div>
-                        </div>
-
-                        <input hidden id="sub" type="number" />
-                        <input hidden id="desc" type="number" />
-                        <input hidden id="imp" type="number" />
-                        <input hidden id="monedaFactura" />
-                        <input hidden id="imp1" type="number" />
-                        <input hidden id="imp2" type="number" />
-                        <input hidden id="imp4" type="number" />
-                        <input hidden id="imp8" type="number" />
-                        <input hidden id="imp13" type="number" />
-                        <input hidden id="otrosCargos" type="number" />
-                        <label id="Existencia" style="color: red;"> </label>
-                        <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Tipo Gasto:</label>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
-                                        <label class="col-form-label">Proveedor:</label>
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <label id="Proveedor" style="line-height: 32px;">
-                                        </label>
 
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <label class="col-form-label">Consecutivo:</label>
-
-                                    </div>
-                                    <div class="col-sm-12" style="text-align: left;">
-                                        <label id="CHacienda" style="line-height: 32px;">
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <label class="col-form-label">Descuento:</label>
-
-                                    </div>
-                                    <div class="col-sm-6" style="text-align: right;">
-                                        <label id="Descuento" style="line-height: 32px;">
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <label class="col-form-label">Total:</label>
-
-                                    </div>
-                                    <div class="col-sm-6" style="text-align: right;">
-                                        <label id="TotalComp" style="line-height: 32px;">
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <label class="col-form-label">Tipo Gasto:</label>
-
-                                    </div>
-                                    <div class="col-sm-8">
-
-
-                                        <select id="idTipoGastoEditar" class="form-control  mi-selector">
-                                            <option value="0" selected>-Sin Asignar-</option>
+                                        <select id="idTipoGastoP" class="form-control ">
+                                            <option value="NULL" selected>-Tipo Gasto-</option>
                                             @foreach (var item in Model.Gastos.OrderBy(a => a.Nombre))
                                             {
                                                 <option value="@item.idTipoGasto">@item.Nombre</option>
@@ -1164,93 +1489,199 @@
 
 
                                         </select>
-
                                     </div>
-
-
-
                                 </div>
 
                             </div>
-                            <div class="col-sm-6">
-
+                            <div class="col-sm-3">
+                                <label class="col-form-label">Monto:</label>
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <label class="col-form-label">Fecha:</label>
-                                        <input readonly hidden id="id" />
-                                    </div>
-                                    <div class="col-sm-12">
-                                        <label id="FechaFac" style="line-height: 32px;">
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-
-                                        <label class="col-form-label">SubTotal:</label>
-                                    </div>
-                                    <div class="col-sm-6" style="text-align: right;">
-                                        <label id="SubTotal" style="line-height: 32px;">
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <label class="col-form-label">Impuesto:</label>
-
-                                    </div>
-                                    <div class="col-sm-6" style="text-align: right;">
-                                        <label id="Impuesto" style="line-height: 32px;">
-                                        </label>
+                                        <input type="number" id="PrecUniP" class="form-control">
                                     </div>
                                 </div>
 
 
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <label class="col-form-label"></label>
 
-                                    </div>
-                                    <div class="col-sm-6" style="text-align: right;">
-                                        <a href="" target="_blank" id="adjunto" title="Mirar Adjunto de la Factura" class="fa fa-paperclip icono"></a>
-                                    </div>
-                                </div>
+
 
 
                             </div>
                             <div class="col-sm-12">
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-                                        <label class="col-form-label">Comentario:</label>
-
-                                    </div>
-                                    <div class="col-sm-12" style="text-align: right;">
-                                        <input class="form-control" maxlength="100" id="ComenFac" />
+                                <div class="row">
+                                    <div class="col-sm-8"></div>
+                                    <div class="col-sm-4" style="text-align: right;">
+                                        @*<button onclick="javascript: AgregarProductosI();" class="btn btn-w-m btn-primary" title="Agregar a la lista">+ Agregar</button>*@
+                                        <button id="buttonSpinP" onclick="javascript: EnviarFCP();" class="ladda-button green expand-left"><span class="label-submit">Guardar Cambios</span> <span class="spinner"></span></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                    </div>
-                    <div class="col-sm-6">
-
-
-
-
                     </div>
                 </div>
 
-            </div>
+
+                <!--Tabla de mentiras-->
+                <div class="ibox" hidden>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+
+                                <div class="table-responsive tableFixHead" style=" overflow-y:scroll;    z-index: 5; height: 300px;">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th align="center" style=" text-align: center;"><h3>Nombre</h3></th>
+
+                                                <th align="center" style=" text-align: center;"><h3>Precio Unitario</h3></th>
+                                                <th align="center" style=" text-align: center;"><h3>Descuento</h3></th>
+                                                <th align="center" style=" text-align: center;"><h3>Impuesto</h3></th>
+                                                <th align="center" style=" text-align: center;"><h3>Total</h3></th>
+                                                <th align="center" style=" text-align: center;"><h3>Eliminar</h3></th>
+
+
+                                            </tr>
+
+                                        </thead>
+                                        <tbody id="tbodyIP">
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                                <hr />
+                                <div class="row">
+                                    <div class="col-sm-8">
+
+                                    </div>
+                                    <div class="col-sm-4" style="text-align: right;">
+                                        <div class="row">
+
+                                            <div class="col-sm-12">
+
+                                                <table class="table">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="text-align: center;">
+                                                                <label class="col-form-label" style="display: inline-table; font-weight: 500 !important; font-style: normal;">SubTotal:</label>
+
+                                                            </td>
+                                                            <td>
+                                                                <label id="subtotalIP" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+
+                                                            <td style="text-align: center;">
+                                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Descuento:</label>
+
+                                                            </td>
+                                                            <td>
+                                                                <label id="descuentoIP" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+
+                                                            <td style="text-align: center;">
+                                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Impuesto:</label>
+
+                                                            </td>
+                                                            <td>
+                                                                <label id="impuestoIP" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+
+                                                            <td style="text-align: center;">
+                                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 1:</label>
+
+                                                            </td>
+                                                            <td>
+                                                                <label id="impuesto1IP" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td style="text-align: center;">
+                                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 2:</label>
+
+                                                            </td>
+                                                            <td>
+                                                                <label id="impuesto2IP" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td style="text-align: center;">
+                                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 4:</label>
+
+                                                            </td>
+                                                            <td>
+                                                                <label id="impuesto4IP" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td style="text-align: center;">
+                                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 8:</label>
+
+                                                            </td>
+                                                            <td>
+                                                                <label id="impuesto8IP" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td style="text-align: center;">
+                                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 13:</label>
+
+                                                            </td>
+                                                            <td>
+                                                                <label id="impuesto13IP" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+
+                                                            <td style="text-align: center;">
+                                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Total:</label>
+
+                                                            </td>
+                                                            <td>
+                                                                <label id="totalIP" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
         <div class="row">
+            @if (Model.Pais != "P")
+            {
+                <div class="col-sm-12" style="text-align: center;">
+                    <a title="Eliminar" onclick="javascript: LimpiarDatos();" style="width: 25%;" class="btn btnpage">Cancelar</a>&nbsp;
+                    <a title="Agregar" id="Agregar" onclick="javascript: InsertarProductoTabla();" style=" color: #fff; width: 25%;" class="btn btn-primary">Asignar</a>
+                </div>
 
-            <div class="col-sm-12" style="text-align: center;">
-                <a title="Eliminar" onclick="javascript: LimpiarDatos();" style="width: 25%;" class="btn btnpage">Cancelar</a>&nbsp;
-                <a title="Agregar" id="Agregar" onclick="javascript: InsertarProductoTabla();" style=" color: #fff; width: 25%;" class="btn btn-primary">Asignar</a>
-            </div>
+            }
+
         </div>
 
         <br />
@@ -1337,70 +1768,98 @@
                                                 <label id="impuesto" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
                                             </td>
                                         </tr>
-                                        <tr>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 1:</label>
+                                        @if (Model.Pais != "P")
+                                        {
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 1:</label>
 
-                                        <tr>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 2:</label>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 2:</label>
 
-                                        <tr>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 4:</label>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto4" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 4:</label>
 
-                                        <tr>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto4" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 8:</label>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto8" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 8:</label>
 
-                                        <tr>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto8" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 13:</label>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
-                                        <tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 13:</label>
 
-                                            <td style="text-align: center;">
-                                                <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Otros Cargos:</label>
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
 
-                                            </td>
-                                            <td>
-                                                <label id="tOCargos" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
-                                            </td>
-                                        </tr>
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Otros Cargos:</label>
+
+                                                </td>
+                                                <td>
+                                                    <label id="tOCargos" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
+                                        }
+                                        else
+                                        {
+                                            <tr>
+
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> ITBMS(7%):</label>
+
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
+                                            <tr>
+
+                                                <td style="text-align: center;">
+                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> ITBMS(10%):</label>
+
+                                                </td>
+                                                <td>
+                                                    <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">0</label>
+                                                </td>
+                                            </tr>
+                                        }
+
                                         <tr>
 
                                             <td style="text-align: center;">
@@ -1435,6 +1894,635 @@
         </div>
     </div>
 </div>
+
+<!--Panama-->
+<script>
+    var ImageBae64 = '';
+    var Productos = [];
+    var subtotalI = 0;
+    var impuestosI = 0;
+    var descuentosI = 0;
+    var totalComprobanteI = 0;
+
+    var impuestoI1 = 0;
+    var impuestoI2 = 0;
+    var impuestoI4 = 0;
+    var impuestoI8 = 0;
+    var impuestoI13 = 0;
+
+    var position = 0;
+    async function readFilePrincipalP(input) {
+
+        if (input.files && input.files[0]) {
+            /*const maxAllowSize = 512000;*/
+            //const maxAllowSize = 2800000;
+            const maxAllowSize = 5000000;
+            if (input.files[0].size > maxAllowSize) {
+                alert("Esta imagen es muy pesada");
+                input.value = '';
+            } else {
+                var reader = new FileReader();
+                var img = document.createElement("img");
+                var canvas = document.createElement('canvas');
+
+                reader.onload = function (e) {
+                    img.src = e.target.result;
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+
+                    var MAX_WIDTH = 800;
+                    var MAX_HEIGHT = 600;
+                    var width = img.width;
+                    var height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    var ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0, width, height);
+                    var dataurl = canvas.toDataURL("image/jpg");
+                    document.getElementById('imgPrincipalGP').src = e.target.result;
+
+
+                    ImageBae64 = dataurl;
+
+
+                }
+
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+
+
+
+    }
+  //  var idF;
+    var fileUploadPrincipal = document.getElementById('imgPrincipalUploadGP');
+    fileUploadPrincipal.onchange = async function (e) {
+
+        await readFilePrincipalP(e.srcElement);
+        // idF = setInterval(cancelar(e), 2000);
+
+       var idF = setInterval( async function () {
+
+            if (ImageBae64 != "data:,") {
+                //alert("Imagen agregada con éxito");
+                clearInterval(idF);
+            } else {
+                await readFilePrincipalP(e.srcElement);
+            }
+        }, 1500);
+
+
+        //await readFilePrincipal(e.srcElement);
+        //sleep(3000);
+        //await readFilePrincipal(e.srcElement);
+
+    }
+
+
+    function checkP(i) {
+
+        var checkbox1 = document.getElementById("simpP");
+        var checkbox2 = document.getElementById("extP");
+        var checkbox3 = document.getElementById("varP");
+        var checkbox4 = document.getElementById("nrecP");
+        if (i == "1") {
+
+            checkbox2.checked = false;
+            checkbox3.checked = false;
+            checkbox4.checked = false;
+            checkbox1.checked = true;
+            $("#CHaciendaP").removeAttr("readonly");
+            $("#ConsHaciendaP").removeAttr("readonly");
+
+        }
+        else if (i == "2") {
+            checkbox3.checked = false;
+            checkbox2.checked = true;
+            checkbox1.checked = false;
+            checkbox4.checked = false;
+            $("#CHaciendaP").attr("readonly", "readonly");
+            $("#ConsHaciendaP").attr("readonly", "readonly");
+
+            $("#CHaciendaP").val("");
+            $("#ConsHaciendaP").val("");
+        } else if (i == "3") {
+            checkbox3.checked = true;
+            checkbox2.checked = false;
+            checkbox1.checked = false;
+            checkbox4.checked = false;
+        } else {
+            checkbox3.checked = false;
+            checkbox2.checked = false;
+            checkbox1.checked = false;
+            checkbox4.checked = true;
+        }
+    }
+
+    function AgregarProductosIP() {
+
+
+        var detalle = {
+
+            CodPro: "1",
+            NomPro: ($("#NomProP").val() == "" ? "Detalle factura" : $("#NomProP").val() ),
+            idTipoGasto: $("#idTipoGastoP").val() == "NULL" ? "0" : $("#idTipoGastoP").val(),
+            Cantidad: "1",
+            PrecioUnitario: $("#PrecUniP").val(),
+            MontoDescuento: $("#descIP").val(),
+            ImpuestoTarifa: $("#TipoImpuestoP").val(),
+            ImpuestoMonto: $("#ImpuestoMontoP").val(),
+            MontoTotalLinea: 0,
+            Impuesto1: 0,
+            Impuesto2: 0,
+            Impuesto4: 0,
+            Impuesto8: 0,
+            Impuesto13: 0
+        };
+        detalle.ImpuestoMonto = 0;
+        detalle.MontoDescuento = 0;
+        switch ($("#TipoImpuestoP").val()) {
+            case "0":
+                {
+
+                    detalle.ImpuestoMonto += parseFloat(detalle.PrecioUnitario) * 0.00;
+
+                    break;
+                }
+            case "7":
+                {
+
+                    detalle.ImpuestoMonto += parseFloat(detalle.PrecioUnitario) * 0.07;
+                    detalle.Impuesto1 += detalle.ImpuestoMonto;
+                    break;
+                }
+            case "10":
+                {
+                    detalle.ImpuestoMonto += parseFloat(detalle.PrecioUnitario) * 0.10;
+                    detalle.Impuesto2 += detalle.ImpuestoMonto;
+                    break;
+                }
+
+        }
+
+        //detalle.MontoTotalLinea = ((detalle.PrecioUnitario) - detalle.MontoDescuento) + parseFloat(detalle.ImpuestoMonto);
+        detalle.MontoTotalLinea = (detalle.PrecioUnitario);
+        var subtotalT = 0;
+        var descuentoT = 0;
+        var impuestoT = 0;
+        var totalT = 0;
+        subtotalT = parseFloat(detalle.PrecioUnitario) - detalle.ImpuestoMonto;
+        descuentoT = parseFloat(detalle.MontoDescuento);
+        impuestoT = parseFloat(detalle.ImpuestoMonto);
+        totalT = parseFloat(detalle.MontoTotalLinea);
+
+        subtotalI += subtotalT;
+        descuentosI += descuentoT;
+        impuestosI += impuestoT;
+
+        totalComprobanteI += totalT;
+
+        var impuesto1T = parseFloat(detalle.Impuesto1);
+        var impuesto2T = parseFloat(detalle.Impuesto2);
+        var impuesto4T = parseFloat(detalle.Impuesto4);
+        var impuesto8T = parseFloat(detalle.Impuesto8);
+        var impuesto13T = parseFloat(detalle.Impuesto13);
+
+
+        impuestoI1 += impuesto1T;
+        impuestoI2 += impuesto2T;
+        impuestoI4 += impuesto4T;
+        impuestoI8 += impuesto8T;
+        impuestoI13 += impuesto13T;
+
+
+        $("#subtotalIP").text(formatoDecimal(subtotalI.toFixed(2)));
+        $("#descuentoIP").text(formatoDecimal(descuentosI.toFixed(2)));
+        $("#impuestoIP").text(formatoDecimal(impuestosI.toFixed(2)));
+        $("#totalIP").text(formatoDecimal(totalComprobanteI.toFixed(2)));
+
+
+        $("#impuesto1IP").text(formatoDecimal(parseFloat(impuestoI1).toFixed(2)));
+        $("#impuesto2IP").text(formatoDecimal(parseFloat(impuestoI2).toFixed(2)));
+        $("#impuesto4IP").text(formatoDecimal(parseFloat(impuestoI4).toFixed(2)));
+        $("#impuesto8IP").text(formatoDecimal(parseFloat(impuestoI8).toFixed(2)));
+        $("#impuesto13IP").text(formatoDecimal(parseFloat(impuestoI13).toFixed(2)));
+
+
+        Productos.push(detalle);
+       // LimpiarDatosI();
+     //   RellenaTablaI();
+    }
+    function LimpiarDatosIP() {
+
+        $("#NomProP").val("");
+
+        $("#PrecUniP").val(0);
+        $("#descIP").val(0);
+        $("#TipoImpuestoP").val("7").trigger('change');
+        $("#idTipoGastoP").val("NULL").trigger('change');
+        $("#ImpuestoMontoP").val(0);
+
+    }
+
+    function RellenaTablaIP() {
+        var texto = '';
+
+        $("#tbodyIP").html('');
+
+        for (var i = 0; i < Productos.length; i++) {
+            texto += '<tr>';
+
+            texto += '<td align="left" style="padding-top:15px;">  <p style="font-size:13px;">' + Productos[i].NomPro + '</p></td>';
+
+            texto += '<td align="right" style="padding-top:15px;">  <p style="font-size:13px;">' + formatoDecimal(Productos[i].PrecioUnitario) + '</p></td>';
+            texto += '<td align="right" style="padding-top:15px;">  <p style="font-size:13px;">' + formatoDecimal(Productos[i].MontoDescuento) + '</p></td>';
+            texto += '<td align="right" style="padding-top:15px;">  <p style="font-size:13px;">' + formatoDecimal(Productos[i].ImpuestoMonto) + '</p></td>';
+            texto += '<td align="right" style="padding-top:13px;">  <p style="font-size:13px;">' + formatoDecimal(Productos[i].MontoTotalLinea) + '</p></td>';
+            texto += '<td align="center" style="padding-top:13px;">    <a style="margin-left: -1%; position: inherit !important;" onclick = "javascript: EliminaProductoI(' + i + ')" title="Eliminar" class="fa fa-trash icono"></a> ';
+            texto += '</tr>'
+        }
+
+
+        $("#tbodyIP").html(texto);
+    }
+
+    function EliminaProductoIP(campo) {
+
+
+                var subtotalT = 0;
+                var descuentoT = 0;
+                var impuestoT = 0;
+                var totalT = 0;
+                subtotalT = parseFloat(Productos[campo].PrecioUnitario);
+                descuentoT = parseFloat(Productos[campo].MontoDescuento);
+                impuestoT = parseFloat(Productos[campo].ImpuestoMonto);
+
+                totalT = parseFloat(Productos[campo].MontoTotalLinea);
+
+                subtotalI -= subtotalT;
+                descuentosI -= descuentoT;
+                impuestosI -= impuestoT;
+
+                totalComprobanteI -= totalT;
+
+                var impuesto1T = parseFloat(Productos[campo].Impuesto1);
+                var impuesto2T = parseFloat(Productos[campo].Impuesto2);
+                var impuesto4T = parseFloat(Productos[campo].Impuesto4);
+                var impuesto8T = parseFloat(Productos[campo].Impuesto8);
+                var impuesto13T = parseFloat(Productos[campo].Impuesto13);
+
+
+                impuestoI1 -= impuesto1T;
+                impuestoI2 -= impuesto2T;
+                impuestoI4 -= impuesto4T;
+                impuestoI8 -= impuesto8T;
+                impuestoI13 -= impuesto13T;
+
+
+                $("#subtotalIP").text(formatoDecimal(subtotalI.toFixed(2)));
+                $("#descuentoIP").text(formatoDecimal(descuentosI.toFixed(2)));
+                $("#impuestoIP").text(formatoDecimal(impuestosI.toFixed(2)));
+                $("#totalIP").text(formatoDecimal(totalComprobanteI.toFixed(2)));
+
+
+                $("#impuesto1IP").text(formatoDecimal(parseFloat(impuestoI1).toFixed(2)));
+                $("#impuesto2IP").text(formatoDecimal(parseFloat(impuestoI2).toFixed(2)));
+                $("#impuesto4IP").text(formatoDecimal(parseFloat(impuestoI4).toFixed(2)));
+                $("#impuesto8IP").text(formatoDecimal(parseFloat(impuestoI8).toFixed(2)));
+                $("#impuesto13IP").text(formatoDecimal(parseFloat(impuestoI13).toFixed(2)));
+
+                Productos.splice(campo, 1);
+                RellenaTablaI();
+
+
+    }
+
+
+
+    function maskP() {
+        switch ($("#idClienteP").val()) {
+            case "01":
+                {
+                    $("#CodProveedorP").inputmask({ "mask": "99-999-9999" });
+                    break;
+                }
+            case "02":
+                {
+                    $("#CodProveedorP").inputmask({ "mask": "9999999-99-999999" });
+
+                    break;
+                }
+            case "03":
+                {
+                    $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                    break;
+                }
+            case "04":
+                {
+                    $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                    break;
+                }
+            default:
+                {
+                    break;
+                }
+        }
+    }
+    function mask2P() {
+
+        $("#CodProveedorP").attr("readonly", false);
+        $("#DVP").attr("readonly", false);
+        switch ($("input:radio[name=idProveedorP]:checked").val()) {
+            case "01":
+                {
+                    $("#CodProveedorP").inputmask({ "mask": "99-999-9999" });
+                    break;
+                }
+            case "02":
+                {
+                    $("#CodProveedorP").inputmask({ "mask": "9999999-99-999999" });
+
+                    break;
+                }
+            case "03":
+                {
+                    $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                    break;
+                }
+            case "04":
+                {
+                    $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                    break;
+                }
+            default:
+                {
+                    break;
+                }
+        }
+    }
+
+              function GenerarIP()
+              {
+                  var button = document.getElementById('buttonSpinP');
+                  if (typeof (button.getAttribute('data-loading')) === 'string') {
+                      button.removeAttribute('data-loading');
+                  }
+                  else {
+                      button.setAttribute('data-loading', '');
+                  }
+
+
+                  //
+
+                 var checkbox1 = document.getElementById("simpP");
+                  var checkbox2 = document.getElementById("extP");
+                  var checkbox3 = document.getElementById("varP");
+                  var checkbox4 = document.getElementById("nrecP");
+                 var EncCompras =
+                    {
+                        ClaveHacienda: $("#NumFacturaP").val(),
+                        ConsecutivoHacienda: $("#NumFacturaP").val(),
+                        TipoIdentificacionCliente: "0",
+                        NumFactura: $("#NumFacturaP").val(),
+                        CodProveedor: $("#CodProveedorP").val() + "[" + $("#DVP").val(),
+                        NomProveedor: $("#NomProveedorP").val(),
+                        FecFactura: $("#FecFacturaP").val(),
+                        CodigoActividadEconomica: "0" ,
+                        CodMoneda: $("#CodMoneda").val(),
+                        CodCliente: "0",
+                        NomCliente: "0",
+                        TotalVenta: $("#subtotalIP").text(),
+                        TotalImpuesto: $("#impuestoIP").text(),
+                        TotalDescuentos: $("#descuentoIP").text(),
+                        Impuesto1: $("#impuesto1IP").text() ,
+                        Impuesto2: $("#impuesto2IP").text()  ,
+                        Impuesto4: $("#impuesto4IP").text(),
+                        Impuesto8: $("#impuesto8IP").text(),
+                        Impuesto13: $("#impuesto13IP").text(),
+                        TotalComprobante: $("#totalIP").text(),
+                        ImagenBase64: (ImageBae64 === '' ? '' : ImageBae64.toString().replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '')),
+                        RegimenSimplificado: checkbox1.checked,
+                     FacturaExterior: checkbox2.checked,
+                     GastosVarios: checkbox3.checked,
+                     FacturaNoRecibida: checkbox4.checked
+                    };
+
+                    var DetCompras = Productos;
+                    var recibido = {
+                            EncCompras,
+                            DetCompras
+                        };
+
+                  var recibidos = JSON.stringify(recibido);
+                  if (ValidarFacturaP()) {
+                      $("#FaltaDatosP").css("display", "none");
+
+                      $.ajax({
+                          type: 'POST',
+
+                          url: '@Url.Page("Editar", "Insertar")',
+                          datatype: "application/json",
+                          data: { recibidos: recibidos.toString() },
+                          headers: {
+                              RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+                          },
+                          success: function (json) {
+
+                              console.log(json.resp + " -> " + json.success );
+                              if (json.success == true) {
+                                  button.removeAttribute('data-loading');
+                                  $("#ErrorFacturaP").css("display", "none");
+                                  //Aqui se meteria en el detalle
+                                  var detalle = {
+                                      id: json.resp,
+                                      Proveedor: EncCompras.NomProveedor,
+                                      CHacienda: EncCompras.NumFactura,
+                                      CodProveedor: EncCompras.CodProveedor,
+                                      //    idTipoGasto: $("#idTipoGasto").val(),
+                                      Fecha: EncCompras.FecFactura,
+                                      SubTotal: parseFloat(EncCompras.TotalVenta.replace(",", "")),
+                                      Descuento: parseFloat(EncCompras.TotalDescuentos.replace(",", "")) ,
+                                      Impuesto: parseFloat(EncCompras.TotalImpuesto.replace(",", "")),
+                                      Total: 0,
+                                      Impuesto1: parseFloat(EncCompras.Impuesto1.replace(",", "")),
+                                      Impuesto2: parseFloat(EncCompras.Impuesto2.replace(",", "")),
+                                      Impuesto4: parseFloat(EncCompras.Impuesto4.replace(",", "")),
+                                      Impuesto8: parseFloat(EncCompras.Impuesto8.replace(",", "")),
+                                      Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "")),
+                                      idTipoGasto: Productos[0].idTipoGasto,
+                                      TotalOtrosCargos: 0,
+                                      Comentario: ""
+                                  };
+
+                                  console.log(EncCompras);
+                                  console.log(detalle);
+                                  var subtotalT = 0;
+                                  var descuentoT = 0;
+                                  var impuestoT = 0;
+                                  var totalT = 0;
+                                  subtotalT = parseFloat(detalle.SubTotal);
+                                  descuentoT = parseFloat(detalle.Descuento);
+                                  impuestoT = parseFloat(detalle.Impuesto);
+                                  detalle.Total = (subtotalT - descuentoT) + impuestoT
+                                  ProdCadena.push(detalle);
+                                  totalT = parseFloat(detalle.Total);
+                                  var impuesto1T = parseFloat(detalle.Impuesto1);
+                                  var impuesto2T = parseFloat(detalle.Impuesto2);
+                                  var impuesto4T = parseFloat(detalle.Impuesto4);
+                                  var impuesto8T = parseFloat(detalle.Impuesto8);
+                                  var impuesto13T = parseFloat(detalle.Impuesto13);
+
+
+
+                                  subtotal += subtotalT;
+                                  descuentos += descuentoT;
+                                  impuestos += impuestoT;
+
+                                  totalComprobante += totalT;
+                                  impuesto1 += impuesto1T;
+                                  impuesto2 += impuesto2T;
+                                  impuesto4 += impuesto4T;
+                                  impuesto8 += impuesto8T;
+                                  impuesto13 += impuesto13T;
+
+                                  $("#subtotal").text(formatoDecimal(parseFloat(subtotal).toFixed(2)));
+                                  $("#descuento").text(formatoDecimal(parseFloat(descuentos).toFixed(2)));
+                                  $("#impuesto").text(formatoDecimal(parseFloat(impuestos).toFixed(2)));
+                                  $("#total").text(formatoDecimal(parseFloat(totalComprobante).toFixed(2)));
+
+                                  //
+                                  $("#impuesto1").text(formatoDecimal(parseFloat(impuesto1).toFixed(2)));
+                                  $("#impuesto2").text(formatoDecimal(parseFloat(impuesto2).toFixed(2)));
+
+                                  //Modificar por ser de panama
+                                  LimpiarDatos();
+
+                                  RellenaTabla();
+                                  LimpiarDatosGeneralesP();
+                                  //$("#ModalInclusion").modal("hide");
+
+                              } else {
+                                  $("#ErrorFacturaP").text(json.resp);
+                                  $("#ErrorFacturaP").css("display", "block");
+                                  button.removeAttribute('data-loading');
+                                  EliminaProductoIP(0);
+                              }
+                          },
+
+                          beforeSend: function (xhr) {
+
+
+                          },
+                          complete: function () {
+
+                          },
+                          error: function (error) {
+
+                              $("#ErrorFactura").css("display", "block");
+
+
+                          }
+                      });
+                  } else {
+                      $("#FaltaDatosP").css("display", "block");
+                      button.removeAttribute('data-loading');
+                      Productos = [];
+                  }
+
+    }
+
+    function LimpiarDatosGeneralesP() {
+        $("#NumFacturaP").val("");
+        $("#CodProveedorP").val("");
+        $("#DVP").val("");
+        $("#NomProveedorP").val("");
+        $("#FecFacturaP").val("");
+        $("#subtotalIP").text("0");
+        $("#impuestoIP").text("0");
+        $("#descuentoIP").text("0");
+        $("#impuesto1IP").text("0");
+        $("#impuesto2IP").text("0");
+        $("#impuesto4IP").text("0");
+        $("#impuesto8IP").text("0");
+        $("#impuesto13IP").text("0");
+        $("#totalIP").text("0");
+        ImagenBase64 = "";
+        Productos = [];
+
+        subtotalT = 0;
+        descuentoT = 0;
+        impuestoT = 0;
+        totalT = 0;
+
+        impuesto1T = 0;
+        impuesto2T = 0;
+        impuesto4T = 0;
+        impuesto8T = 0;
+        impuesto13T = 0;
+
+        subtotalI = 0;
+        impuestosI = 0;
+        descuentosI = 0;
+        totalComprobanteI = 0;
+
+        impuestoI1 = 0;
+        impuestoI2 = 0;
+        impuestoI4 = 0;
+        impuestoI8 = 0;
+        impuestoI13 = 0;
+        document.getElementById('imgPrincipalGP').src = "/img/cm.jpg";
+        ImageBae64 = "";
+        LimpiarDatosIP();
+        RellenaTablaIP();
+    }
+    function ValidarFacturaP() {
+        if (ProdCadena.find(a => a.CHacienda.trim() == $("#NumFacturaP").val() && a.CodProveedor == $("#CodProveedorP").val()) != undefined) {
+            return false;
+        }
+
+        if ($("#NumFacturaP").val() == "") {
+            return false;
+        } else if ($("#CodProveedorP").val() == "") {
+            return false;
+        } else if ($("#NomProveedorP").val() == "") {
+            return false;
+        } else if ($("#FecFacturaP").val() == "")
+        {
+            return false;
+        } else if (Productos.length == 0)
+        {
+            return false;
+        } else if (ImageBae64 == "")
+        {
+            return false;
+        } else if ($("#idTipoGastoP").val() == "NULL") {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    async function EnviarFCP() {
+        AgregarProductosIP();
+        GenerarIP();
+
+    }
+</script>
+
 <!--Programacion del modal-->
 
 <div class="modal fade bd-example-modal-lg" id="ModalInclusion" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -1854,24 +2942,55 @@
 
 
 
-                                <label class="col-form-label">Tipo Indentificación:</label>
-                                <div class="form-group row">
-                                    <div class="col-sm-12" style="text-align: center;">
-                                        <input type="radio" name="idProvedor" id="idProvedor1" onclick="javascript: maskE2();" value="01"> Física &nbsp;
-                                        <input type="radio" name="idProvedor" id="idProvedor2" onclick="javascript: maskE2();" value="02"> Jurídica &nbsp;
-                                        <input type="radio" name="idProvedor" id="idProvedor3" onclick="javascript: maskE2();" value="03"> DIMEX &nbsp;
-                                        <input type="radio" name="idProvedor" id="idProvedor4" onclick="javascript: maskE2();" value="04"> NITE
+                                <label class="col-form-label">Tipo Identificación:</label>
+                                @if (Model.Pais == "P")
+                                {
+                                    <div class="form-group row">
+                                        <div class="col-sm-12" style="text-align: center;">
+                                            <input type="radio" name="idProvedor" id="idProvedor1" onclick="javascript: maskE2();" value="01"> Natural &nbsp;
+                                            <input type="radio" name="idProvedor" id="idProvedor2" onclick="javascript: maskE2();" value="02"> Jurídica &nbsp;
+                                            <input type="radio" name="idProvedor" id="idProvedor3" onclick="javascript: maskE2();" value="03"> Extranjero
+                                        </div>
                                     </div>
-                                </div>
-
-
-                                <label class="col-form-label">Cédula Proveedor:</label>
-                                <div class="form-group row">
-                                    <div class="col-sm-12">
-
-                                        <input type="text" id="CodProveedorE" class="form-control">
+                                }
+                                else
+                                {
+                                    <div class="form-group row">
+                                        <div class="col-sm-12" style="text-align: center;">
+                                            <input type="radio" name="idProvedor" id="idProvedor1" onclick="javascript: maskE2();" value="01"> Física &nbsp;
+                                            <input type="radio" name="idProvedor" id="idProvedor2" onclick="javascript: maskE2();" value="02"> Jurídica &nbsp;
+                                            <input type="radio" name="idProvedor" id="idProvedor3" onclick="javascript: maskE2();" value="03"> DIMEX &nbsp;
+                                            <input type="radio" name="idProvedor" id="idProvedor4" onclick="javascript: maskE2();" value="04"> NITE
+                                        </div>
                                     </div>
-                                </div>
+                                }
+
+
+                                @if (Model.Pais == "P")
+                                {
+                                    <label class="col-form-label">RUC Proveedor:</label>
+                                    <div class="form-group row">
+                                        <div class="col-sm-8">
+
+                                            <input type="text" id="CodProveedorE" class="form-control">
+                                        </div>
+                                        <div class="col-sm-4">
+
+                                            <input type="text" id="DVE"  placeholder="D.V" class="form-control">
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <label class="col-form-label">Cédula Proveedor:</label>
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+
+                                            <input type="text" id="CodProveedorE" class="form-control">
+                                        </div>
+                                    </div>
+                                }
+
 
                                 <label class="col-form-label">Nombre Proveedor:</label>
                                 <div class="form-group row">
@@ -1904,36 +3023,73 @@
 
 
                                 <label class="col-form-label">Tipo Documento:</label>
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                                            Regimen Simplificado
-                                            <input type="checkbox" id="simpE" onchange="javascript: checkE('1');">
-                                            <span class="check"></span>
-                                        </label>
+                                @if (Model.Pais != "P")
+                                {
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                                Regimen Simplificado
+                                                <input type="checkbox" id="simpE" onchange="javascript: checkE('1');">
+                                                <span class="check"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                                Factura Exterior
+                                                <input type="checkbox" id="extE" onchange="javascript: checkE('2');">
+                                                <span class="check"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                                Gastos Varios
+                                                <input type="checkbox" id="varE" onchange="javascript: checkE('3');">
+                                                <span class="check"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-12" hidden>
+                                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                                Factura No Recibida
+                                                <input type="checkbox" id="nrecE" onchange="javascript: checkE('4');">
+                                                <span class="check"></span>
+                                            </label>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-12">
-                                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                                            Factura Exterior
-                                            <input type="checkbox" id="extE" onchange="javascript: checkE('2');">
-                                            <span class="check"></span>
-                                        </label>
+                                }
+                                else
+                                {
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                                Factura Fiscal
+                                                <input type="checkbox" id="simpE" onchange="javascript: checkE('1');">
+                                                <span class="check"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                                Factura Exterior
+                                                <input type="checkbox" id="extE" onchange="javascript: checkE('2');">
+                                                <span class="check"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                                Gastos Varios
+                                                <input type="checkbox" id="varE" onchange="javascript: checkE('3');">
+                                                <span class="check"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                                Factura Electrónica
+                                                <input type="checkbox" id="nrecE" onchange="javascript: checkE('4');">
+                                                <span class="check"></span>
+                                            </label>
+                                        </div>
                                     </div>
-                                    <div class="col-sm-12">
-                                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                                            Gastos Varios
-                                            <input type="checkbox" id="varE" onchange="javascript: checkE('3');">
-                                            <span class="check"></span>
-                                        </label>
-                                    </div>
-                                    <div class="col-sm-12" hidden>
-                                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                                            Factura No Recibida
-                                            <input type="checkbox" id="nrecE" onchange="javascript: checkE('4');">
-                                            <span class="check"></span>
-                                        </label>
-                                    </div>
-                                </div>
+                                }
+
 
 
 
@@ -1977,13 +3133,27 @@
 
                                         <select id="TipoImpuestoE" class="form-control  ">
                                             <option value="NULL" selected>-IVA-</option>
+                                            @if (Model.Pais != "P")
+                                            {
+                                                <option value="0">I.V.A 0</option>
+                                                <option value="1">I.V.A 1</option>
+                                                <option value="2">I.V.A 2</option>
+                                                <option value="4">I.V.A 4</option>
+                                                <option value="8">I.V.A 8</option>
+                                                <option value="13">I.V.A 13</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="0">Exento</option>
+                                                <option value="7" selected>
+                                                    ITBMS(7%)
+                                                </option>
+                                                <option value="10">
+                                                    ITBMS(10%)
+                                                </option>
+                                            }
 
-                                            <option value="0">I.V.A 0</option>
-                                            <option value="1">I.V.A 1</option>
-                                            <option value="2">I.V.A 2</option>
-                                            <option value="4">I.V.A 4</option>
-                                            <option value="8">I.V.A 8</option>
-                                            <option value="13">I.V.A 13</option>
+
 
 
                                         </select>
@@ -2793,6 +3963,10 @@
         RellenaTablaI();
     }
     function ValidarFactura() {
+        if (ProdCadena.find(a => a.CHacienda.trim() == $("#NumFactura").val() && a.CodProveedor == $("#CodProveedor").val()) != undefined) {
+            return false;
+        }
+
         if ($("#NumFactura").val() == "") {
             return false;
         } else if ($("#CodProveedor").val() == "") {
@@ -3008,15 +4182,40 @@
                     detalle.Impuesto13 += detalle.ImpuestoMonto;
                     break;
                 }
+            case "7":
+                {
+                    detalle.ImpuestoMonto = 0;
+                    detalle.ImpuestoMonto += parseFloat(detalle.PrecioUnitario) * 0.07;
+                    detalle.Impuesto1 += detalle.ImpuestoMonto;
+                    break;
+                }
+            case "10":
+                {
+                    detalle.ImpuestoMonto = 0;
+                    detalle.ImpuestoMonto += parseFloat(detalle.PrecioUnitario) * 0.10;
+                    detalle.Impuesto2 += detalle.ImpuestoMonto;
+                    break;
+                }
         }
 
-        detalle.MontoTotalLinea = ((detalle.PrecioUnitario) - detalle.MontoDescuento) + parseFloat(detalle.ImpuestoMonto);
+        if (Pais != "P") {
+            detalle.MontoTotalLinea = ((detalle.PrecioUnitario) - detalle.MontoDescuento) + parseFloat(detalle.ImpuestoMonto);
+
+        } else {
+            detalle.MontoTotalLinea = (detalle.PrecioUnitario);
+        }
 
         var subtotalT = 0;
         var descuentoT = 0;
         var impuestoT = 0;
         var totalT = 0;
-        subtotalT = parseFloat(detalle.PrecioUnitario);
+
+        if (Pais == "P") {
+            subtotalT = parseFloat(detalle.PrecioUnitario) - detalle.ImpuestoMonto;
+        } else {
+            subtotalT = parseFloat(detalle.PrecioUnitario);
+        }
+        
         descuentoT = parseFloat(detalle.MontoDescuento);
         impuestoT = parseFloat(detalle.ImpuestoMonto);
         totalT = parseFloat(detalle.MontoTotalLinea);
@@ -3157,6 +4356,11 @@
                     $("#idFacE").val(id);
                     document.getElementById('imgPrincipalGE').src = result.pdfFactura;
 
+                    if (Pais == "P") {
+                        $("#DVE").val(result.codProveedor.split("[")[1]);
+                        result.codProveedor = result.codProveedor.split("[")[0];
+                    }
+
                     switch (result.codProveedor.replace("-", "").replace("-", "").length) {
                         case 9:
                             {
@@ -3166,13 +4370,24 @@
                             }
                         case 10:
                             {
-                                $("#idProvedor2").prop('checked', true)
+                                if (Pais == "P") {
+                                    $("#idProvedor3").prop('checked', true)
+                                } else {
+                                    $("#idProvedor2").prop('checked', true)
+                                }
+                                
                                 maskE2();
                                 break;
                             }
                         case 12:
                             {
                                 $("#idProvedor3").prop('checked', true)
+                                maskE2();
+                                break;
+                            }
+                        case 15:
+                            {
+                                $("#idProvedor2").prop('checked', true)
                                 maskE2();
                                 break;
                             }
@@ -3186,7 +4401,12 @@
                     $("#NomProE").val(result.detCompras[0].nomPro);
                     $("#TipoImpuestoE").val(result.detCompras[0].impuestoTarifa);
                     $("#idTipoGastoE").val(result.detCompras[0].idTipoGasto);
-                    $("#PrecUniE").val(result.detCompras[0].precioUnitario);
+
+                    
+                        $("#PrecUniE").val(result.detCompras[0].precioUnitario);
+                    
+
+                    
                     $("#descE").val(result.detCompras[0].montoDescuento);
                     $("#ImpuestoMontoE").val(result.detCompras[0].impuestoMonto);
                     if (result.regimenSimplificado) {
@@ -3214,60 +4434,125 @@
     }
 
     function maskE() {
-        switch ($("#idClienteE").val()) {
-            case "01":
-                {
-                    $("#CodClienteE").inputmask({ "mask": "9-9999-9999" });
-                    break;
-                }
-            case "02":
-                {
-                    $("#CodClienteE").inputmask({ "mask": "9-999-999999" });
-                    break;
-                }
-            case "03":
-                {
-                    $("#CodClienteE").inputmask({ "mask": "999999999999" });
-                    break;
-                }
-            case "04":
-                {
-                    $("#CodClienteE").inputmask({ "mask": "9999999999" });
-                    break;
-                }
-            default:
-                {
-                    break;
-                }
+        if (Pais == "P") {
+            switch ($("#idClienteE").val()) {
+                case "01":
+                    {
+                        $("#CodClienteE").inputmask({ "mask": "99-999-9999" });
+                        break;
+                    }
+                case "02":
+                    {
+                        $("#CodClienteE").inputmask({ "mask": "9999999-99-999999" });
+                        break;
+                    }
+                case "03":
+                    {
+                        $("#CodClienteE").inputmask({ "mask": "9999999999" });
+                        break;
+                    }
+                case "04":
+                    {
+                        $("#CodClienteE").inputmask({ "mask": "9999999999" });
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        } else {
+
+            switch ($("#idClienteE").val()) {
+                case "01":
+                    {
+                        $("#CodClienteE").inputmask({ "mask": "9-9999-9999" });
+                        break;
+                    }
+                case "02":
+                    {
+                        $("#CodClienteE").inputmask({ "mask": "9-999-999999" });
+                        break;
+                    }
+                case "03":
+                    {
+                        $("#CodClienteE").inputmask({ "mask": "999999999999" });
+                        break;
+                    }
+                case "04":
+                    {
+                        $("#CodClienteE").inputmask({ "mask": "9999999999" });
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
         }
+
+        
     }
     function maskE2() {
-        switch ($("input:radio[name=idProvedor]:checked").val()) {
-            case "01":
-                {
-                    $("#CodProveedorE").inputmask({ "mask": "9-9999-9999" });
-                    break;
-                }
-            case "02":
-                {
-                    $("#CodProveedorE").inputmask({ "mask": "9-999-999999" });
-                    break;
-                }
-            case "03":
-                {
-                    $("#CodProveedorE").inputmask({ "mask": "999999999999" });
-                    break;
-                }
-            case "04":
-                {
-                    $("#CodProveedorE").inputmask({ "mask": "9999999999" });
-                    break;
-                }
-            default:
-                {
-                    break;
-                }
+
+        if (Pais == "P") {
+            switch ($("input:radio[name=idProvedor]:checked").val()) {
+                case "01":
+                    {
+                        $("#CodProveedorE").inputmask({ "mask": "99-999-9999" });
+                        break;
+                    }
+                case "02":
+                    {
+                        $("#CodProveedorE").inputmask({ "mask": "9999999-99-999999" });
+
+                        break;
+                    }
+                case "03":
+                    {
+                        $("#CodProveedorE").inputmask({ "mask": "9999999999" });
+                        break;
+                    }
+                case "04":
+                    {
+                        $("#CodProveedorE").inputmask({ "mask": "9999999999" });
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
+        } else {
+            switch ($("input:radio[name=idProvedor]:checked").val()) {
+                case "01":
+                    {
+                        $("#CodProveedorE").inputmask({ "mask": "9-9999-9999" });
+                        break;
+                    }
+                case "02":
+                    {
+                        $("#CodProveedorE").inputmask({ "mask": "9-999-999999" });
+                        break;
+                    }
+                case "03":
+                    {
+                        $("#CodProveedorE").inputmask({ "mask": "999999999999" });
+                        break;
+                    }
+                case "04":
+                    {
+                        $("#CodProveedorE").inputmask({ "mask": "9999999999" });
+                        break;
+                    }
+                default:
+                    {
+                        break;
+                    }
+            }
         }
+
+       
     }
 
               function GenerarE()
@@ -3291,7 +4576,7 @@
                         ConsecutivoHacienda: $("#NumFacturaE").val(),
                         TipoIdentificacionCliente: "0",
                         NumFactura: $("#NumFacturaE").val(),
-                        CodProveedor: $("#CodProveedorE").val(),
+                        CodProveedor: (Pais == "P" ? $("#CodProveedorE").val() + "[" + $("#DVE").val() : $("#CodProveedorE").val()),
                         NomProveedor: $("#NomProveedorE").val(),
                         FecFactura: $("#FecFacturaE").val(),
                         CodigoActividadEconomica: "0" ,
@@ -3311,7 +4596,7 @@
                         RegimenSimplificado: checkbox1.checked,
                      FacturaExterior: checkbox2.checked,
                      GastosVarios: checkbox3.checked,
-                     FacturaNoRecibida: false//checkbox4.checked
+                     FacturaNoRecibida: (Pais == "P" ? checkbox4.checked : false)//checkbox4.checked
                     };
 
                     var DetCompras = ProductosE;
@@ -3378,11 +4663,20 @@
                                   var impuesto13T = parseFloat(detalle.Impuesto13);
 
                                   //Se le resta los totales anteriores al general para despues sumarle los demas
-                                  subtotal -= parseFloat(resultadoAnterior.totalVenta);
+                                  if (Pais == "P") {
+                                      subtotal -= parseFloat(resultadoAnterior.totalComprobante) - parseFloat(resultadoAnterior.totalImpuesto);
+                                  } else {
+                                      subtotal -= parseFloat(resultadoAnterior.totalVenta);
+                                  }
+                                 
                                   descuentos -= parseFloat(resultadoAnterior.totalDescuentos);
                                   impuestos -= parseFloat(resultadoAnterior.totalImpuesto);
-
-                                  totalComprobante -= (parseFloat(resultadoAnterior.totalVenta) - parseFloat(resultadoAnterior.totalDescuentos) ) - parseFloat(resultadoAnterior.totalImpuesto);
+                                  if (Pais == "P") {
+                                      totalComprobante -= parseFloat(resultadoAnterior.totalComprobante);
+                                  } else {
+                                      totalComprobante -= (parseFloat(resultadoAnterior.totalVenta) - parseFloat(resultadoAnterior.totalDescuentos)) - parseFloat(resultadoAnterior.totalImpuesto);
+                                  }
+                                  
                                   impuesto1 -= parseFloat(resultadoAnterior.impuesto1);
                                   impuesto2 -= parseFloat(resultadoAnterior.impuesto2);
                                   impuesto4 -= parseFloat(resultadoAnterior.impuesto4);
@@ -3481,6 +4775,7 @@
     function LimpiarDatosGeneralesE() {
         $("#NumFacturaE").val("");
         $("#CodProveedorE").val("");
+        $("#DVE").val("");
         $("#NomProveedorE").val("");
         $("#FecFacturaE").val("");
         $("#subtotalE").text("0");
@@ -3522,6 +4817,10 @@
         RellenaTablaE();
     }
     function ValidarFacturaE() {
+
+         
+      
+
         if ($("#NumFacturaE").val() == "") {
             return false;
         } else if ($("#CodProveedorE").val() == "") {

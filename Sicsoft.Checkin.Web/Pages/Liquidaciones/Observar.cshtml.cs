@@ -27,6 +27,9 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         public ComprasViewModel[] Objeto { get; set; }
 
         [BindProperty]
+        public string Pais { get; set; }
+
+        [BindProperty]
         public UsuariosViewModel[] Usuarios { get; set; }
 
         [BindProperty]
@@ -54,6 +57,9 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Usuarios = await users.ObtenerLista("");
                 Rols = await roles.ObtenerLista("");
 
+                var Pais = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Pais").Select(s1 => s1.Value).FirstOrDefault();
+
+                this.Pais = Pais;
 
                 ParametrosFiltros filt = new ParametrosFiltros();
                 filt.Codigo3 = Liquidacion.EncCierre.idCierre;

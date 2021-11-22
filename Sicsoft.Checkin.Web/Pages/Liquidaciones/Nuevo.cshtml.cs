@@ -40,6 +40,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         [BindProperty]
         public List<MonedasViewModel> Monedas { get; set; }
 
+        [BindProperty]
+        public string Pais { get; set; }
 
         [BindProperty]
         public string Periodo { get; set; }
@@ -109,17 +111,26 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Periodo = Periodos[filtro.FechaFinal.Month - 1];
 
 
-                MonedasViewModel moneda = new MonedasViewModel();
-                
-                moneda.identificador = "CRC";
-                moneda.Moneda = "Colones";
+                var Pais = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Pais").Select(s1 => s1.Value).FirstOrDefault();
 
-                var resp = await mon.VCierre(idLogin,Periodo,DateTime.Now,moneda.identificador);
-                if(resp)
+                this.Pais = Pais;
+
+                var resp = false;
+                if(Pais == "C")
                 {
-                    Monedas.Add(moneda);
+                    MonedasViewModel moneda = new MonedasViewModel();
 
+                    moneda.identificador = "CRC";
+                    moneda.Moneda = "Colones";
+
+                     resp = await mon.VCierre(idLogin, Periodo, DateTime.Now, moneda.identificador);
+                    if (resp)
+                    {
+                        Monedas.Add(moneda);
+
+                    }
                 }
+               
 
 
 
@@ -396,7 +407,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Objeto1.EncCompras.CodCliente = recibido.EncCompras.CodCliente;
                 Objeto1.EncCompras.NomCliente = recibido.EncCompras.NomCliente;
                 Objeto1.EncCompras.TotalImpuesto = recibido.EncCompras.TotalImpuesto;
-                Objeto1.EncCompras.TotalDescuentos = recibido.EncCompras.Impuesto1;
+                Objeto1.EncCompras.TotalDescuentos = recibido.EncCompras.TotalDescuentos;
                 Objeto1.EncCompras.Impuesto1 = recibido.EncCompras.Impuesto1;
                 Objeto1.EncCompras.Impuesto2 = recibido.EncCompras.Impuesto2;
                 Objeto1.EncCompras.Impuesto4 = recibido.EncCompras.Impuesto4;

@@ -218,9 +218,20 @@
 
                                     <select asp-for="filtro.CodMoneda" id="codMoneda" class="form-control  mi-selector">
 
-                                        <option value="CRC" selected>Colones</option>
-                                        <option value="USD" >Dólares</option>
-                                        <option value="EUR" >Euros</option>
+                                        @if (Model.Pais == "C")
+                                        {
+                                            <option value="CRC" selected>Colones</option>
+                                            <option value="USD">Dólares</option>
+                                            <option value="EUR">Euros</option>
+                                        }
+                                        else if (Model.Pais == "P")
+                                        {
+                                            <option value="USD" selected>Seleccione</option>
+                                            <option value="USD" >Dólares</option>
+                                            <option value="EUR">Euros</option>
+                                        }
+
+
 
 
 

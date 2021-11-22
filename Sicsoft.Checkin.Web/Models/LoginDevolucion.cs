@@ -17,6 +17,7 @@ namespace Sicsoft.CostaRica.Checkin.Web.Models
         public string token { get; set; }
         public string UrlLogo { get; set; }
         public bool CambiarClave { get; set; }
+        public string Pais { get; set; }
         public List<SeguridadRolesModulos> Seguridad { get; set; }
     }
 }

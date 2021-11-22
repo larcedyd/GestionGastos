@@ -62,6 +62,7 @@ namespace Sicsoft.Checkin.Web
                 identity.AddClaim(new Claim("Roles",str));
                 identity.AddClaim(new Claim("Logo", resultado.UrlLogo));
                 identity.AddClaim(new Claim("CambiarClave", resultado.CambiarClave.ToString()));
+                identity.AddClaim(new Claim("Pais", resultado.Pais.ToString()));
                 var principal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 

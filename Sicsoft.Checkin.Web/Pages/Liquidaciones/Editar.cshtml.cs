@@ -46,6 +46,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
         [BindProperty]
         public LoginUsuarioViewModel Usuario { get; set; }
+        [BindProperty]
+        public string Pais { get; set; }
         //Programacion para el modal de insercion
         [BindProperty(SupportsGet = true)]
         public ComprasInsercionViewModel Objeto1 { get; set; }
@@ -91,7 +93,9 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 ParametrosFiltros filt = new ParametrosFiltros();
 
+                var Pais = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Pais").Select(s1 => s1.Value).FirstOrDefault();
 
+                this.Pais = Pais;
 
                 /*  filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 26);
                   filt.FechaFinal = filt.FechaInicio.AddMonths(1);*/
@@ -384,7 +388,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Objeto1.EncCompras.CodCliente = recibido.EncCompras.CodCliente;
                 Objeto1.EncCompras.NomCliente = recibido.EncCompras.NomCliente;
                 Objeto1.EncCompras.TotalImpuesto = recibido.EncCompras.TotalImpuesto;
-                Objeto1.EncCompras.TotalDescuentos = recibido.EncCompras.Impuesto1;
+                Objeto1.EncCompras.TotalDescuentos = recibido.EncCompras.TotalDescuentos;
                 Objeto1.EncCompras.Impuesto1 = recibido.EncCompras.Impuesto1;
                 Objeto1.EncCompras.Impuesto2 = recibido.EncCompras.Impuesto2;
                 Objeto1.EncCompras.Impuesto4 = recibido.EncCompras.Impuesto4;
@@ -438,7 +442,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 var obj = new
                 {
-                    success = true,
+                    success = false,
                     resp = errores.Message
                 };
                 return new JsonResult(obj);
@@ -508,7 +512,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Objeto1.EncCompras.CodCliente = recibido.EncCompras.CodCliente;
                 Objeto1.EncCompras.NomCliente = recibido.EncCompras.NomCliente;
                 Objeto1.EncCompras.TotalImpuesto = recibido.EncCompras.TotalImpuesto;
-                Objeto1.EncCompras.TotalDescuentos = recibido.EncCompras.Impuesto1;
+                Objeto1.EncCompras.TotalDescuentos = recibido.EncCompras.TotalDescuentos;
                 Objeto1.EncCompras.Impuesto1 = recibido.EncCompras.Impuesto1;
                 Objeto1.EncCompras.Impuesto2 = recibido.EncCompras.Impuesto2;
                 Objeto1.EncCompras.Impuesto4 = recibido.EncCompras.Impuesto4;

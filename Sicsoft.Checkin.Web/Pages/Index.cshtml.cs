@@ -45,6 +45,9 @@ namespace Sicsoft.Checkin.Web.Pages
         [BindProperty]
         public List<IGrouping<string, EncComprasReportes>> ComprasAnuales { get; set; }
 
+        [BindProperty]
+        public string Pais { get; set; }
+
 
         [BindProperty(SupportsGet = true)]
         public ParametrosFiltros filtro { get; set; }
@@ -87,7 +90,9 @@ namespace Sicsoft.Checkin.Web.Pages
 
                 filtro.FechaFinal = ultimoDia;
 
+                var Pais = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Pais").Select(s1 => s1.Value).FirstOrDefault();
 
+                this.Pais = Pais;
 
                 Compra = await compras.ObtenerLista(filtro);
                 Compras = Compra.GroupBy(a => a.TipoGasto).ToList();

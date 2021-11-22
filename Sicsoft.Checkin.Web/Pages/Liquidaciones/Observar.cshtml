@@ -584,72 +584,101 @@
                                                     <label id="impuesto" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuestos.Value, 2).ToString("N", formato)</label>
                                                 </td>
                                             </tr>
-                                            <tr>
 
-                                                <td style="text-align: center;">
-                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 1:</label>
+                                            @if (Model.Pais != "P")
+                                            {
 
-                                                </td>
-                                                <td>
-                                                    <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto1, 2).ToString("N", formato)</label>
-                                                </td>
-                                            </tr>
 
-                                            <tr>
 
-                                                <td style="text-align: center;">
-                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 2:</label>
+                                                <tr>
 
-                                                </td>
-                                                <td>
-                                                    <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto2, 2).ToString("N", formato)</label>
-                                                </td>
-                                            </tr>
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 1:</label>
 
-                                            <tr>
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto1, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
 
-                                                <td style="text-align: center;">
-                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 4:</label>
+                                                <tr>
 
-                                                </td>
-                                                <td>
-                                                    <label id="impuesto4" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto4, 2).ToString("N", formato)</label>
-                                                </td>
-                                            </tr>
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 2:</label>
 
-                                            <tr>
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto2, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
 
-                                                <td style="text-align: center;">
-                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 8:</label>
+                                                <tr>
 
-                                                </td>
-                                                <td>
-                                                    <label id="impuesto8" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto8, 2).ToString("N", formato)</label>
-                                                </td>
-                                            </tr>
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 4:</label>
 
-                                            <tr>
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto4" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto4, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
 
-                                                <td style="text-align: center;">
-                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 13:</label>
+                                                <tr>
 
-                                                </td>
-                                                <td>
-                                                    <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto13, 2).ToString("N", formato)</label>
-                                                </td>
-                                            </tr>
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 8:</label>
 
-                                            <tr>
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto8" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto8, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
 
-                                                <td style="text-align: center;">
-                                                    <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Otros Cargos:</label>
+                                                <tr>
 
-                                                </td>
-                                                <td>
-                                                    <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.TotalOtrosCargos, 2).ToString("N", formato)</label>
-                                                </td>
-                                            </tr>
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> I.V.A 13:</label>
 
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto13, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> Otros Cargos:</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto13" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.TotalOtrosCargos, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            else
+                                            {
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> ITBMS(7%):</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto1" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto1, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td style="text-align: center;">
+                                                        <label class="col-form-label" style="display: inline-table;  font-weight: 500 !important; font-style: normal;"> ITBMS(10%):</label>
+
+                                                    </td>
+                                                    <td>
+                                                        <label id="impuesto2" style="display: inline-table;  font-weight: bold !important; font-style: normal;">@decimal.Round(@Model.Liquidacion.EncCierre.Impuesto2, 2).ToString("N", formato)</label>
+                                                    </td>
+                                                </tr>
+                                            }
                                             <tr>
 
                                                 <td style="text-align: center;">
