@@ -23,6 +23,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         private readonly ICrudApi<GastosR, int> liquidaciones;
         private readonly ICrudApi<ComprasViewModel, int> compras;
         private readonly ICrudApi<ComprasInsercionViewModel, int> insercionCompras;
+        private readonly ICrudApi<ProveedoresViewModel, int> proveedor;
 
         [BindProperty(SupportsGet = true)]
         public ComprasViewModel[] Objeto { get; set; }
@@ -45,6 +46,9 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         public GastosViewModel[] Gastos { get; set; }
 
         [BindProperty]
+        public ProveedoresViewModel[] Proveedores { get; set; }
+
+        [BindProperty]
         public LoginUsuarioViewModel Usuario { get; set; }
         [BindProperty]
         public string Pais { get; set; }
@@ -54,7 +58,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         //Termina
 
         public EditarModel(ICrudApi<ComprasViewModel, int> service, ICrudApi<LoginUsuarioViewModel, int> usuario, ICrudApi<GastosViewModel, int> gastos,
-          ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> compras, ICrudApi<ComprasInsercionViewModel, int> insercionCompras)
+          ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> compras, ICrudApi<ComprasInsercionViewModel, int> insercionCompras, ICrudApi<ProveedoresViewModel, int> proveedor)
         {
             this.gastos = gastos;
             this.service = service;
@@ -62,6 +66,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
             this.liquidaciones = liquidaciones;
             this.compras = compras;
             this.insercionCompras = insercionCompras;
+            this.proveedor = proveedor;
+
         }
 
         public async Task<IActionResult> OnGetAsync(string id)
@@ -97,6 +103,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 this.Pais = Pais;
 
+                Proveedores = await proveedor.ObtenerLista("");
+
                 /*  filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month - 1, 26);
                   filt.FechaFinal = filt.FechaInicio.AddMonths(1);*/
                 filt.FechaInicio = filtro.FechaInicio;
@@ -128,6 +136,35 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 ModelState.AddModelError(string.Empty, error.Message);
 
                 return Page();
+            }
+        }
+
+        public async Task<IActionResult> OnGetBuscarProveedor(string ids, string dv, string nombre)
+        {
+            try
+            {
+
+
+                //var ids = Convert.ToInt32(id);
+
+                ParametrosFiltros filt = new ParametrosFiltros();
+                filt.Texto = ids;
+                filt.Texto2 = dv;
+                filt.Texto3 = nombre;
+                var objetos = await proveedor.ObtenerLista(filt);
+
+                var objeto = objetos.FirstOrDefault();
+
+
+
+                return new JsonResult(objeto);
+            }
+            catch (ApiException ex)
+            {
+                Errores error = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+
+
+                return new JsonResult(error);
             }
         }
         //Este metodo busca las facturas para ponerlas en la liquidacion 

@@ -476,6 +476,7 @@
                                             <th align="center" style=" text-align: center;"><h4>Cons. Hacienda</h4></th>
 
                                             <th align="center" style=" text-align: center;"><h4>Fecha</h4></th>
+                                            <th align="center" style=" text-align: center;"><h4>Cod. Proveedor</h4></th>
                                             <th align="center" style=" text-align: center;"><h4>Proveedor</h4></th>
                                             <th align="center" style=" text-align: center;"><h4>Tipo de Gasto</h4></th>
                                             <th align="center" style=" text-align: center;"><h4>Comentario</h4></th>
@@ -493,6 +494,18 @@
                                                 <td align="center" style="padding-top:15px;">  <a style="font-size:13px;" href="@item.PdfFactura" target="_blank">@item.ConsecutivoHacienda </a></td>
 
                                                 <td align="center" style="padding-top:15px;">  <p style="font-size:13px;">@item.FecFactura.Value.ToString("dd/MM/yyyy") </p></td>
+                                                <td align="left" style="padding-top:15px;">
+                                                    @if (Model.Pais == "P")
+                                                    {
+                                                    <p style="font-size:13px;">@item.CodProveedor.Split("[")[0]  [ @item.CodProveedor.Split("[")[1] ]   </p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p style="font-size:13px;">@item.CodProveedor </p>
+                                                    }
+
+
+                                                </td>
                                                 <td align="left" style="padding-top:15px;">
                                                     <p style="font-size:13px;">
                                                         @item.NomProveedor

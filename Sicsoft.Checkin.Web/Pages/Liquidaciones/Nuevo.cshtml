@@ -174,6 +174,148 @@
             }
         }
 
+        function onChangeProveedor(bit) {
+
+            var ruc = $("#CodProveedorP").val();
+            var dv = $("#DVP").val();
+            var nombre = $("#NomProveedorP").val();
+
+            if (bit == 1) {
+
+                $("#CodProveedorP").val("");
+                $("#DVP").val("");
+
+            } else {
+                $("#NomProveedorP").val("");
+            }
+
+            $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '@Url.Page("Nuevo", "BuscarProveedor")',
+                data: { id: $("#CodProveedorP").val(), dv: $("#DVP").val(), nombre: $("#NomProveedorP").val()  },
+            success: function (result) {
+
+                console.log(result);
+                
+                if (result != null) {
+
+                   // if ($("#NomProveedorP").val() == "") {
+                        $("#NomProveedorP").val(result.nombre);
+                        $("#DVP").val(result.dv);
+                        $("#CodProveedorP").val(result.ruc);
+                        switch (result.ruc.replace("-", "").replace("-", "").length) {
+                            case 7:
+                            case 8:
+                            case 9:
+                                {
+                                    $("#idProveedor1P").prop('checked', true)
+                                    mask2P();
+                                    break;
+                                }
+                            case 10:
+
+                                {
+
+                                    $("#idProveedor3P").prop('checked', true)
+
+
+                                    mask2P();
+                                    break;
+                                }
+                            case 12:
+                                {
+                                    $("#idProveedor3P").prop('checked', true)
+                                    mask2P();
+                                    break;
+                                }
+                            case 13:
+                            case 14:
+                            case 15:
+                                {
+                                    $("#idProveedor2P").prop('checked', true)
+                                    mask2P();
+                                    break;
+                                }
+                            default:
+                                {
+                                    $("#idProveedor1P").prop('checked', true)
+                                    mask2P();
+                                    break;
+                                }
+
+
+                        }
+                    //} else {
+                    //    $("#DVP").val(result.dv);
+                    //    $("#CodProveedorP").val(result.ruc);
+
+                    //    switch (result.ruc.replace("-", "").replace("-", "").length) {
+                    //        case 7:
+                    //        case 8:
+                    //        case 9:
+                    //            {
+                    //                $("#idProveedor1P").prop('checked', true)
+                    //                mask2P();
+                    //                break;
+                    //            }
+                    //        case 10:
+
+                    //            {
+                            
+                    //                    $("#idProveedor3P").prop('checked', true)
+                                   
+
+                    //                mask2P();
+                    //                break;
+                    //            }
+                    //        case 12:
+                    //            {
+                    //                $("#idProveedor3P").prop('checked', true)
+                    //                mask2P();
+                    //                break;
+                    //            }
+                    //        case 13:
+                    //        case 14:
+                    //        case 15:
+                    //            {
+                    //                $("#idProveedor2P").prop('checked', true)
+                    //                mask2P();
+                    //                break;
+                    //            }
+                    //        default:
+                    //            {
+                    //                $("#idProveedor1P").prop('checked', true)
+                    //                mask2P();
+                    //                break;
+                    //            }
+                                
+
+                    //    }
+                    //}
+                    
+
+                } else {
+
+                    $("#CodProveedorP").val(ruc);
+                    $("#DVP").val(dv);
+                    $("#NomProveedorP").val(nombre);
+
+
+
+                }
+
+            },
+            beforeSend: function () {
+
+            },
+            complete: function () {
+
+            }
+        });
+        }
+
+
     function onChangeProducto() {
 
 
@@ -1142,12 +1284,33 @@
                                 <div class="form-group row">
                                     <div class="col-sm-8">
 
-                                        <input type="text" id="CodProveedorP" readonly class="form-control">
+                                        <input type="text" id="CodProveedorP" list="proveedoresP" onchange="javascript: onChangeProveedor(0)" readonly class="form-control">
+                                         
+                                        <datalist id="proveedoresP">
+                                            @foreach(var item in Model.Proveedores)
+                                            {
+                                            <option value="@item.RUC"> @item.RUC</option>
+
+                                             }
+
+
+
+                                        </datalist>
                                     </div>
                            
                                     <div class="col-sm-4">
 
-                                        <input type="text" id="DVP" readonly placeholder="D.V" class="form-control">
+                                        <input type="text" id="DVP" list="dvP" readonly placeholder="D.V" onchange="javascript: onChangeProveedor(0)" class="form-control">
+                                        <datalist id="dvP">
+                                            @foreach(var item in Model.Proveedores)
+                                            {
+                                            <option value="@item.DV"> @item.DV</option>
+
+                                             }
+
+
+
+                                        </datalist>
                                     </div>
                                 </div>
                                
@@ -1156,7 +1319,17 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <input type="text" maxlength="200" asp-for="Objeto1.EncCompras.NomProveedor" id="NomProveedorP" class="form-control">
+                                        <input type="text" maxlength="200" list="NombresProveedoresP" asp-for="Objeto1.EncCompras.NomProveedor" onchange="javascript: onChangeProveedor(1)" id="NomProveedorP" class="form-control">
+                                        <datalist id="NombresProveedoresP">
+                                            @foreach(var item in Model.Proveedores)
+                                            {
+                                            <option value="@item.Nombre"> @item.Nombre</option>
+
+                                             }
+
+
+
+                                        </datalist>
                                     </div>
                                 </div>
 
@@ -1293,7 +1466,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <select id="idTipoGastoP" class="form-control ">
+                                        <select id="idTipoGastoP" class="form-control " onchange="javascript: onChangeTipoGasto()">
                                             <option value="NULL" selected>-Tipo Gasto-</option>
                                             @foreach (var item in Model.Gastos.OrderBy(a => a.Nombre))
                                             {
@@ -1323,12 +1496,49 @@
 
 
                             </div>
+                            <!--En caso de ser combustible-->
+                            <div class="col-sm-12" hidden id="Combustible">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Cantidad Litros:</label>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+
+                                                <input type="number" id="CantLitrosP" class="form-control">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Tipo Combustible:</label>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+
+                                                <select id="idTipoCombP" class="form-control ">
+                                                    <option value="" selected>-Tipo Combustible-</option>
+
+                                                    <option value="Diesel"  >Diesel</option>
+                                                    <option value="Gasolina 95">Gasolina 95</option>
+                                                    <option value="Gasolina 90">Gasolina 90</option>
+                                                    <option value="Gas LP">Gas LP</option>
+
+
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Termina En caso de ser combustible-->
+
+
                             <div class="col-sm-12">
                                 <div class="row">
-                                    <div class="col-sm-8"></div>
-                                    <div class="col-sm-4" style="text-align: right;">
+                                    <div class="col-sm-7"></div>
+                                    <div class="col-sm-5" style="text-align: right;">
                                         @*<button onclick="javascript: AgregarProductosI();" class="btn btn-w-m btn-primary" title="Agregar a la lista">+ Agregar</button>*@
-                                        <button id="buttonSpinP" onclick="javascript: EnviarFCP();" class="ladda-button green expand-left"><span class="label-submit">Guardar Cambios</span> <span class="spinner"></span></button>
+                                        <button id="buttonSpinP" onclick="javascript: EnviarFCP();" class="ladda-button green expand-left"><span class="label-submit">Agregar Factura</span> <span class="spinner"></span></button>
                                     </div>
                                 </div>
                             </div>
@@ -2187,28 +2397,31 @@
 
     }
   //  var idF;
-    var fileUploadPrincipal = document.getElementById('imgPrincipalUploadGP');  
-    fileUploadPrincipal.onchange = async function (e) {
+     
+        var fileUploadPrincipal = document.getElementById('imgPrincipalUploadGP');
+        fileUploadPrincipal.onchange = async function (e) {
 
-        await readFilePrincipalP(e.srcElement);
-        // idF = setInterval(cancelar(e), 2000);
+            await readFilePrincipalP(e.srcElement);
+            // idF = setInterval(cancelar(e), 2000);
 
-       var idF = setInterval( async function () {
+            var idF = setInterval(async function () {
 
-            if (ImageBae64 != "data:,") {
-                //alert("Imagen agregada con éxito");
-                clearInterval(idF);
-            } else {
-                await readFilePrincipalP(e.srcElement);
-            }
-        }, 1500);
+                if (ImageBae64 != "data:,") {
+                    //alert("Imagen agregada con éxito");
+                    clearInterval(idF);
+                } else {
+                    await readFilePrincipalP(e.srcElement);
+                }
+            }, 1500);
 
 
-        //await readFilePrincipal(e.srcElement);
-        //sleep(3000);
-        //await readFilePrincipal(e.srcElement);
+            //await readFilePrincipal(e.srcElement);
+            //sleep(3000);
+            //await readFilePrincipal(e.srcElement);
 
-    }
+        }
+     
+  
 
    
     function checkP(i) {
@@ -2252,13 +2465,14 @@
    
     function AgregarProductosIP() {
 
-
+        var combo = document.getElementById("idTipoGastoP");
+        var selected = combo.options[combo.selectedIndex].text;
         var detalle = {
 
             CodPro: "1",
-            NomPro: ($("#NomProP").val() == "" ? "Detalle factura" : $("#NomProP").val() ),
+            NomPro: ($("#NomProP").val() == "" ? "Detalle factura" : (selected.includes("COMB") ? $("#NomProP").val() + " * " + $("#idTipoCombP").val() : $("#NomProP").val())  ),
             idTipoGasto: $("#idTipoGastoP").val() == "NULL" ? "0" : $("#idTipoGastoP").val(),
-            Cantidad: "1",
+            Cantidad: (selected.includes("COMB") ? $("#CantLitrosP").val() : "1") ,
             PrecioUnitario: $("#PrecUniP").val(),
             MontoDescuento: $("#descIP").val(),
             ImpuestoTarifa: $("#TipoImpuestoP").val(),
@@ -2353,7 +2567,8 @@
         $("#TipoImpuestoP").val("7").trigger('change');
         $("#idTipoGastoP").val("NULL").trigger('change');
         $("#ImpuestoMontoP").val(0);
-
+        $("#idTipoCombP").val("").trigger('change');
+        $("#CantLitrosP").val(1);
     }
 
     function RellenaTablaIP() {
@@ -2429,6 +2644,16 @@
 
     }
 
+    function onChangeTipoGasto() {
+        var combo = document.getElementById("idTipoGastoP");
+        var selected = combo.options[combo.selectedIndex].text;
+
+        if (selected.includes("COMB")) {
+            $("#Combustible").attr("hidden", false);
+        } else {
+            $("#Combustible").attr("hidden", true);
+        }
+    }
 
 
     function maskP() {
@@ -2467,23 +2692,26 @@
         switch ($("input:radio[name=idProveedorP]:checked").val()) {
             case "01":
                 {
-                    $("#CodProveedorP").inputmask({ "mask": "99-999-9999" });
+                    //$("#CodProveedorP").inputmask({ "mask": "99-999-9999" });
+                    $("#CodProveedorP").attr('maxlength', 11);
                     break;
                 }
             case "02":
                 {
-                    $("#CodProveedorP").inputmask({ "mask": "9999999-99-999999" });
-
+                    //$("#CodProveedorP").inputmask({ "mask": "9999999-99-999999" });
+                    $("#CodProveedorP").attr('maxlength', 17);
                     break;
                 }
             case "03":
                 {
-                    $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                   // $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                    $("#CodProveedorP").attr('maxlength', 10);
                     break;
                 }
             case "04":
                 {
-                    $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                    //$("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                    $("#CodProveedorP").attr('maxlength', 10);
                     break;
                 }
             default:

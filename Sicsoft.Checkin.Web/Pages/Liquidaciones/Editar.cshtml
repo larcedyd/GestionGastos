@@ -1329,11 +1329,31 @@
                                 <div class="form-group row">
                                     <div class="col-sm-8">
 
-                                        <input type="text" id="CodProveedorP" readonly class="form-control">
+                                        <input type="text" id="CodProveedorP"  list="proveedoresP" readonly class="form-control">
+                                        <datalist id="proveedoresP">
+                                            @foreach(var item in Model.Proveedores)
+                                            {
+                                            <option value="@item.RUC"> @item.RUC</option>
+
+                                             }
+
+
+
+                                        </datalist>
                                     </div>
                                     <div class="col-sm-4">
 
-                                        <input type="text" id="DVP" readonly placeholder="D.V" class="form-control">
+                                        <input type="text" id="DVP" readonly list="dvP" placeholder="D.V" onchange="javascript: onChangeProveedorP(0)" class="form-control">
+                                        <datalist id="dvP">
+                                            @foreach(var item in Model.Proveedores)
+                                            {
+                                            <option value="@item.DV"> @item.DV</option>
+
+                                             }
+
+
+
+                                        </datalist>
                                     </div>
                                 </div>
 
@@ -1341,7 +1361,18 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <input type="text" maxlength="200" asp-for="Objeto1.EncCompras.NomProveedor" id="NomProveedorP" class="form-control">
+                                        <input type="text" maxlength="200" asp-for="Objeto1.EncCompras.NomProveedor" list="NombresProveedoresP" onchange="javascript: onChangeProveedorP(1)" id="NomProveedorP" class="form-control">
+                                        <datalist id="NombresProveedoresP">
+                                            @foreach(var item in Model.Proveedores)
+                                            {
+                                            <option value="@item.Nombre"> @item.Nombre</option>
+
+                                             }
+
+
+
+                                        </datalist>
+
                                     </div>
                                 </div>
 
@@ -1478,7 +1509,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <select id="idTipoGastoP" class="form-control ">
+                                        <select id="idTipoGastoP" class="form-control " onchange="javascript: onChangeTipoGasto()">
                                             <option value="NULL" selected>-Tipo Gasto-</option>
                                             @foreach (var item in Model.Gastos.OrderBy(a => a.Nombre))
                                             {
@@ -1508,12 +1539,48 @@
 
 
                             </div>
+
+                            <!--En caso de ser combustible-->
+                            <div class="col-sm-12" hidden id="Combustible">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Cantidad Litros:</label>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+
+                                                <input type="number" id="CantLitrosP" value="1" class="form-control">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Tipo Combustible:</label>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+
+                                                <select id="idTipoCombP" class="form-control ">
+                                                    <option value="" selected>-Tipo Combustible-</option>
+
+                                                    <option value="Diesel">Diesel</option>
+                                                    <option value="Gasolina 95">Gasolina 95</option>
+                                                    <option value="Gasolina 90">Gasolina 90</option>
+                                                    <option value="Gas LP">Gas LP</option>
+
+
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Termina En caso de ser combustible-->
                             <div class="col-sm-12">
                                 <div class="row">
                                     <div class="col-sm-8"></div>
                                     <div class="col-sm-4" style="text-align: right;">
                                         @*<button onclick="javascript: AgregarProductosI();" class="btn btn-w-m btn-primary" title="Agregar a la lista">+ Agregar</button>*@
-                                        <button id="buttonSpinP" onclick="javascript: EnviarFCP();" class="ladda-button green expand-left"><span class="label-submit">Guardar Cambios</span> <span class="spinner"></span></button>
+                                        <button id="buttonSpinP" onclick="javascript: EnviarFCP();" class="ladda-button green expand-left"><span class="label-submit">Agregar Factura</span> <span class="spinner"></span></button>
                                     </div>
                                 </div>
                             </div>
@@ -1992,6 +2059,150 @@
     }
 
 
+    function onChangeProveedorP(bit) {
+
+        var ruc = $("#CodProveedorP").val();
+        var dv = $("#DVP").val();
+        var nombre = $("#NomProveedorP").val();
+
+
+
+        if (bit == 1) {
+             
+                $("#CodProveedorP").val("");
+                $("#DVP").val("");
+            
+          
+
+        } else {
+            $("#NomProveedorP").val("");
+        }
+
+            $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '@Url.Page("Editar", "BuscarProveedor")',
+                data: { ids: $("#CodProveedorP").val(), dv: $("#DVP").val(), nombre: $("#NomProveedorP").val()  },
+            success: function (result) {
+
+                console.log(result);
+
+                if (result != null) {
+
+                    /*if ($("#NomProveedorP").val() == "") {*/
+                        $("#NomProveedorP").val(result.nombre);
+                        $("#DVP").val(result.dv);
+                        $("#CodProveedorP").val(result.ruc);
+                        switch (result.ruc.replace("-", "").replace("-", "").length) {
+                            case 7:
+                            case 8:
+                            case 9:
+                                {
+                                    $("#idProveedor1P").prop('checked', true)
+                                    mask2P();
+                                    break;
+                                }
+                            case 10:
+
+                                {
+
+                                    $("#idProveedor3P").prop('checked', true)
+
+
+                                    mask2P();
+                                    break;
+                                }
+                            case 12:
+                                {
+                                    $("#idProveedor3P").prop('checked', true)
+                                    mask2P();
+                                    break;
+                                }
+                            case 13:
+                            case 14:
+                            case 15:
+                                {
+                                    $("#idProveedor2P").prop('checked', true)
+                                    mask2P();
+                                    break;
+                                }
+                            default:
+                                {
+                                    $("#idProveedor1P").prop('checked', true)
+                                    mask2P();
+                                    break;
+                                }
+
+
+                        }
+                    //} else {
+                    //    $("#DVP").val(result.dv);
+                    //    $("#CodProveedorP").val(result.ruc);
+
+                    //    switch (result.ruc.replace("-", "").replace("-", "").length) {
+                    //        case 7:
+                    //        case 8:
+                    //        case 9:
+                    //            {
+                    //                $("#idProveedor1P").prop('checked', true)
+                    //                mask2P();
+                    //                break;
+                    //            }
+                    //        case 10:
+
+                    //            {
+
+                    //                $("#idProveedor3P").prop('checked', true)
+
+
+                    //                mask2P();
+                    //                break;
+                    //            }
+                    //        case 12:
+                    //            {
+                    //                $("#idProveedor3P").prop('checked', true)
+                    //                mask2P();
+                    //                break;
+                    //            }
+                    //        case 13:
+                    //        case 14:
+                    //        case 15:
+                    //            {
+                    //                $("#idProveedor2P").prop('checked', true)
+                    //                mask2P();
+                    //                break;
+                    //            }
+                    //        default:
+                    //            {
+                    //                $("#idProveedor1P").prop('checked', true)
+                    //                mask2P();
+                    //                break;
+                    //            }
+
+
+                    //    }
+                    //}
+
+
+                } else {
+
+
+                    $("#CodProveedorP").val(ruc);
+                    $("#DVP").val(dv);
+                    $("#NomProveedorP").val(nombre);
+
+                }
+
+            },
+            beforeSend: function () {
+
+            },
+            complete: function () {
+
+            }
+        });
+        }
+
     function checkP(i) {
 
         var checkbox1 = document.getElementById("simpP");
@@ -2032,14 +2243,15 @@
     }
 
     function AgregarProductosIP() {
-
+        var combo = document.getElementById("idTipoGastoP");
+        var selected = combo.options[combo.selectedIndex].text;
 
         var detalle = {
 
             CodPro: "1",
-            NomPro: ($("#NomProP").val() == "" ? "Detalle factura" : $("#NomProP").val() ),
+            NomPro: ($("#NomProP").val() == "" ? "Detalle factura" : (selected.includes("COMB") ? $("#NomProP").val() + " * " + $("#idTipoCombP").val() : $("#NomProP").val())),
             idTipoGasto: $("#idTipoGastoP").val() == "NULL" ? "0" : $("#idTipoGastoP").val(),
-            Cantidad: "1",
+            Cantidad: (selected.includes("COMB") ? $("#CantLitrosP").val() : "1"),
             PrecioUnitario: $("#PrecUniP").val(),
             MontoDescuento: $("#descIP").val(),
             ImpuestoTarifa: $("#TipoImpuestoP").val(),
@@ -2134,7 +2346,8 @@
         $("#TipoImpuestoP").val("7").trigger('change');
         $("#idTipoGastoP").val("NULL").trigger('change');
         $("#ImpuestoMontoP").val(0);
-
+        $("#idTipoCombP").val("").trigger('change');
+        $("#CantLitrosP").val(1);
     }
 
     function RellenaTablaIP() {
@@ -2210,7 +2423,16 @@
 
     }
 
+    function onChangeTipoGasto() {
+        var combo = document.getElementById("idTipoGastoP");
+        var selected = combo.options[combo.selectedIndex].text;
 
+        if (selected.includes("COMB")) {
+            $("#Combustible").attr("hidden", false);
+        } else {
+            $("#Combustible").attr("hidden", true);
+        }
+    }
 
     function maskP() {
         switch ($("#idClienteP").val()) {
@@ -2248,23 +2470,26 @@
         switch ($("input:radio[name=idProveedorP]:checked").val()) {
             case "01":
                 {
-                    $("#CodProveedorP").inputmask({ "mask": "99-999-9999" });
+                    //$("#CodProveedorP").inputmask({ "mask": "99-999-9999" });
+                    $("#CodProveedorP").attr('maxlength', 11);
                     break;
                 }
             case "02":
                 {
-                    $("#CodProveedorP").inputmask({ "mask": "9999999-99-999999" });
-
+                    //$("#CodProveedorP").inputmask({ "mask": "9999999-99-999999" });
+                    $("#CodProveedorP").attr('maxlength', 17);
                     break;
                 }
             case "03":
                 {
-                    $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                   // $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                    $("#CodProveedorP").attr('maxlength', 10);
                     break;
                 }
             case "04":
                 {
-                    $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                   // $("#CodProveedorP").inputmask({ "mask": "9999999999" });
+                    $("#CodProveedorP").attr('maxlength', 10);
                     break;
                 }
             default:
@@ -2972,11 +3197,11 @@
                                     <div class="form-group row">
                                         <div class="col-sm-8">
 
-                                            <input type="text" id="CodProveedorE" class="form-control">
+                                            <input type="text" id="CodProveedorE" readonly class="form-control">
                                         </div>
                                         <div class="col-sm-4">
 
-                                            <input type="text" id="DVE"  placeholder="D.V" class="form-control">
+                                            <input type="text" id="DVE"  placeholder="D.V" readonly class="form-control">
                                         </div>
                                     </div>
                                 }
@@ -3178,7 +3403,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <select id="idTipoGastoE" class="form-control ">
+                                        <select id="idTipoGastoE" class="form-control " onchange="javascript: onChangeTipoGastoE()">
                                             <option value="NULL" selected>-Tipo Gasto-</option>
                                             @foreach (var item in Model.Gastos.OrderBy(a => a.Nombre))
                                             {
@@ -3208,6 +3433,43 @@
 
 
                             </div>
+
+                            <!--En caso de ser combustible-->
+                            <div class="col-sm-12" hidden id="CombustibleE">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Cantidad Litros:</label>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+
+                                                <input type="number" id="CantLitrosE" value="1" class="form-control">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label class="col-form-label">Tipo Combustible:</label>
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+
+                                                <select id="idTipoCombE" class="form-control ">
+                                                    <option value="" selected>-Tipo Combustible-</option>
+
+                                                    <option value="Diesel">Diesel</option>
+                                                    <option value="Gasolina 95">Gasolina 95</option>
+                                                    <option value="Gasolina 90">Gasolina 90</option>
+                                                    <option value="Gas LP">Gas LP</option>
+
+
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Termina En caso de ser combustible-->
+
                             <div class="col-sm-12">
                                 <div class="row">
                                     <div class="col-sm-8"></div>
@@ -4136,14 +4398,15 @@
         $("#ModalEdicion").modal("show");
     }
     function AgregarProductosE() {
-
+        var combo = document.getElementById("idTipoGastoE");
+        var selected = combo.options[combo.selectedIndex].text;
 
         var detalle = {
 
             CodPro: "1",
-            NomPro: ($("#NomProE").val() == "" ? "Detalle factura" : $("#NomProE").val()),
+            NomPro: ($("#NomProE").val() == "" ? "Detalle factura" : (selected.includes("COMB") ? $("#NomProE").val() + " * " + $("#idTipoCombE").val() : $("#NomProE").val())) ,
             idTipoGasto: $("#idTipoGastoE").val() == "NULL" ? "0" : $("#idTipoGastoE").val(),
-            Cantidad: "1",
+            Cantidad: (selected.includes("COMB") && Pais == "P" ? $("#CantLitrosE").val() : "1"),
             PrecioUnitario: $("#PrecUniE").val(),
             MontoDescuento: $("#descE").val(),
             ImpuestoTarifa: $("#TipoImpuestoE").val(),
@@ -4266,7 +4529,8 @@
         $("#TipoImpuestoE").val("0").trigger('change');
         $("#idTipoGastoE").val("NULL").trigger('change');
         $("#ImpuestoMontoE").val(0);
-
+        $("#idTipoCombE").val("").trigger('change');
+        $("#CantLitrosE").val(1);
     }
 
     function RellenaTablaE() {
@@ -4340,6 +4604,16 @@
 
     }
 
+    function onChangeTipoGastoE() {
+        var combo = document.getElementById("idTipoGastoE");
+        var selected = combo.options[combo.selectedIndex].text;
+
+        if (selected.includes("COMB") && Pais == "P") {
+            $("#CombustibleE").attr("hidden", false);
+        } else {
+            $("#CombustibleE").attr("hidden", true);
+        }
+    }
 
     function AbrirModalEdicion(id) {
         $.ajax({
@@ -4359,9 +4633,13 @@
                     if (Pais == "P") {
                         $("#DVE").val(result.codProveedor.split("[")[1]);
                         result.codProveedor = result.codProveedor.split("[")[0];
+
+
                     }
 
                     switch (result.codProveedor.replace("-", "").replace("-", "").length) {
+                        case 7:
+                        case 8:
                         case 9:
                             {
                                 $("#idProvedor1").prop('checked', true)
@@ -4369,6 +4647,7 @@
                                 break;
                             }
                         case 10:
+                        
                             {
                                 if (Pais == "P") {
                                     $("#idProvedor3").prop('checked', true)
@@ -4385,6 +4664,8 @@
                                 maskE2();
                                 break;
                             }
+                        case 13:
+                        case 14:
                         case 15:
                             {
                                 $("#idProvedor2").prop('checked', true)
@@ -4417,6 +4698,22 @@
                     } else {
                         checkE('3');
                     }
+
+
+                    if (Pais == "P") {
+                        var combo = document.getElementById("idTipoGastoE");
+                        var selected = combo.options[combo.selectedIndex].text;
+
+                        if (selected.includes("COMB")) {
+                            $("#CombustibleE").attr("hidden", false);
+                            $("#CantLitrosE").val(result.detCompras[0].cantidad);
+                            $("#NomProE").val(result.detCompras[0].nomPro.split("*")[0].trim());
+                            $("#idTipoCombE").val(result.detCompras[0].nomPro.split("*")[1].trim());
+                        } else {
+                            $("#CombustibleE").attr("hidden", true);
+                        }
+                    }
+                    
 
                     AbrirModalE();
 
@@ -4496,7 +4793,7 @@
     function maskE2() {
 
         if (Pais == "P") {
-            switch ($("input:radio[name=idProvedor]:checked").val()) {
+          /*  switch ($("input:radio[name=idProvedor]:checked").val()) {
                 case "01":
                     {
                         $("#CodProveedorE").inputmask({ "mask": "99-999-9999" });
@@ -4522,7 +4819,7 @@
                     {
                         break;
                     }
-            }
+            }*/
         } else {
             switch ($("input:radio[name=idProvedor]:checked").val()) {
                 case "01":

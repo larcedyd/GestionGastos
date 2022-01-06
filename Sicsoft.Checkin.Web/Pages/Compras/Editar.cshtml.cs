@@ -21,7 +21,8 @@ namespace InversionGloblalWeb.Pages.Compras
         private readonly ICrudApi<AsignacionViewModel, int> asignacion;
         [BindProperty]
         public ComprasViewModel Objeto { get; set; }
-
+        [BindProperty]
+        public string Pais { get; set; }
         [BindProperty]
         public NormasRepartoViewModel[] Normas { get; set; }
         public EditarModel(ICrudApi<ComprasViewModel, int> service, ICrudApi<NormasRepartoViewModel, int> normas, ICrudApi<AsignacionViewModel, int> asignacion)
@@ -41,6 +42,9 @@ namespace InversionGloblalWeb.Pages.Compras
                     return RedirectToPage("/NoPermiso");
                 }
 
+                var Pais = ((ClaimsIdentity)User.Identity).Claims.Where(d => d.Type == "Pais").Select(s1 => s1.Value).FirstOrDefault();
+
+                this.Pais = Pais;
                 Normas = await normas.ObtenerLista("");
                 Objeto = await service.ObtenerPorId(id);
 

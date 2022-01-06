@@ -25,6 +25,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         private readonly ICrudApi<ComprasViewModel, int> compras;
         private readonly ICrudApi<ComprasInsercionViewModel, int> insercionCompras;
         private readonly ICrudApi<MonedasViewModel, bool> mon;
+        private readonly ICrudApi<ProveedoresViewModel, int> proveedor;
+
 
         [BindProperty(SupportsGet = true)]
         public ComprasViewModel[] Objeto { get; set; }
@@ -50,6 +52,9 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         public LoginUsuarioViewModel[] Usuarios { get; set; }
 
         [BindProperty]
+        public ProveedoresViewModel[] Proveedores { get; set; }
+
+        [BindProperty]
         public GastosViewModel[] Gastos { get; set; }
 
         [BindProperty]
@@ -62,7 +67,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
         public NuevoModel(ICrudApi<ComprasViewModel, int> service, ICrudApi<LoginUsuarioViewModel, int> usuario, ICrudApi<GastosViewModel, int> gastos,
             ICrudApi<GastosR, int> liquidaciones, ICrudApi<ComprasViewModel, int> compras, ICrudApi<ComprasInsercionViewModel, int> insercionCompras,
-            ICrudApi<MonedasViewModel, bool> mon)
+            ICrudApi<MonedasViewModel, bool> mon, ICrudApi<ProveedoresViewModel, int> proveedor)
         {
             this.gastos = gastos;
             this.service = service;
@@ -71,6 +76,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
             this.compras = compras;
             this.insercionCompras = insercionCompras;
             this.mon = mon;
+            this.proveedor = proveedor;
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -90,10 +96,10 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Monedas = new List<MonedasViewModel>();
 
 
-     
 
+               
 
-
+                Proveedores = await proveedor.ObtenerLista("");
 
                 filtro.FechaInicio = DateTime.Now;
 
@@ -146,16 +152,19 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 }
 
             
-
-                MonedasViewModel moneda3 = new MonedasViewModel();
-                moneda3.identificador = "EUR";
-                moneda3.Moneda = "Euros";
-                resp = await mon.VCierre(idLogin, Periodo, DateTime.Now, moneda3.identificador);
-                if (resp)
+                if(Pais == "C")
                 {
-                    Monedas.Add(moneda3);
+                    MonedasViewModel moneda3 = new MonedasViewModel();
+                    moneda3.identificador = "EUR";
+                    moneda3.Moneda = "Euros";
+                    resp = await mon.VCierre(idLogin, Periodo, DateTime.Now, moneda3.identificador);
+                    if (resp)
+                    {
+                        Monedas.Add(moneda3);
 
+                    }
                 }
+                
                 
 
                 Usuarios = await usuario.ObtenerLista("");
@@ -184,6 +193,36 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         //public async Task<IActionResult> OnGetRevisar(string id)
         ///
 
+        public async Task<IActionResult> OnGetBuscarProveedor(string id, string dv, string nombre)
+        {
+            try
+            {
+
+
+                //var ids = Convert.ToInt32(id);
+
+                ParametrosFiltros filt = new ParametrosFiltros();
+                filt.Texto = id;
+                filt.Texto2 = dv;
+                filt.Texto3 = nombre;
+
+                var objetos = await proveedor.ObtenerLista(filt);
+
+                var objeto = objetos.FirstOrDefault();
+
+
+
+                return new JsonResult(objeto);
+            }
+            catch (ApiException ex)
+            {
+                Errores error = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+
+
+                return new JsonResult(error);
+            }
+        }
+
 
         public async Task<IActionResult> OnGetBuscar(string id)
         {
@@ -195,8 +234,8 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 ParametrosFiltros filt = new ParametrosFiltros();
                 filt.Texto = id;
-                filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month -1, 26);
-                filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
+                //filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month -1, 26);
+                //filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
                 //DateTime time = DateTime.Now;
 
                 filt.FechaInicio = DateTime.Now;

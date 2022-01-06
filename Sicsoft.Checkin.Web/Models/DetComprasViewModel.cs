@@ -45,7 +45,7 @@ namespace InversionGloblalWeb.Models
         [StringLength(500)]
         public string NomCliente { get; set; }
 
-        public int? Cantidad { get; set; }
+        public decimal? Cantidad { get; set; }
 
         
         public decimal? MontoTotal { get; set; }
