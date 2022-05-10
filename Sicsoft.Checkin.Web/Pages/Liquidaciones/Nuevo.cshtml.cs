@@ -193,7 +193,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
         //public async Task<IActionResult> OnGetRevisar(string id)
         ///
 
-        public async Task<IActionResult> OnGetBuscarProveedor(string id, string dv, string nombre)
+        public async Task<IActionResult> OnGetBuscarProveedor(string id, string dv, string nombre, bool CR = false)
         {
             try
             {
@@ -203,7 +203,12 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 ParametrosFiltros filt = new ParametrosFiltros();
                 filt.Texto = id;
-                filt.Texto2 = dv;
+                if (!CR)
+                {
+                    filt.Texto2 = dv;
+
+                }
+         
                 filt.Texto3 = nombre;
 
                 var objetos = await proveedor.ObtenerLista(filt);
@@ -459,11 +464,13 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 Objeto1.EncCompras.FacturaExterior = recibido.EncCompras.FacturaExterior;
                 Objeto1.EncCompras.GastosVarios = recibido.EncCompras.GastosVarios;
                 Objeto1.EncCompras.FacturaNoRecibida = recibido.EncCompras.FacturaNoRecibida;
+                Objeto1.EncCompras.Comentario = recibido.EncCompras.Comentario;
+                Objeto1.EncCompras.ImagenB64 = recibido.EncCompras.ImagenB64;
 
 
                 short cantidad = 1;
 
-                foreach (var item in recibido.DetCompras)
+                foreach (var item in recibido.DetCompras.Take(1).ToList())
                 {
                     Objeto1.DetCompras[cantidad - 1] = new DetComprasViewModel();
                     Objeto1.DetCompras[cantidad - 1].CodPro = item.CodPro;
@@ -479,6 +486,12 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                     Objeto1.DetCompras[cantidad - 1].idTipoGasto = item.idTipoGasto;
 
                     Objeto1.DetCompras[cantidad - 1].UnidadMedida = "";
+
+
+                    Objeto1.EncCompras.TotalImpuesto = item.ImpuestoMonto;
+                    Objeto1.EncCompras.TotalDescuentos = item.MontoDescuento;
+                    Objeto1.EncCompras.TotalComprobante = item.MontoTotalLinea;
+
 
                     cantidad++;
                 }

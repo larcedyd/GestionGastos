@@ -174,6 +174,90 @@
             }
         }
 
+
+        ///Costa Rica
+        function onChangeProveedorCR(bit) {
+
+            var ruc = $("#CodProveedor").val();
+            var dv = 0;
+            var nombre = $("#NomProveedor").val();
+
+            if (bit == 1) {
+
+                $("#CodProveedor").val("");
+                 
+
+            } else {
+                $("#NomProveedor").val("");
+            }
+
+            $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: '@Url.Page("Nuevo", "BuscarProveedor")',
+                data: { id: $("#CodProveedor").val(), dv: "0", nombre: $("#NomProveedor").val()  },
+            success: function (result) {
+
+                console.log(result);
+
+                if (result != null) {
+
+                   // if ($("#NomProveedorP").val() == "") {
+                    $("#NomProveedor").val(result.nombre);
+                     //   $("#DVP").val(result.dv);
+                    $("#CodProveedor").val(result.ruc);
+                        switch (result.ruc.replace("-", "").replace("-", "").length) {
+                            
+                            case 9:
+                                {
+                                    $("#idProveedor1").prop('checked', true)
+                                    mask2();
+                                    break;
+                                }
+                            case 10:
+
+                                {
+
+                                    $("#idProveedor2").prop('checked', true)
+
+
+                                    mask2();
+                                    break;
+                                }
+                      
+                            default:
+                                {
+                                    $("#idProveedor3").prop('checked', true)
+                                    mask2();
+                                    break;
+                                }
+
+
+                        }
+                   
+
+                } else {
+
+                    $("#CodProveedor").val(ruc);
+                   
+                    $("#NomProveedor").val(nombre);
+
+
+
+                }
+
+            },
+            beforeSend: function () {
+
+            },
+            complete: function () {
+
+            }
+        });
+        }
+
+
+        ///Panama
         function onChangeProveedor(bit) {
 
             var ruc = $("#CodProveedorP").val();
@@ -197,7 +281,7 @@
             success: function (result) {
 
                 console.log(result);
-                
+
                 if (result != null) {
 
                    // if ($("#NomProveedorP").val() == "") {
@@ -262,9 +346,9 @@
                     //        case 10:
 
                     //            {
-                            
+
                     //                    $("#idProveedor3P").prop('checked', true)
-                                   
+
 
                     //                mask2P();
                     //                break;
@@ -289,11 +373,11 @@
                     //                mask2P();
                     //                break;
                     //            }
-                                
+
 
                     //    }
                     //}
-                    
+
 
                 } else {
 
@@ -1285,35 +1369,35 @@
                                     <div class="col-sm-8">
 
                                         <input type="text" id="CodProveedorP" list="proveedoresP" onchange="javascript: onChangeProveedor(0)" readonly class="form-control">
-                                         
-                                        <datalist id="proveedoresP">
-                                            @foreach(var item in Model.Proveedores)
-                                            {
-                                            <option value="@item.RUC"> @item.RUC</option>
 
-                                             }
+                                        <datalist id="proveedoresP">
+                                            @foreach (var item in Model.Proveedores)
+                                            {
+                                                <option value="@item.RUC"> @item.RUC</option>
+
+                                            }
 
 
 
                                         </datalist>
                                     </div>
-                           
+
                                     <div class="col-sm-4">
 
                                         <input type="text" id="DVP" list="dvP" readonly placeholder="D.V" onchange="javascript: onChangeProveedor(0)" class="form-control">
                                         <datalist id="dvP">
-                                            @foreach(var item in Model.Proveedores)
+                                            @foreach (var item in Model.Proveedores)
                                             {
-                                            <option value="@item.DV"> @item.DV</option>
+                                                <option value="@item.DV"> @item.DV</option>
 
-                                             }
+                                            }
 
 
 
                                         </datalist>
                                     </div>
                                 </div>
-                               
+
 
                                 <label class="col-form-label">Nombre Proveedor:</label>
                                 <div class="form-group row">
@@ -1321,11 +1405,11 @@
 
                                         <input type="text" maxlength="200" list="NombresProveedoresP" asp-for="Objeto1.EncCompras.NomProveedor" onchange="javascript: onChangeProveedor(1)" id="NomProveedorP" class="form-control">
                                         <datalist id="NombresProveedoresP">
-                                            @foreach(var item in Model.Proveedores)
+                                            @foreach (var item in Model.Proveedores)
                                             {
-                                            <option value="@item.Nombre"> @item.Nombre</option>
+                                                <option value="@item.Nombre"> @item.Nombre</option>
 
-                                             }
+                                            }
 
 
 
@@ -1350,7 +1434,13 @@
                                     </div>
                                 </div>
 
+                                <label class="col-form-label">Comentarios:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
 
+                                        <input type="text" asp-for="Objeto1.EncCompras.Comentario" id="ComentarioFacturaP" class="form-control">
+                                    </div>
+                                </div>
 
 
 
@@ -1979,7 +2069,17 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <input type="text" id="CodProveedor" class="form-control">
+                                        <input type="text" id="CodProveedor" list="proveedoresCR" onchange="javascript: onChangeProveedorCR(0);" class="form-control">
+                                        <datalist id="proveedoresCR">
+                                            @foreach (var item in Model.Proveedores)
+                                            {
+                                                <option value="@item.RUC"> @item.RUC</option>
+
+                                            }
+
+
+
+                                        </datalist>
                                     </div>
                                 </div>
 
@@ -1987,7 +2087,17 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <input type="text" maxlength="200" asp-for="Objeto1.EncCompras.NomProveedor" id="NomProveedor" class="form-control">
+                                        <input type="text" maxlength="200" asp-for="Objeto1.EncCompras.NomProveedor" onchange="javascript: onChangeProveedorCR(1);" list="proveedoresNomCR" id="NomProveedor" class="form-control">
+                                        <datalist id="proveedoresNomCR">
+                                            @foreach (var item in Model.Proveedores)
+                                            {
+                                                <option value="@item.Nombre"> @item.Nombre</option>
+
+                                            }
+
+
+
+                                        </datalist>
                                     </div>
                                 </div>
 
@@ -2009,7 +2119,13 @@
                                 </div>
 
 
+                                <label class="col-form-label">Comentarios:</label>
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
 
+                                        <input type="text" asp-for="Objeto1.EncCompras.Comentario"   id="ComentarioFactura" class="form-control">
+                                    </div>
+                                </div>
 
 
 
@@ -2327,6 +2443,7 @@
 <!--Panama-->
 <script>
     var ImageBae64 = '';
+    var IMG2 = '';
     var Productos = [];
     var subtotalI = 0;
     var impuestosI = 0;
@@ -2384,7 +2501,7 @@
 
                    
                     ImageBae64 = dataurl; 
-                  
+                    IMG2 = e.target.result;
 
                 }
 
@@ -2743,7 +2860,8 @@
                         ClaveHacienda: $("#NumFacturaP").val(),
                         ConsecutivoHacienda: $("#NumFacturaP").val(),
                         TipoIdentificacionCliente: "0",
-                        NumFactura: $("#NumFacturaP").val(),
+                     NumFactura: $("#NumFacturaP").val(),
+                     Comentario: $("#ComentarioFacturaP").val(),
                         CodProveedor: $("#CodProveedorP").val() + "[" + $("#DVP").val() ,
                         NomProveedor: $("#NomProveedorP").val(),
                         FecFactura: $("#FecFacturaP").val(),
@@ -2759,7 +2877,8 @@
                         Impuesto4: $("#impuesto4IP").text(),
                         Impuesto8: $("#impuesto8IP").text(),
                         Impuesto13: $("#impuesto13IP").text(),
-                        TotalComprobante: $("#totalIP").text(),
+                     TotalComprobante: $("#totalIP").text(),
+                     ImagenB64: (ImageBae64 === '' ? '' : ImageBae64.toString().replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '')),
                         ImagenBase64: (ImageBae64 === '' ? '' : ImageBae64.toString().replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '')),
                         RegimenSimplificado: checkbox1.checked,
                      FacturaExterior: checkbox2.checked,
@@ -2800,15 +2919,15 @@
                                       CodProveedor: EncCompras.CodProveedor,
                                       //    idTipoGasto: $("#idTipoGasto").val(),
                                       Fecha: EncCompras.FecFactura,
-                                      SubTotal: parseFloat(EncCompras.TotalVenta.replace(",", "")),
-                                      Descuento: parseFloat(EncCompras.TotalDescuentos.replace(",", "")) ,
-                                      Impuesto: parseFloat(EncCompras.TotalImpuesto.replace(",", "")),
+                                      SubTotal: parseFloat(EncCompras.TotalVenta.replace(",", "").replace(",", "")),
+                                      Descuento: parseFloat(EncCompras.TotalDescuentos.replace(",", "").replace(",", "")) ,
+                                      Impuesto: parseFloat(EncCompras.TotalImpuesto.replace(",", "").replace(",", "")),
                                       Total: 0,
-                                      Impuesto1: parseFloat(EncCompras.Impuesto1.replace(",", "")),
-                                      Impuesto2: parseFloat(EncCompras.Impuesto2.replace(",", "")),
-                                      Impuesto4: parseFloat(EncCompras.Impuesto4.replace(",", "")),
-                                      Impuesto8: parseFloat(EncCompras.Impuesto8.replace(",", "")),
-                                      Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "")),
+                                      Impuesto1: parseFloat(EncCompras.Impuesto1.replace(",", "").replace(",", "")),
+                                      Impuesto2: parseFloat(EncCompras.Impuesto2.replace(",", "").replace(",", "")),
+                                      Impuesto4: parseFloat(EncCompras.Impuesto4.replace(",", "").replace(",", "")),
+                                      Impuesto8: parseFloat(EncCompras.Impuesto8.replace(",", "").replace(",", "")),
+                                      Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "").replace(",", "")),
                                       idTipoGasto: Productos[0].idTipoGasto,
                                       TotalOtrosCargos: 0,
                                       Comentario: ""
@@ -2974,6 +3093,7 @@
 <!--Modal-->
 <script>
     var ImageBae64 = '';
+    var IMG2 = '';
     var Productos = [];
     var subtotalI = 0;
     var impuestosI = 0;
@@ -3030,6 +3150,7 @@
 
                    // console.log(dataurl);
                     ImageBae64 = dataurl;//e.target.result;
+                    IMG2 = e.target.result;
                     //var idF = setInterval(cancelar, 3000);
 
                     //function cancelar() {
@@ -3390,7 +3511,8 @@
                         NumFactura: $("#NumFactura").val(),
                         CodProveedor: $("#CodProveedor").val(),
                         NomProveedor: $("#NomProveedor").val(),
-                        FecFactura: $("#FecFactura").val(),
+                     FecFactura: $("#FecFactura").val(),
+                     Comentario: $("#ComentarioFactura").val(),
                         CodigoActividadEconomica: "0" ,
                         CodMoneda: $("#CodMoneda").val(),
                         CodCliente: "0",
@@ -3403,7 +3525,9 @@
                         Impuesto4: $("#impuesto4I").text(),
                         Impuesto8: $("#impuesto8I").text(),
                         Impuesto13: $("#impuesto13I").text(),
-                        TotalComprobante: $("#totalI").text(),
+                     TotalComprobante: $("#totalI").text(),
+                     ImagenB64: (ImageBae64 === '' ? '' : ImageBae64.toString().replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '')),
+
                         ImagenBase64: (ImageBae64 === '' ? '' : ImageBae64.toString().replace('data:image/jpeg;base64,', '').replace('data:image/png;base64,', '')),
                         RegimenSimplificado: checkbox1.checked,
                      FacturaExterior: checkbox2.checked,
@@ -3444,15 +3568,15 @@
                                       CodProveedor: EncCompras.CodProveedor,
                                       //    idTipoGasto: $("#idTipoGasto").val(),
                                       Fecha: EncCompras.FecFactura,
-                                      SubTotal: parseFloat(EncCompras.TotalVenta.replace(",", "")),
-                                      Descuento: parseFloat(EncCompras.TotalDescuentos.replace(",", "")) ,
-                                      Impuesto: parseFloat(EncCompras.TotalImpuesto.replace(",", "")),
+                                      SubTotal: parseFloat(EncCompras.TotalVenta.replace(",", "").replace(",", "")),
+                                      Descuento: parseFloat(EncCompras.TotalDescuentos.replace(",", "").replace(",", "")) ,
+                                      Impuesto: parseFloat(EncCompras.TotalImpuesto.replace(",", "").replace(",", "")),
                                       Total: 0,
-                                      Impuesto1: parseFloat(EncCompras.Impuesto1.replace(",", "")),
-                                      Impuesto2: parseFloat(EncCompras.Impuesto2.replace(",", "")),
-                                      Impuesto4: parseFloat(EncCompras.Impuesto4.replace(",", "")),
-                                      Impuesto8: parseFloat(EncCompras.Impuesto8.replace(",", "")),
-                                      Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "")),
+                                      Impuesto1: parseFloat(EncCompras.Impuesto1.replace(",", "").replace(",", "")),
+                                      Impuesto2: parseFloat(EncCompras.Impuesto2.replace(",", "").replace(",", "")),
+                                      Impuesto4: parseFloat(EncCompras.Impuesto4.replace(",", "").replace(",", "")),
+                                      Impuesto8: parseFloat(EncCompras.Impuesto8.replace(",", "").replace(",", "")),
+                                      Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "").replace(",", "")),
                                       idTipoGasto: Productos[0].idTipoGasto,
                                       TotalOtrosCargos: 0,
                                       Comentario: ""

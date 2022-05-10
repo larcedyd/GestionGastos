@@ -141,6 +141,7 @@ namespace InversionGloblalWeb.Models
         public bool RegimenSimplificado { get; set; }
         public bool FacturaExterior { get; set; }
         public bool GastosVarios { get; set; }
+        public string ImagenB64 { get; set; }
         public DetComprasViewModel[] DetCompras { get; set; }
     }
 }

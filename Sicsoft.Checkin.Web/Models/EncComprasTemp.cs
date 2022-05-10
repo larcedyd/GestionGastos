@@ -33,5 +33,9 @@ namespace InversionGloblalWeb.Models
         public bool FacturaExterior { get; set; }
         public bool GastosVarios { get; set; }
         public bool FacturaNoRecibida { get; set; }
+        public string Comentario { get; set; }
+
+        public string ImagenB64 { get; set; }
+
     }
 }

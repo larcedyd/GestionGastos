@@ -48,6 +48,7 @@ namespace InversionGloblalWeb.Pages.Compras
                 Normas = await normas.ObtenerLista("");
                 Objeto = await service.ObtenerPorId(id);
 
+               
 
                 return Page();
             }
