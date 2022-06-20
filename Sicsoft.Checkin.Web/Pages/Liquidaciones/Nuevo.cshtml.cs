@@ -136,8 +136,21 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                     }
                 }
-               
 
+                if (Pais == "N")
+                {
+                    MonedasViewModel moneda = new MonedasViewModel();
+
+                    moneda.identificador = "COR";
+                    moneda.Moneda = "Córdobas";
+
+                    resp = await mon.VCierre(idLogin, Periodo, DateTime.Now, moneda.identificador);
+                    if (resp)
+                    {
+                        Monedas.Add(moneda);
+
+                    }
+                }
 
 
 
