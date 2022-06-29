@@ -10,6 +10,6 @@ namespace InversionGloblalWeb.Models
         public int id { get; set; }
         public int idCierre { get; set; }
         public int NumLinea { get; set; }
-        public EncComprasViewModel Factura { get; set; }
+        //public EncComprasViewModel Factura { get; set; }
     }
 }

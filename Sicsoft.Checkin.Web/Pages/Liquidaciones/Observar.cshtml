@@ -512,46 +512,50 @@
                                     <tbody id="tbody">
                                         @foreach (var item in Model.Objeto)
                                         {
-                                        <tr>
-                                            @if (string.IsNullOrEmpty(item.ImagenB64))
+                                            @if (item != null)
                                             {
-                                                <td align="center" style="padding-top:15px;">  <a style="font-size:13px;" href="@item.PdfFactura" target="_blank">@item.ConsecutivoHacienda </a></td>
+                                                <tr>
+                                                    @if (string.IsNullOrEmpty(item.ImagenB64))
+                                                    {
+                                                        <td align="center" style="padding-top:15px;">  <a style="font-size:13px;" href="@item.PdfFactura" target="_blank">@item.ConsecutivoHacienda </a></td>
+                                                    }
+                                                    else
+                                                    {
+                                                        <td align="center" style="padding-top:15px;">  <a style="font-size:13px; text-decoration: underline; text-decoration-color:blue; color: blue;" onclick="javascript: Llamar('@item.ImagenB64')">@item.ConsecutivoHacienda </a></td>
+                                                    }
+
+
+                                                    <td align="center" style="padding-top:15px;">  <p style="font-size:13px;">@item.FecFactura.Value.ToString("dd/MM/yyyy") </p></td>
+                                                    <td align="left" style="padding-top:15px;">
+                                                        @if (Model.Pais == "P")
+                                                        {
+                                                            <p style="font-size:13px;">@item.CodProveedor.Split("[")[0]  [ @item.CodProveedor.Split("[")[1] ]   </p>
+                                                        }
+                                                        else if (Model.Pais == "C")
+                                                        {
+                                                            <p style="font-size:13px;">@item.CodProveedor </p>
+                                                        }
+                                                        else if (Model.Pais == "N")
+                                                        {
+                                                            <p style="font-size:13px;">@item.CodProveedor.Split("[")[0]   </p>
+
+                                                        }
+
+
+                                                    </td>
+                                                    <td align="left" style="padding-top:15px;">
+                                                        <p style="font-size:13px;">
+                                                            @item.NomProveedor
+
+
+                                                        </p>
+                                                    </td>
+                                                    <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@item.TipoGasto </p></td>
+                                                    <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@(item.Comentario == null ? "" : item.Comentario) </p></td>
+                                                    <td align="right" style="padding-top:13px;"> <p style="font-size:13px;">@decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato) </p></td>
+                                                </tr>
                                             }
-                                            else
-                                            {
-                                                <td align="center" style="padding-top:15px;">  <a style="font-size:13px; text-decoration: underline; text-decoration-color:blue; color: blue;" onclick="javascript: Llamar('@item.ImagenB64')" >@item.ConsecutivoHacienda </a></td>
-                                            }
 
-
-                                            <td align="center" style="padding-top:15px;">  <p style="font-size:13px;">@item.FecFactura.Value.ToString("dd/MM/yyyy") </p></td>
-                                            <td align="left" style="padding-top:15px;">
-                                                @if (Model.Pais == "P")
-                                                {
-                                                    <p style="font-size:13px;">@item.CodProveedor.Split("[")[0]  [ @item.CodProveedor.Split("[")[1] ]   </p>
-                                                }
-                                                else if (Model.Pais == "C")
-                                                {
-                                                    <p style="font-size:13px;">@item.CodProveedor </p>
-                                                }
-                                                else if (Model.Pais == "N")
-                                                {
-                                                    <p style="font-size:13px;">@item.CodProveedor.Split("[")[0]   </p>
-
-                                                }
-
-
-                                            </td>
-                                            <td align="left" style="padding-top:15px;">
-                                                <p style="font-size:13px;">
-                                                    @item.NomProveedor
-
-
-                                                </p>
-                                            </td>
-                                            <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@item.TipoGasto </p></td>
-                                            <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@(item.Comentario == null ? "" : item.Comentario) </p></td>
-                                            <td align="right" style="padding-top:13px;"> <p style="font-size:13px;">@decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato) </p></td>
-                                        </tr>
                                         }
                                     </tbody>
                                 </table>
@@ -973,24 +977,28 @@
                                         </thead>
                                         <tbody id="tbody">
                                             @foreach (var item in Model.Objeto)
-                                        {
-                                            <tr>
+                                            {
+                                                @if (item != null)
+                                                {
+                                                    <tr>
 
-                                                <td align="center" style="padding-top:15px;">  <p style="font-size:13px;"> @item.ConsecutivoHacienda  </p></td>
+                                                        <td align="center" style="padding-top:15px;">  <p style="font-size:13px;"> @item.ConsecutivoHacienda  </p></td>
 
-                                                <td align="center" style="padding-top:15px;">  <p style="font-size:13px;">@item.FecFactura.Value.ToString("dd/MM/yyyy") </p></td>
-                                                <td align="left" style="padding-top:15px;">
-                                                    <p style="font-size:13px;">
-                                                        @item.NomProveedor
+                                                        <td align="center" style="padding-top:15px;">  <p style="font-size:13px;">@item.FecFactura.Value.ToString("dd/MM/yyyy") </p></td>
+                                                        <td align="left" style="padding-top:15px;">
+                                                            <p style="font-size:13px;">
+                                                                @item.NomProveedor
 
 
-                                                    </p>
-                                                </td>
-                                                <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@item.TipoGasto </p></td>
-                                                <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@(item.Comentario == null ? "" : item.Comentario) </p></td>
-                                                <td align="right" style="padding-top:13px;"> <p style="font-size:13px;">@decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato) </p></td>
-                                            </tr>
-                                        }
+                                                            </p>
+                                                        </td>
+                                                        <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@item.TipoGasto </p></td>
+                                                        <td align="left" style="padding-top:15px;"> <p style="font-size:13px;">@(item.Comentario == null ? "" : item.Comentario) </p></td>
+                                                        <td align="right" style="padding-top:13px;"> <p style="font-size:13px;">@decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato) </p></td>
+                                                    </tr>
+                                                }
+
+                                            }
                                         </tbody>
                                     </table>
 
