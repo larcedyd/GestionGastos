@@ -125,7 +125,8 @@ namespace Sicsoft.Checkin.Web
             services.AddRefitClient<ICrudApi<UsuariosViewModel, int>>()
            .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Login"))
            .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();
-
+            services.AddRefitClient<ICrudApi<Compañias, int>>()
+          .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Login"));
             services.AddRefitClient<ICrudApi<RolesViewModel, int>>()
             .ConfigureHttpClient(c => c.BaseAddress = new Uri($"{Configuration["UrlWebApi"]}/api/Roles"))
             .AddHttpMessageHandler<AuthenticatedHttpClientHandler>();

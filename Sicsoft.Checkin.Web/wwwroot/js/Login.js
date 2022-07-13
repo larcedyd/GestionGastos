@@ -3,7 +3,7 @@ function Login() {
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: 'https://localhost:44350/api/Login/Compañias?email=' + $("#Input_Email").val(),
+        url:  'https://localhost:44350/api/Login/Compañias?email=' + $("#Input_Email").val(),
         data: {  },
         success: function (result) {
 

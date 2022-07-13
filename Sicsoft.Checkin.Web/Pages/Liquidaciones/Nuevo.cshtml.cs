@@ -178,7 +178,10 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                     }
                 }
                 
-                
+                if(Monedas.Count() == 0)
+                {
+                    return RedirectToPage("/NoPermiso");
+                }
 
                 Usuarios = await usuario.ObtenerLista("");
 
@@ -252,9 +255,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 ParametrosFiltros filt = new ParametrosFiltros();
                 filt.Texto = id;
-                //filt.FechaInicio = new DateTime(DateTime.Now.Year, DateTime.Now.Month -1, 26);
-                //filt.FechaFinal = filt.FechaInicio.AddMonths(1).AddDays(-1);
-                //DateTime time = DateTime.Now;
+                
 
                 filt.FechaInicio = DateTime.Now;
                 filt.FechaInicio = new DateTime(filt.FechaInicio.Year, filt.FechaInicio.Month, 1);
@@ -541,7 +542,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
                 var obj = new
                 {
                     success = false,
-                    resp = ex.Message
+                    resp = ((Refit.ApiException)ex).Content.ToString()
                 };
                 return new JsonResult(obj);
             }

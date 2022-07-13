@@ -45,7 +45,7 @@
                     </span>
 
                     <div class="wrap-input100 validate-input m-b-16">
-                        <input class="input100" type="email" asp-for="Input.Email" onchange="javascript: Login();" placeholder="Email">
+                        <input class="input100" type="email" asp-for="Input.Email" onchange="javascript: Login();" placeholder="Email" id="correoElectronico" onkeypress="javascript: Login()" onkeyup="javascript: Login()">
                         <span asp-validation-for="Input.Email" class=" text-danger"></span>
                     </div>
 
@@ -90,8 +90,75 @@
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <partial name="_ValidationScriptsPartial" />
-    <script src="~/js/Login.js"></script>
+    @*<script src="~/js/Login.js"></script>*@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.15.5/dist/sweetalert2.all.min.js"></script>
+    <script>
+        function Guardar() {
+            if (Validar()) {
+                $("#formTipos").submit();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Parece que faltan datos por llenar'
+
+                });
+            }
+        }
+        function Validar() {
+            if ($("#correoElectronico").val() == "") {
+                return false;
+            }  else if ($("#Compañia").val() == "") {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        function Login() {
+
+
+
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: '@Url.Page("Login", "Buscar")',
+                data: { email: $("#correoElectronico").val()  },
+                success: function (result) {
+
+
+                    console.log(result);
+
+                    if (result != null) {
+                        var t = '';
+                        $("#Compañia").html('');
+
+                        for (var i = 0; i < result.length; i++) {
+
+                            if (i == 0) {
+                                t += '<option value="' + result[i].cedulaJuridica + '" selected >' + result[i].nombreEmpresa + '</option>';
+                            } else {
+                                t += '<option value="' + result[i].cedulaJuridica + '">' + result[i].nombreEmpresa + '</option>';
+                            }
+
+
+                        }
+
+
+
+                        $("#Compañia").html(t);
+
+                    }
+
+                },
+                beforeSend: function () {
+
+                },
+                complete: function () {
+
+                }
+            });
+        }
+    </script>
 </body>
     
 </html>

@@ -31,7 +31,8 @@ namespace Sicsoft.Checkin.Web.Servicios
 
         [Get("")]
         Task<bool> VCierre(int idLogin, string Periodo, DateTime fechaCierre, string CodMoneda);
-
+        [Get("/Compañias")]
+        Task<TEntity[]> ObtenerCompañias(string email);
 
         [Get("/Listado")]
         Task<TEntity[]> ObtenerListaCompras<TQuery>(TQuery q);

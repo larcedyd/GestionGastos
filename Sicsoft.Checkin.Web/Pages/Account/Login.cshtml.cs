@@ -20,20 +20,43 @@ namespace Sicsoft.Checkin.Web
     public class LoginModel : PageModel
     {
         private readonly ICrudApi<LoginDevolucion,int> checkInService;
+        private readonly ICrudApi<Compañias, int> serviceCompañia;
 
         [BindProperty]
         public LoginViewModel Input { get; set; }
 
-
-        public LoginModel(ICrudApi<LoginDevolucion, int> checkInService)
+        [BindProperty]
+        public Compañias[] Compañias { get; set; }
+        public LoginModel(ICrudApi<LoginDevolucion, int> checkInService, ICrudApi<Compañias, int> serviceCompañia)
         {
             this.checkInService = checkInService;
+            this.serviceCompañia = serviceCompañia;
         }
         public void OnGet()
         {
 
         }
+        public async Task<IActionResult> OnGetBuscar(string email)
+        {
+            try
+            {
 
+
+
+                var objeto = await serviceCompañia.ObtenerCompañias(email);
+
+
+
+                return new JsonResult(objeto);
+            }
+            catch (ApiException ex)
+            {
+                Errores error = JsonConvert.DeserializeObject<Errores>(ex.Content.ToString());
+
+
+                return new JsonResult(error);
+            }
+        }
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
