@@ -3620,7 +3620,11 @@
 
         if ($("#NumFacturaP").val() == "") {
             return false;
-        } else if ($("#CodProveedorP").val() == "") {
+        }else if( $("#DVP").val() == "" || $("#DVP").val().length < 2 || $("#DVP").val().length > 2)
+        {
+            return false;
+        }
+        else if ($("#CodProveedorP").val() == "") {
             return false;
         } else if ($("#NomProveedorP").val() == "") {
             return false;

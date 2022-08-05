@@ -212,12 +212,12 @@
             html += '<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">';
             html += '</scrip' + 't>';
             html += '</head> ';
-            html += '<body>'
+            html += '<body>';
             html += ' <div class="row"> <div class="col-sm-12" style="text-align: center;"> <h2> Liquidación por revisar </h2> </div> </div>';
             html += '<div class="row"> <div class="col-sm-12"> <br> </div> </div>';
             html += $("#idHtml2").html();
 
-           html += "</body></html>"
+            html += "</body></html>";
 
             var recibido =
             {
@@ -225,7 +225,7 @@
                 emailDest: $("#emailEnvio").val(),
                 emailCC: $("#emailCCEnvio").val(),
                 body: html
-            }
+            };
 
             Swal.fire({
                 title: '¿Desea enviar por correo esta liquidación?',

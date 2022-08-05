@@ -449,7 +449,7 @@ namespace InversionGloblalWeb.Pages.Liquidaciones
 
                 Objeto1 = new ComprasInsercionViewModel();
                 Objeto1.EncCompras = new EncComprasViewModel();
-                Objeto1.DetCompras = new DetComprasViewModel[recibido.DetCompras.Length];
+                Objeto1.DetCompras = new DetComprasViewModel[1];
 
 
                 Objeto1.EncCompras.ConsecutivoHacienda = recibido.EncCompras.ConsecutivoHacienda;
