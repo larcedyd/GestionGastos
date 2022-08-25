@@ -147,7 +147,14 @@
                                     </li>
                                 }
                             }
+                            @{if (!string.IsNullOrEmpty(Roles.Where(a => a == "27").FirstOrDefault()))
+                                {
+                                    <li class="@(httpContextAccessor.HttpContext.Request.RouteValues["Page"].ToString().ToLower().Contains("Proveedores".ToLower()) ? "active" : null) navBar">
 
+                                        <a asp-page="/Proveedores/Index" class="NAVA"> <img class="imgNav" src="/img/Usuarios.png"> &nbsp; Proveedores</a>
+                                    </li>
+                                }
+                            }
                         </ul>
                     </li>
                 }
