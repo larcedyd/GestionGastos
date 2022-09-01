@@ -3161,7 +3161,7 @@
                                       Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "").replace(",", "")),
                                       idTipoGasto: Productos[0].idTipoGasto,
                                       TotalOtrosCargos: 0,
-                                      Comentario: ""
+                                      Comentario: EncCompras.Comentario
                                   };
 
                                   console.log(EncCompras);
@@ -3885,7 +3885,7 @@
                                       Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "").replace(",", "")),
                                       idTipoGasto: Productos[0].idTipoGasto,
                                       TotalOtrosCargos: 0,
-                                      Comentario: ""
+                                      Comentario: EncCompras.Comentario
                                   };
 
                                   console.log(EncCompras);
@@ -5438,7 +5438,7 @@
                                       Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "").replace(",", "")),
                                       idTipoGasto: Productos[0].idTipoGasto,
                                       TotalOtrosCargos: 0,
-                                      Comentario: ""
+                                      Comentario: EncCompras.Comentario
                                   };
 
                                   console.log(EncCompras);
@@ -6238,7 +6238,9 @@
                         ConsecutivoHacienda: $("#NumFacturaE").val(),
                         TipoIdentificacionCliente: "0",
                         NumFactura: $("#NumFacturaE").val(),
-                        CodProveedor: (Pais == "P" || Pais == "N" ? $("#CodProveedorE").val() + "[" + $("#DVE").val() : $("#CodProveedorE").val()),
+                     CodProveedor: (Pais == "P" || Pais == "N" ? $("#CodProveedorE").val() + "[" + $("#DVE").val() : $("#CodProveedorE").val()),
+                 
+
                         NomProveedor: $("#NomProveedorE").val(),
                         FecFactura: $("#FecFacturaE").val(),
                         CodigoActividadEconomica: "0" ,
@@ -6303,7 +6305,7 @@
                                       Impuesto13: parseFloat(EncCompras.Impuesto13.replace(",", "").replace(",", "")),
                                       idTipoGasto: ProductosE[0].idTipoGasto,
                                       TotalOtrosCargos: 0,
-                                      Comentario: ""
+                                      Comentario: EncCompras.Comentario
                                   };
 
                                   console.log(EncCompras);
