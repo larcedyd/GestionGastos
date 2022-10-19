@@ -1869,7 +1869,7 @@
                                 <div class="form-group row">
                                     <div class="col-sm-12">
 
-                                        <input type="text" id="CodProveedorN" list="proveedoresN" onchange="javascript: onChangeProveedorN(0)"  class="form-control">
+                                        <input type="text" id="CodProveedorN" list="proveedoresN" onchange="javascript: onChangeProveedorN(0)" class="form-control">
                                         <datalist id="proveedoresN">
                                             @foreach (var item in Model.Proveedores)
                                             {
@@ -2022,12 +2022,12 @@
                                             <option value="NULL">-IVA-</option>
 
                                             <option value="0">Exento</option>
-                                           @* <option value="13">
-                                                IV(13%)
-                                            </option>
-                                            <option value="15" selected>
-                                                IVA(15%)
-                                            </option>*@
+                                            @* <option value="13">
+                                                    IV(13%)
+                                                </option>
+                                                <option value="15" selected>
+                                                    IVA(15%)
+                                                </option>*@
 
 
 
@@ -3414,7 +3414,7 @@
             }
         }, 1500);
 
- 
+
     }
 
 
@@ -3447,7 +3447,7 @@
                 console.log(result);
 
                 if (result != null) {
- 
+
                         $("#NomProveedorN").val(result.nombre);
                         $("#DVP").val(result.dv);
                         $("#CodProveedorN").val(result.ruc);
@@ -3472,11 +3472,11 @@
                                     mask2N();
                                     break;
                                 }
-                        
+
 
 
                         }
-                   
+
 
                 } else {
 
@@ -3628,7 +3628,7 @@
 
 
         Productos.push(detalle);
-      
+
     }
     function LimpiarDatosIN() {
 
@@ -4502,7 +4502,7 @@
                                         </div>
                                     </div>
                                 }
-                                else if(Model.Pais == "C")
+                                else if (Model.Pais == "C")
                                 {
                                     <div class="form-group row">
                                         <div class="col-sm-12" style="text-align: center;">
@@ -4515,7 +4515,7 @@
                                 }
 
 
-                                @if (Model.Pais == "P" )
+                                @if (Model.Pais == "P")
                                 {
                                     <label class="col-form-label">RUC Proveedor:</label>
                                     <div class="form-group row">
@@ -4705,11 +4705,11 @@
                                             {
                                                 <option value="0">Exento</option>
                                                 @*<option value="13" >
-                                                    IV(13%)
-                                                </option>
-                                                <option value="15" selected>
-                                                    IVA(15%)
-                                                </option>*@
+                                                        IV(13%)
+                                                    </option>
+                                                    <option value="15" selected>
+                                                        IVA(15%)
+                                                    </option>*@
                                             }
 
 
@@ -6184,7 +6184,7 @@
     function maskE2() {
 
         if (Pais == "P" || Pais == "N") {
-           
+
         } else if(Pais == "C") {
             switch ($("input:radio[name=idProvedor]:checked").val()) {
                 case "01":
@@ -6239,7 +6239,7 @@
                         TipoIdentificacionCliente: "0",
                         NumFactura: $("#NumFacturaE").val(),
                      CodProveedor: (Pais == "P" || Pais == "N" ? $("#CodProveedorE").val() + "[" + $("#DVE").val() : $("#CodProveedorE").val()),
-                 
+
 
                         NomProveedor: $("#NomProveedorE").val(),
                         FecFactura: $("#FecFacturaE").val(),
