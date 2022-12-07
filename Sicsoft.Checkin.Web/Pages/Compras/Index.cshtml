@@ -8,8 +8,8 @@
 @section Title{
     <h2><i></i> @ViewData["Title"]</h2>
 }
-@using System.Globalization;
-@{
+    @using System.Globalization;
+    @{
     NumberFormatInfo formato = new CultureInfo("en-US").NumberFormat;
     formato.CurrencyGroupSeparator = ",";
     formato.NumberDecimalSeparator = ".";
@@ -25,10 +25,10 @@
         <strong>Resumen </strong>
     </li>
 }
-@section TitleAction{
+    @section TitleAction{
     @*<a asp-page="Nuevo" class="btn btn-primary" title="Agregar"><i class="fa fa-plus"></i> Agregar Cuenta Contable</a>*@
-}
-@section styles{
+    }
+    @section styles{
     <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
     <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
     <link rel="stylesheet" href="~/lib/select2/css/select2-bootstrap4.min.css" />
@@ -43,14 +43,17 @@
             top: 0;
             background: white;
         }
+
         .ibox .label {
             font-size: 12px !important;
         }
     </style>
 
 }
-@section scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @section scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script src="~/lib/summernote/summernote-bs4.min.js"></script>
     <script src="~/lib/select2/js/select2.min.js"></script>
     <script src="~/lib/dropzone/dropzone.js"></script>
@@ -58,33 +61,33 @@
     <script src="~/js/plugins/dataTables/datatables.min.js"></script>
     <script src="~/js/plugins/dataTables/dataTables.bootstrap4.min.js"></script>
     <script>
-    $(document).ready(function () {
-        jQuery(document).ready(function ($) {
-            $(document).ready(function () {
-                $('.mi-selector').select2();
+        $(document).ready(function() {
+            jQuery(document).ready(function($) {
+                $(document).ready(function() {
+                    $('.mi-selector').select2();
+                });
             });
+            $(".js-example-responsive").select2({
+                width: 'resolve',// need to override the changed default
+                height: 'resolve'
+            });
+
+            $('.dataTables-example').DataTable({
+                pageLength: 10,
+                responsive: true,
+                order: [[1, "desc"]]
+
+            });
+
+
+
         });
-        $(".js-example-responsive").select2({
-            width: 'resolve',// need to override the changed default
-            height: 'resolve'
-        });
 
-        $('.dataTables-example').DataTable({
-            pageLength: 10,
-            responsive: true,
-            order: [[1, "desc"]]
-
-        });
-
-
-
-    });
-
-         var ids = 0;
+        var ids = 0;
         var ids2 = 0;
         function onClickModal(id) {
 
-        ids = id;
+            ids = id;
             console.log("id que viene del asignar: " + ids);
 
             Swal.fire({
@@ -107,317 +110,316 @@
             })
 
 
-    }
-        function  Asignar() {
+        }
+        function Asignar() {
 
 
-         $.ajax({
-                        type: 'GET',
-                        dataType: 'json',
-                        url: '@Url.Page("Index", "Asignar")',
-                        data: { id: ids },
-             success: function (result) {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: '@Url.Page("Index", "Asignar")',
+                data: { id: ids },
+                success: function(result) {
 
-                             if (result == false) {
-                                 ids = 0;
-                                // $("#Eliminar").hide();
-                                // $("#Error").show();
-                                 Swal.fire({
-                                     icon: 'error',
-                                     title: 'Oops...',
-                                     text: 'Ha ocurrido un error al intentar asignar'
+                    if (result == false) {
+                        ids = 0;
+                        // $("#Eliminar").hide();
+                        // $("#Error").show();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Ha ocurrido un error al intentar asignar'
 
-                                 })
-                             } else {
-                                 Swal.fire({
-                                     title: "Ha sido asignado con éxito",
+                        })
+                    } else {
+                        Swal.fire({
+                            title: "Ha sido asignado con éxito",
 
-                                     icon: 'success',
-                                     showCancelButton: false,
-                                     customClass: {
-                                         confirmButton: 'swalBtnColor',
+                            icon: 'success',
+                            showCancelButton: false,
+                            customClass: {
+                                confirmButton: 'swalBtnColor',
 
-                                     },
-                                     confirmButtonText: 'OK'
-                                 }).then((result) => {
-                                     if (result.isConfirmed) {
-                                         location.reload();
-                                     }
-                                 })
-                             }
-             },
-             beforeSend: function () {
+                            },
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        })
+                    }
+                },
+                beforeSend: function() {
 
-             },
-             complete: function () {
+                },
+                complete: function() {
 
-             }
-                     })
+                }
+            })
         }
 
         function verPDF(idF) {
-             $.ajax({
-                        type: 'GET',
-                        dataType: 'json',
-                        url: '@Url.Page("Index", "PDF")',
-                        data: { id: idF },
-             success: function (result) {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: '@Url.Page("Index", "PDF")',
+                data: { id: idF },
+                success: function(result) {
 
-                            
-             },
-             beforeSend: function () {
 
-             },
-             complete: function () {
+                },
+                beforeSend: function() {
 
-             }
-                     })
+                },
+                complete: function() {
+
+                }
+            })
         }
 
 
     </script>
 
 }
-@using Microsoft.AspNetCore.Http
-@using System;
-@using System.Collections.Generic;
-@using System.IO;
-@using System.Linq;
-@using System.Security.Claims;
-@using System.Threading.Tasks;
-@using Microsoft.AspNetCore.Mvc;
-@using Microsoft.AspNetCore.Mvc.RazorPages;
-@using Microsoft.Extensions.Configuration;
-@using Refit;
-@using Sicsoft.Checkin.Web.Models;
-@inject IHttpContextAccessor httpContextAccessor
+    @using Microsoft.AspNetCore.Http
+    @using System;
+    @using System.Collections.Generic;
+    @using System.IO;
+    @using System.Linq;
+    @using System.Security.Claims;
+    @using System.Threading.Tasks;
+    @using Microsoft.AspNetCore.Mvc;
+    @using Microsoft.AspNetCore.Mvc.RazorPages;
+    @using Microsoft.Extensions.Configuration;
+    @using Refit;
+    @using Sicsoft.Checkin.Web.Models;
+    @inject IHttpContextAccessor httpContextAccessor
 
-<div class="ibox">
-    <div class="ibox-content">
-        <form method="get">
-            <h2>Filtros:</h2>
+    <div class="ibox">
+        <div class="ibox-content">
+            <form method="get">
+                <h2>Filtros:</h2>
 
-            <div>
-                <div class="row">
+                <div>
+                    <div class="row">
 
 
 
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <label class="col-form-label">Número Factura:</label>
-                                <div class="form-row">
-                                    <div class="input-group input-group-sm  col-md-12">
-                                        <input asp-for="filtro.Texto" class="form-control" placeholder="Buscar Compras">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label class="col-form-label">Número Factura:</label>
+                                    <div class="form-row">
+                                        <div class="input-group input-group-sm  col-md-12">
+                                            <input asp-for="filtro.Texto" class="form-control" placeholder="Buscar Compras">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-form-label">Proveedor:</label>
+                                    <div class="form-row">
+                                        <div class="input-group input-group-sm  col-md-12">
+                                            <input asp-for="filtro.Texto2" class="form-control" placeholder="Buscar Proveedor">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-form-label">Número de Liquidación:</label>
+                                    <div class="form-row">
+                                        <div class="input-group input-group-sm  col-md-12">
+                                            <input asp-for="filtro.NumCierre" class="form-control" placeholder="# Liquidación">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <label class="col-form-label">Proveedor:</label>
-                                <div class="form-row">
-                                    <div class="input-group input-group-sm  col-md-12">
-                                        <input asp-for="filtro.Texto2" class="form-control" placeholder="Buscar Proveedor">
-                                    </div>
+
+
+
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="col-form-label">Moneda:</label>
+                            <div class="form-group row">
+
+                                <div class="col-sm-10">
+
+                                    <select asp-for="filtro.CodMoneda" id="CodCajero" class="form-control  mi-selector">
+                                        <option value="NULL" selected>-Moneda-</option>
+                                        <option value="CRC">Colones</option>
+                                        <option value="USD">Dólares</option>
+                                        <option value="EUR">Euros</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <label class="col-form-label">Número de Liquidación:</label>
-                                <div class="form-row">
-                                    <div class="input-group input-group-sm  col-md-12">
-                                        <input asp-for="filtro.NumCierre" class="form-control" placeholder="# Liquidación">
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <br />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="col-form-label">Fecha Inicial:</label>
+                            <input class="form-control" id="FecInicial" type="date" asp-for="filtro.FechaInicio" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="col-form-label">Fecha Final:</label>
+                            <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal" />
+                        </div>
+                        <div class="col-sm-12">
+                            <br />
+                        </div>
+                        <div class="col-md-3">
+                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                Regimen Simplificado
+                                <input type="checkbox" id="anulada" asp-for="filtro.RegimeSimplificado" />
+                                <span class="check"></span>
+                            </label>
+
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                Factura Exterior
+                                <input type="checkbox" id="cnTarjeta" asp-for="filtro.FacturaExterior" />
+                                <span class="check"></span>
+                            </label>
+
+                        </div>
+                        <div class="col-md-3">
+                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                Factura No Recibidas
+                                <input type="checkbox" id="norec" asp-for="filtro.FacturaNoRecibida" />
+                                <span class="check"></span>
+                            </label>
+
+                        </div>
+                        <div class="col-md-3">
+                            <label class="checkbox" style="text-decoration: none; font-size: 13px;">
+                                Facturas Sin Asignar
+                                <input type="checkbox" id="exentas" asp-for="filtro.Asignados" />
+                                <span class="check"></span>
+                            </label>
+
+                        </div>
+
+
+
+                        <div class="col-sm-12">
+                            <br />
+                        </div>
+
+
+
+                        <div class="">
+
+
+
+                            <p style="font-size:14px;">Se encontraron @Model.Objeto.Length registros de Compras.</p>
+
+
+
                         </div>
 
 
 
                     </div>
-                    <div class="col-sm-6">
-                        <label class="col-form-label">Moneda:</label>
-                        <div class="form-group row">
+                    <div class="row">
+                        <div class="col-sm-6">
+                        </div>
+                        <div class="col-sm-6" style="text-align: right;">
+                            <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>&nbsp;
 
-                            <div class="col-sm-10">
-
-                                <select asp-for="filtro.CodMoneda" id="CodCajero" class="form-control  mi-selector">
-                                    <option value="NULL" selected>-Moneda-</option>
-                                    <option value="CRC">Colones</option>
-                                    <option value="USD">Dólares</option>
-                                    <option value="EUR">Euros</option>
-                                </select>
-                            </div>
                         </div>
                     </div>
-                    <div class="col-sm-12">
-                        <br />
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="col-form-label">Fecha Inicial:</label>
-                        <input class="form-control" id="FecInicial" type="date" asp-for="filtro.FechaInicio" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="col-form-label">Fecha Final:</label>
-                        <input class="form-control" id="FecFinal" type="date" asp-for="filtro.FechaFinal" />
-                    </div>
-                    <div class="col-sm-12">
-                        <br />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                            Regimen Simplificado
-                            <input type="checkbox" id="anulada" asp-for="filtro.RegimeSimplificado" />
-                            <span class="check"></span>
-                        </label>
-
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                            Factura Exterior
-                            <input type="checkbox" id="cnTarjeta" asp-for="filtro.FacturaExterior" />
-                            <span class="check"></span>
-                        </label>
-
-                    </div>
-                    <div class="col-md-3">
-                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                            Factura No Recibidas
-                            <input type="checkbox" id="norec" asp-for="filtro.FacturaNoRecibida" />
-                            <span class="check"></span>
-                        </label>
-
-                    </div>
-                    <div class="col-md-3">
-                        <label class="checkbox" style="text-decoration: none; font-size: 13px;">
-                            Facturas Sin Asignar
-                            <input type="checkbox" id="exentas" asp-for="filtro.Asignados" />
-                            <span class="check"></span>
-                        </label>
-
-                    </div>
-
-
-
-                    <div class="col-sm-12">
-                        <br />
-                    </div>
-
-
-
-                    <div class="">
-
-
-
-                        <p style="font-size:14px;">Se encontraron @Model.Objeto.Length registros de Compras.</p>
-
-
-
-                    </div>
-
-
-
                 </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-
-                            </div>
-                            <div class="col-sm-6" style="text-align: right;">
-                                <button title="Buscar" type="submit" class="btn btn btn-primary"> <i class="fa fa-search"></i></button>&nbsp;
-
-                            </div>
-                        </div>
-                    </div>
-        </form>
-    </div>
-</div>
-
-
-<div class="ibox ">
-    <div class="ibox-title">
-        <div class="ibox-tools">
-            <button type="button" class="btn" data-toggle="popover" data-html="true" data-placement="top" data-content="Para ordenar la lista por cabecera, se debe dar click en la misma.">
-                <i class="fa fa-question-circle"></i>
-            </button>
+            </form>
         </div>
     </div>
 
-    <div class="ibox-content lista">
-        <div class="table-responsive" style="padding:inherit;">
-            <table class="table table-striped dataTables-example" style="width: 100%;">
-                <thead>
-                    <tr>
 
-                        <td align="center" style="width: 3%;"><h3>Consecutivo Hacienda</h3></td>
-                        <td align="center" style="width: 5%;"><h3>Fecha</h3></td>
-                        <td align="center" style="width: 13%;"><h3>Céd. Proveedor</h3></td>
-                        <td align="center" style="width: 25%;"><h3>Proveedor</h3></td>
-                        <td align="center" style="width: 6%;"><h3>Moneda</h3></td>
-                        <td align="center" style="width: 11%;"><h3>Total</h3></td>
-                        <td align="center" style="width: 12%;"><h3>Estado</h3></td>
-                        <td align="center" style="width: 15%;"><h3>Usuario</h3></td>
-                        <td align="center" style="width: 10%;"><h3>Acción</h3></td>
-                    </tr>
+    <div class="ibox ">
+        <div class="ibox-title">
+            <div class="ibox-tools">
+                <button type="button" class="btn" data-toggle="popover" data-html="true" data-placement="top" data-content="Para ordenar la lista por cabecera, se debe dar click en la misma.">
+                    <i class="fa fa-question-circle"></i>
+                </button>
+            </div>
+        </div>
 
-                </thead>
-                <tbody>
+        <div class="ibox-content lista">
+            <div class="table-responsive" style="padding:inherit;">
+                <table class="table table-striped dataTables-example" style="width: 100%;">
+                    <thead>
+                        <tr>
 
-                    @foreach (var item in Model.Objeto.OrderBy(a => a.FechaGravado))
+                            <td align="center" style="width: 3%;"><h3>Consecutivo Hacienda</h3></td>
+                            <td align="center" style="width: 5%;"><h3>Fecha</h3></td>
+                            <td align="center" style="width: 13%;"><h3>Céd. Proveedor</h3></td>
+                            <td align="center" style="width: 25%;"><h3>Proveedor</h3></td>
+                            <td align="center" style="width: 6%;"><h3>Moneda</h3></td>
+                            <td align="center" style="width: 11%;"><h3>Total</h3></td>
+                            <td align="center" style="width: 12%;"><h3>Estado</h3></td>
+                            <td align="center" style="width: 15%;"><h3>Usuario</h3></td>
+                            <td align="center" style="width: 10%;"><h3>Acción</h3></td>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.Objeto.OrderBy(a => a.FechaGravado))
                     {
-                    <tr>
+                        <tr>
 
-                        <td align="left" style="padding-top: 15px;"><a style="font-size:15px;" href="@item.PdfFactura" target="_blank">@item.ConsecutivoHacienda</a></td>
-                        <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.FecFactura.Value.ToString("dd/MM/yyyy")</a></td>
-                        <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.CodProveedor</a></td>
-                        <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NomProveedor</a></td>
-                        <td align="center" style="padding-top:15px;">
-                            <a style="font-size:15px;  ">
-                                @item.CodMoneda
-                            </a>
-                        </td>
+                            <td align="left" style="padding-top: 15px;"><a style="font-size:15px;" href="@item.PdfFactura" target="_blank">@item.ConsecutivoHacienda</a></td>
+                            <td align="center" style="padding-top:15px;"><a style="font-size:15px;  "> @item.FecFactura.Value.ToString("dd/MM/yyyy")</a></td>
+                            <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.CodProveedor</a></td>
+                            <td align="left" style="padding-top:15px;"><a style="font-size:15px;  "> @item.NomProveedor</a></td>
+                            <td align="center" style="padding-top:15px;">
+                                <a style="font-size:15px;  ">
+                                    @item.CodMoneda
+                                </a>
+                            </td>
 
-                        <td align="right" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato)</a></td>
-
-
-                        <td align="center" style="padding-top:15px;">
-                            @if (item.idCierre != 0 && item.idCierre != null)
-                            {
-
-                                <p><span class="badge badge-primary">Asignado</span></p>
-
-                            }
-                            else
-                            {
-                                <p><span class="badge badge-danger">No Asignado</span></p>
-
-                            }
+                            <td align="right" style="padding-top:15px;"><a style="font-size:15px;  "> @decimal.Round(item.TotalComprobante.Value, 2).ToString("N", formato)</a></td>
 
 
-
-
-                        </td>
-
-                        <td align="left" style="padding-top:15px;">
-                            <a style="font-size:15px;  ">
-                                @(item.Usuario == 0 ? "N/A" : Model.Usuarios.Where(a => a.id == item.Usuario).FirstOrDefault() == null ? "N/A" : Model.Usuarios.Where(a => a.id == item.Usuario).FirstOrDefault().Nombre)
-                            </a>
-                        </td>
-                        <td align="center" style="padding-top:15px;">
-                            @if (!string.IsNullOrEmpty(Roles.Where(a => a == "23").FirstOrDefault()))
-                            {
+                            <td align="center" style="padding-top:15px;">
                                 @if (item.idCierre != 0 && item.idCierre != null)
                                 {
-                                    <a asp-page="./Editar" asp-route-id="@item.id" title="Editar" class="fa fa-edit icono"> </a>
-                                }
-                            }
-                        </td>
 
-                    </tr>
+                                    <p><span class="badge badge-primary">Asignado</span></p>
+
+                                }
+                                else
+                                {
+                                    <p><span class="badge badge-danger">No Asignado</span></p>
+
+                                }
+
+
+
+
+                            </td>
+
+                            <td align="left" style="padding-top:15px;">
+                                <a style="font-size:15px;  ">
+                                    @(item.Usuario == 0 ? "N/A" : Model.Usuarios.Where(a => a.id == item.Usuario).FirstOrDefault() == null ? "N/A" : Model.Usuarios.Where(a => a.id == item.Usuario).FirstOrDefault().Nombre)
+                                </a>
+                            </td>
+                            <td align="center" style="padding-top:15px;">
+                                @if (!string.IsNullOrEmpty(Roles.Where(a => a == "23").FirstOrDefault()))
+                                {
+                                    @if (item.idCierre != 0 && item.idCierre != null)
+                                    {
+                                        <a asp-page="./Editar" asp-route-id="@item.id" title="Editar" class="fa fa-edit icono"> </a>
+                                    }
+                                }
+                            </td>
+
+                        </tr>
 
                     }
                 </tbody>
             </table>
 
         </div>
-      
+
     </div>
 </div>
