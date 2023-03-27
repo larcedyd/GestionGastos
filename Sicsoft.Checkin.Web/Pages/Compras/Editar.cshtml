@@ -6,8 +6,8 @@
 @section Title{
     <h2><i></i> @ViewData["Title"]</h2>
 }
-@using System.Globalization;
-@{
+    @using System.Globalization;
+    @{
     NumberFormatInfo formato = new CultureInfo("en-US").NumberFormat;
     formato.CurrencyGroupSeparator = ",";
     formato.NumberDecimalSeparator = ".";
@@ -23,10 +23,10 @@
         <strong>Inclusión </strong>
     </li>
 }
-@section TitleAction{
+    @section TitleAction{
     <a asp-page="./Index" class="nav-link text-dark"><i class="fa fa-arrow-circle-o-left "></i>  Regresar</a>
 }
-@section styles{
+    @section styles{
     <link rel="stylesheet" href="~/lib/summernote/summernote-bs4.css" />
     <link rel="stylesheet" href="~/lib/select2/css/select2.min.css" />
     <link rel="stylesheet" href="~/lib/select2/css/select2-bootstrap4.min.css" />
@@ -37,10 +37,10 @@
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jasny-bootstrap/4.0.0/css/jasny-bootstrap.min.css">
     <style>
         /*     .tableFixHead th {
-                position: sticky;
-                top: 0;
-                background: white;
-            }*/
+                        position: sticky;
+                        top: 0;
+                        background: white;
+                    }*/
         td {
             border-bottom-style: solid !important;
             border-bottom-width: 1px !important;
@@ -80,25 +80,27 @@
         }
 
         /*label
-        {
-            font-size: 15px;
-        }*/
+                {
+                    font-size: 15px;
+                }*/
 
         #imgGalerias {
             display: none;
         }
     </style>
 }
-@section scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @section scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     <script src="~/lib/summernote/summernote-bs4.min.js"></script>
     <script src="~/lib/select2/js/select2.min.js"></script>
     <script src="~/lib/dropzone/dropzone.js"></script>
     <script src="~/lib/iCheck/icheck.js"></script>
     <script>
-        $(document).ready(function () {
-            jQuery(document).ready(function ($) {
-                $(document).ready(function () {
+        $(document).ready(function() {
+            jQuery(document).ready(function($) {
+                $(document).ready(function() {
                     $(":input").inputmask();
                     $('.mi-selector').select2();
                     check(1);
@@ -114,140 +116,140 @@
 
 
         });
-    function  Asignar(ids) {
+        function Asignar(ids) {
 
 
-         $.ajax({
-                        type: 'GET',
-                        dataType: 'json',
-                        url: '@Url.Page("Editar", "Asignar")',
-             data: { id: ids, idNorma: $("#normaid").val() },
-             success: function (result) {
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                url: '@Url.Page("Editar", "Asignar")',
+                data: { id: ids, idNorma: $("#normaid").val() },
+                success: function(result) {
 
-                             if (result == false) {
+                    if (result == false) {
 
-                                // $("#Eliminar").hide();
-                                // $("#Error").show();
-                                 Swal.fire({
-                                     icon: 'error',
-                                     title: 'Oops...',
-                                     text: 'Ha ocurrido un error al intentar actualizar'
+                        // $("#Eliminar").hide();
+                        // $("#Error").show();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Ha ocurrido un error al intentar actualizar'
 
-                                 })
-                             } else {
-                                 Swal.fire({
-                                     title: "Ha sido actualizado con éxito",
+                        })
+                    } else {
+                        Swal.fire({
+                            title: "Ha sido actualizado con éxito",
 
-                                     icon: 'success',
-                                     showCancelButton: false,
-                                     customClass: {
-                                         confirmButton: 'swalBtnColor',
+                            icon: 'success',
+                            showCancelButton: false,
+                            customClass: {
+                                confirmButton: 'swalBtnColor',
 
-                                     },
-                                     confirmButtonText: 'OK'
-                                 }).then((result) => {
-                                     if (result.isConfirmed) {
-                                         window.location.href = window.location.href.split("/Editar")[0];
-                                     }
-                                 })
-                             }
-             },
-             beforeSend: function () {
+                            },
+                            confirmButtonText: 'OK'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = window.location.href.split("/Editar")[0];
+                            }
+                        })
+                    }
+                },
+                beforeSend: function() {
 
-             },
-             complete: function () {
+                },
+                complete: function() {
 
-             }
-                     })
+                }
+            })
         }
     </script>
 }
-<div class="ibox">
+    <div class="ibox">
 
-    <div class="ibox-content">
-        <div class="row">
-            <div class="col-sm-6">
-
-
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-6">
 
 
 
 
-                <label class="col-form-label">Cédula Proveedor:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
 
-                        <input type="text" id="CodProveedor" asp-for="Objeto.CodProveedor" readonly class="form-control">
+
+                    <label class="col-form-label">Cédula Proveedor:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+
+                            <input type="text" id="CodProveedor" asp-for="Objeto.CodProveedor" readonly class="form-control">
+                        </div>
                     </div>
+
+                    <label class="col-form-label">Nombre Proveedor:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+
+                            <input type="text" asp-for="Objeto.NomProveedor" readonly id="NomProveedor" class="form-control">
+                        </div>
+                    </div>
+
+
+
+
+
+                    <label class="col-form-label">Moneda:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+
+                            <input asp-for="Objeto.CodMoneda" readonly class="form-control" />
+                        </div>
+                    </div>
+
+                    <label class="col-form-label">Usuario Asignado:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+
+                            <input asp-for="Objeto.UsuarioAsignado" readonly class="form-control" />
+                        </div>
+                    </div>
+
+
                 </div>
 
-                <label class="col-form-label">Nombre Proveedor:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
+                <div class="col-sm-6">
 
-                        <input type="text" asp-for="Objeto.NomProveedor" readonly id="NomProveedor" class="form-control">
+
+                    <label class="col-form-label">Consecutivo Hacienda:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+
+                            <input asp-for="Objeto.ConsecutivoHacienda" readonly class="form-control" />
+                        </div>
                     </div>
-                </div>
 
+                    <label class="col-form-label">Número Factura:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
 
-
-
-
-                <label class="col-form-label">Moneda:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <input asp-for="Objeto.CodMoneda" readonly class="form-control" />
+                            <input type="number" asp-for="Objeto.NumFactura" readonly id="NumFactura" class="form-control">
+                        </div>
                     </div>
-                </div>
 
-                <label class="col-form-label">Usuario Asignado:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
 
-                        <input asp-for="Objeto.UsuarioAsignado" readonly class="form-control" />
+
+                    <label class="col-form-label">Fecha Factura:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+
+                            <input type="date" asp-for="Objeto.FecFactura" id="FecFactura" readonly class="form-control">
+                        </div>
                     </div>
-                </div>
 
 
-            </div>
-
-            <div class="col-sm-6">
-
-
-                <label class="col-form-label">Consecutivo Hacienda:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <input asp-for="Objeto.ConsecutivoHacienda" readonly class="form-control" />
-                    </div>
-                </div>
-
-                <label class="col-form-label">Número Factura:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <input type="number" asp-for="Objeto.NumFactura" readonly id="NumFactura" class="form-control">
-                    </div>
-                </div>
-
-
-
-                <label class="col-form-label">Fecha Factura:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-
-                        <input type="date" asp-for="Objeto.FecFactura" id="FecFactura" readonly class="form-control">
-                    </div>
-                </div>
-
-
-                <label class="col-form-label">Norma de Reparto:</label>
-                <div class="form-group row">
-                    <div class="col-sm-12">
-                        <select id="normaid" asp-for="Objeto.idNormaReparto" class="form-control  mi-selector">
-                            <option value="0">-Norma Reparto-</option>
-                            @foreach (var item in Model.Normas)
+                    <label class="col-form-label">Norma de Reparto:</label>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <select id="normaid" asp-for="Objeto.idNormaReparto" class="form-control  mi-selector">
+                                <option value="0">-Norma Reparto-</option>
+                                @foreach (var item in Model.Normas)
                             {
                                 <option value="@item.id">@item.Nombre</option>
                             }
@@ -261,8 +263,8 @@
 
             </div>
 
-                </div>
-            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -291,17 +293,17 @@
                         <tbody id="tbody">
                             @foreach (var item in Model.Objeto.DetCompras)
                             {
-                            <tr>
-                                <td align="center"><a style="font-size:15px;  "> @item.Cantidad</a></td>
-                                <td align="center"><a style="font-size:15px;  "> @item.NomPro</a></td>
-                                <td align="right"><a style="font-size:15px;  "> @decimal.Round(item.SubTotal.Value, 2).ToString("N", formato)</a></td>
-                                <td align="right"><a style="font-size:15px;  "> @decimal.Round(item.MontoDescuento.Value, 2).ToString("N", formato)</a></td>
-                                <td align="right"><a style="font-size:15px;  "> @decimal.Round(item.ImpuestoMonto.Value, 2).ToString("N", formato)</a></td>
-                                <td align="right"><a style="font-size:15px;  "> @decimal.Round(item.MontoTotalLinea.Value, 2).ToString("N", formato)</a></td>
-                            </tr>
-                        }
-                            </tbody>
-                        </table>
+                                <tr>
+                                    <td align="center"><a style="font-size:15px;  "> @item.Cantidad</a></td>
+                                    <td align="center"><a style="font-size:15px;  "> @item.NomPro</a></td>
+                                    <td align="right"><a style="font-size:15px;  "> @decimal.Round(item.SubTotal.Value, 2).ToString("N", formato)</a></td>
+                                    <td align="right"><a style="font-size:15px;  "> @decimal.Round(item.MontoDescuento.Value, 2).ToString("N", formato)</a></td>
+                                    <td align="right"><a style="font-size:15px;  "> @decimal.Round(item.ImpuestoMonto.Value, 2).ToString("N", formato)</a></td>
+                                    <td align="right"><a style="font-size:15px;  "> @decimal.Round(item.MontoTotalLinea.Value, 2).ToString("N", formato)</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
 
                 </div>
                 <hr />
